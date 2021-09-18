@@ -23,7 +23,7 @@ public class GraphDbEditorsConsoleRootType extends ConsoleRootType {
     }
 
     GraphDbEditorsConsoleRootType() {
-        super("graphdb-editors", "Graph Database Data Source editor");
+        super("graphdb-editors", "XMeta Data Source editor");
     }
 
     @Nullable

@@ -1,7 +1,6 @@
 package com.neueda.jetbrains.plugin.graphdb.jetbrains.component.settings;
 
 import com.intellij.ide.util.PropertiesComponent;
-import com.neueda.jetbrains.plugin.graphdb.jetbrains.component.analytics.Analytics;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
@@ -44,7 +43,6 @@ public class SettingsComponentImpl implements SettingsComponent {
 
     @Override
     public void enableAnalytics(boolean state) {
-        Analytics.forceEvent("settings", state ? "enableAnalytics" : "disableAnalytics");
         properties().setValue(ANALYTICS_ENABLED_KEY, state, true);
     }
 

@@ -1,6 +1,6 @@
 // Languages
-include 'language'
-include 'language:cypher'
+//include 'language'
+//include 'language:cypher'
 
 // Database adaptors
 include 'database'
@@ -18,8 +18,8 @@ include 'intellij-support-plugin'
 include 'platform'
 
 // Testing
-include 'testing'
-include 'testing:common'
+//include 'testing'
+//include 'testing:common'
 //include 'testing:manual'
 //include 'testing:database'
 //include 'testing:database:neo4j-common'

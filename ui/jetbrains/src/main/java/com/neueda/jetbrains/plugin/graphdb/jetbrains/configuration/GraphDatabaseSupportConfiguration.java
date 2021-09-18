@@ -4,9 +4,7 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.ui.components.JBCheckBox;
-import com.neueda.jetbrains.plugin.graphdb.jetbrains.component.analytics.AnalyticsApplicationComponent;
 import com.neueda.jetbrains.plugin.graphdb.jetbrains.component.settings.SettingsComponent;
-import com.neueda.jetbrains.plugin.graphdb.jetbrains.ui.console.event.PluginSettingsUpdated;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.Nullable;
 
@@ -17,18 +15,17 @@ public class GraphDatabaseSupportConfiguration implements Configurable {
     private boolean isModified = false;
     private JBCheckBox analyticsCheckBox, globalParametersCheckbox;
     private JBCheckBox invertZoomCheckBox;
-    private AnalyticsApplicationComponent analytics;
 
     @Nls
     @Override
     public String getDisplayName() {
-        return "Graph Database";
+        return "XMeta";
     }
 
     @Nullable
     @Override
     public String getHelpTopic() {
-        return "Graph Database support plugin configuration";
+        return "XMeta support plugin configuration";
     }
 
     @Nullable
@@ -36,7 +33,6 @@ public class GraphDatabaseSupportConfiguration implements Configurable {
     public JComponent createComponent() {
         isModified = false;
 
-        analytics = AnalyticsApplicationComponent.getInstance();
         analyticsCheckBox = new JBCheckBox("Send anonymous usage statistics",
                 SettingsComponent.getInstance().isAnalyticEnabled());
         analyticsCheckBox.addActionListener(e -> isModified = true);
@@ -64,7 +60,8 @@ public class GraphDatabaseSupportConfiguration implements Configurable {
         instance.enableAnalytics(analyticsCheckBox.isSelected());
         instance.invertGraphViewZoom(invertZoomCheckBox.isSelected());
 
-        ApplicationManager.getApplication().getMessageBus().syncPublisher(PluginSettingsUpdated.TOPIC).settingsUpdated();
+        //ApplicationManager.getApplication().getMessageBus().syncPublisher(PluginSettingsUpdated.TOPIC)
+        // .settingsUpdated();
 
         isModified = false;
     }

@@ -11,8 +11,6 @@ import com.neueda.jetbrains.plugin.graphdb.jetbrains.component.datasource.state.
 import com.neueda.jetbrains.plugin.graphdb.jetbrains.database.DatabaseManagerService;
 import com.neueda.jetbrains.plugin.graphdb.jetbrains.services.ExecutorService;
 import com.neueda.jetbrains.plugin.graphdb.jetbrains.ui.datasource.metadata.MetadataRetrieveEvent;
-import com.neueda.jetbrains.plugin.graphdb.language.cypher.completion.metadata.CypherMetadataContainer;
-import com.neueda.jetbrains.plugin.graphdb.language.cypher.completion.metadata.CypherMetadataProviderService;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
@@ -30,19 +28,16 @@ import static java.util.stream.Collectors.toList;
 public class DataSourcesComponentMetadata implements ProjectComponent {
 
     private final Map<DataSourceType, Function<DataSourceApi, DataSourceMetadata>> handlers = new HashMap<>();
-    private CypherMetadataProviderService cypherMetadataProviderService;
     private ExecutorService executorService;
     private DatabaseManagerService databaseManager;
     private MessageBus messageBus;
 
     public DataSourcesComponentMetadata(MessageBus messageBus,
                                         DatabaseManagerService databaseManager,
-                                        CypherMetadataProviderService cypherMetadataProviderService,
                                         ExecutorService executorService
     ) {
         this.messageBus = messageBus;
         this.databaseManager = databaseManager;
-        this.cypherMetadataProviderService = cypherMetadataProviderService;
         this.executorService = executorService;
 
         handlers.put(NEO4J_BOLT, this::getNeo4jBoltMetadata);
@@ -174,28 +169,28 @@ public class DataSourcesComponentMetadata implements ProjectComponent {
 
     private void updateNeo4jBoltMetadata(DataSourceApi dataSource, Neo4jBoltCypherDataSourceMetadata metadata) {
         // Refresh cypher metadata provider
-        cypherMetadataProviderService.wipeContainer(dataSource.getName());
-        CypherMetadataContainer container = cypherMetadataProviderService.getContainer(dataSource.getName());
-
-        metadata.getLabels()
-                .stream()
-                .map(Neo4jLabelMetadata::getName)
-                .forEach(container::addLabel);
-        metadata.getRelationshipTypes()
-                .stream()
-                .map(Neo4jRelationshipTypeMetadata::getName)
-                .forEach(container::addRelationshipType);
-        metadata.getMetadata(Neo4jBoltCypherDataSourceMetadata.PROPERTY_KEYS).stream()
-                .map((row) -> row.get("propertyKey"))
-                .forEach(container::addPropertyKey);
-        metadata.getMetadata(Neo4jBoltCypherDataSourceMetadata.STORED_PROCEDURES)
-                .forEach(row -> container.addProcedure(row.get("name"), row.get("signature"), row.get("description")));
-
-        List<Map<String, String>> userFunctionMetadata = metadata.getMetadata(Neo4jBoltCypherDataSourceMetadata.USER_FUNCTIONS);
-        if (userFunctionMetadata != null) {
-            userFunctionMetadata
-                    .forEach(row -> container.addUserFunction(row.get("name"), row.get("signature"), row.get("description")));
-        }
+//        cypherMetadataProviderService.wipeContainer(dataSource.getName());
+//        CypherMetadataContainer container = cypherMetadataProviderService.getContainer(dataSource.getName());
+//
+//        metadata.getLabels()
+//                .stream()
+//                .map(Neo4jLabelMetadata::getName)
+//                .forEach(container::addLabel);
+//        metadata.getRelationshipTypes()
+//                .stream()
+//                .map(Neo4jRelationshipTypeMetadata::getName)
+//                .forEach(container::addRelationshipType);
+//        metadata.getMetadata(Neo4jBoltCypherDataSourceMetadata.PROPERTY_KEYS).stream()
+//                .map((row) -> row.get("propertyKey"))
+//                .forEach(container::addPropertyKey);
+//        metadata.getMetadata(Neo4jBoltCypherDataSourceMetadata.STORED_PROCEDURES)
+//                .forEach(row -> container.addProcedure(row.get("name"), row.get("signature"), row.get("description")));
+//
+//        List<Map<String, String>> userFunctionMetadata = metadata.getMetadata(Neo4jBoltCypherDataSourceMetadata.USER_FUNCTIONS);
+//        if (userFunctionMetadata != null) {
+//            userFunctionMetadata
+//                    .forEach(row -> container.addUserFunction(row.get("name"), row.get("signature"), row.get("description")));
+//        }
     }
 
     @Override

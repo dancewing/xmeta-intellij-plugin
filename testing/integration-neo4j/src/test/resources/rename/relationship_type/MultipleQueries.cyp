@@ -1,7 +1,0 @@
-MATCH ()-[:RENAME_THIS]-()
-MATCH ()-[:RENAME_<caret>THIS]-()
-RETURN *;
-
-MATCH ()-[:RENAME_THIS]-()
-MATCH ()-[:RENAME_THIS]-()
-RETURN *;

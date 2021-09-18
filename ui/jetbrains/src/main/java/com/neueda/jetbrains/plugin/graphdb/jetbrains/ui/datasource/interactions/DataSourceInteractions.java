@@ -1,17 +1,11 @@
 package com.neueda.jetbrains.plugin.graphdb.jetbrains.ui.datasource.interactions;
 
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.ui.popup.JBPopupFactory;
-import com.intellij.openapi.ui.popup.ListPopup;
 import com.intellij.ui.ToolbarDecorator;
 import com.intellij.ui.treeStructure.PatchedDefaultMutableTreeNode;
 import com.intellij.ui.treeStructure.Tree;
-import com.neueda.jetbrains.plugin.graphdb.jetbrains.component.analytics.Analytics;
-import com.neueda.jetbrains.plugin.graphdb.jetbrains.component.datasource.DataSourceType;
 import com.neueda.jetbrains.plugin.graphdb.jetbrains.component.datasource.state.DataSourceApi;
 import com.neueda.jetbrains.plugin.graphdb.jetbrains.ui.datasource.DataSourcesView;
-import com.neueda.jetbrains.plugin.graphdb.jetbrains.ui.datasource.interactions.neo4j.bolt.Neo4jBoltDataSourceDialog;
-import com.neueda.jetbrains.plugin.graphdb.jetbrains.ui.datasource.interactions.tinkerpop.gremlin.OpenCypherGremlinDataSourceDialog;
 import com.neueda.jetbrains.plugin.graphdb.jetbrains.ui.datasource.tree.Neo4jTreeNodeType;
 import com.neueda.jetbrains.plugin.graphdb.jetbrains.ui.datasource.tree.TreeNodeModelApi;
 import com.neueda.jetbrains.plugin.graphdb.jetbrains.util.FileUtil;
@@ -46,14 +40,10 @@ public class DataSourceInteractions {
 
     private void initAddAction() {
         decorator.setAddAction(anActionButton -> {
-            ListPopup popup = JBPopupFactory.getInstance().createActionGroupPopup(
-                    "New Data Source",
-                    new NewDataSourceActionGroup(project, dataSourcesView),
-                    anActionButton.getDataContext(),
-                    JBPopupFactory.ActionSelectionAid.NUMBERING,
-                    true
-            );
-            popup.show(anActionButton.getPreferredPopupPoint());
+            OpenCypherGremlinDataSourceDialog dialog = new OpenCypherGremlinDataSourceDialog(project, dataSourcesView);
+            if (dialog.go()){
+                dataSourcesView.createDataSource(dialog.constructDataSource());
+            }
         });
     }
 
@@ -94,17 +84,9 @@ public class DataSourceInteractions {
 
                 DataSourceApi dataSourceToEdit = getDataSourceApi(treeNode);
 
-                DataSourceDialog dialog = null;
-                if (dataSourceToEdit.getDataSourceType().equals(DataSourceType.NEO4J_BOLT)) {
-                    dialog = new Neo4jBoltDataSourceDialog(project, dataSourcesView, dataSourceToEdit);
-                } else if (dataSourceToEdit.getDataSourceType().equals(DataSourceType.OPENCYPHER_GREMLIN)) {
-                    dialog = new OpenCypherGremlinDataSourceDialog(project, dataSourcesView, dataSourceToEdit);
-                }
-
-                if (dialog != null) {
-                    if (dialog.go()) {
-                        dataSourcesView.updateDataSource(treeNode, dataSourceToEdit, dialog.constructDataSource());
-                    }
+                DataSourceDialog dialog = new OpenCypherGremlinDataSourceDialog(project, dataSourcesView, dataSourceToEdit);;
+                if (dialog.go()) {
+                    dataSourcesView.updateDataSource(treeNode, dataSourceToEdit, dialog.constructDataSource());
                 }
             }
         });
@@ -124,7 +106,6 @@ public class DataSourceInteractions {
                     }
 
                     DataSourceApi dataSource = getDataSourceApi(selectedNodes[0]);
-                    Analytics.event(dataSource, "openEditor");
 
                     try {
                         FileUtil.openFile(project, FileUtil.getDataSourceFile(project, dataSource));

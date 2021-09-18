@@ -1,3 +1,0 @@
-MATCH (n:RENAME_<caret>THIS)
-MATCH (m:RENAME_THIS)
-RETURN *;

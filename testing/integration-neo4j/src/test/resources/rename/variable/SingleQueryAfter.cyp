@@ -1,2 +1,0 @@
-MATCH (renamed)
-RETURN (renamed);

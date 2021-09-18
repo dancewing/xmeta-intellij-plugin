@@ -6,7 +6,7 @@ import com.intellij.notification.Notifications;
 
 public class Notifier {
 
-    private static final String GROUP_DISPLAY_ID = "Graph Database Support";
+    private static final String GROUP_DISPLAY_ID = "XMeta Support";
 
     public static void info(String title, String message) {
         notify(title, message, NotificationType.INFORMATION);

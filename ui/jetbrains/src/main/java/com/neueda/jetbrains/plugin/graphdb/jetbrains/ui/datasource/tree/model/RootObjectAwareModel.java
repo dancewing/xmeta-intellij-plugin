@@ -2,7 +2,6 @@ package com.neueda.jetbrains.plugin.graphdb.jetbrains.ui.datasource.tree.model;
 
 import com.neueda.jetbrains.plugin.graphdb.database.api.data.NoIdGraphEntity;
 import com.neueda.jetbrains.plugin.graphdb.jetbrains.component.datasource.state.DataSourceApi;
-import com.neueda.jetbrains.plugin.graphdb.jetbrains.ui.console.graph.EntityContextMenu;
 import com.neueda.jetbrains.plugin.graphdb.jetbrains.ui.datasource.metadata.dto.ContextMenu;
 import com.neueda.jetbrains.plugin.graphdb.jetbrains.ui.datasource.tree.TreeNodeModelApi;
 import org.jetbrains.annotations.Nullable;
@@ -21,11 +20,11 @@ public abstract class RootObjectAwareModel implements TreeNodeModelApi {
 
     @Override
     public Optional<ContextMenu> getContextMenu() {
-        if (rootObject instanceof NoIdGraphEntity) {
-            return Optional.of(new EntityContextMenu(dataSourceApi, (NoIdGraphEntity) rootObject));
-        } else if (this instanceof NoIdGraphEntity) {
-            return Optional.of(new EntityContextMenu(dataSourceApi, (NoIdGraphEntity) this));
-        }
+//        if (rootObject instanceof NoIdGraphEntity) {
+//            return Optional.of(new EntityContextMenu(dataSourceApi, (NoIdGraphEntity) rootObject));
+//        } else if (this instanceof NoIdGraphEntity) {
+//            return Optional.of(new EntityContextMenu(dataSourceApi, (NoIdGraphEntity) this));
+//        }
         return Optional.empty();
     }
 

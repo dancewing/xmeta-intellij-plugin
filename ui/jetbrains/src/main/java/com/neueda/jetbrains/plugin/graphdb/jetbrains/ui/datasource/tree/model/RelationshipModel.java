@@ -2,7 +2,6 @@ package com.neueda.jetbrains.plugin.graphdb.jetbrains.ui.datasource.tree.model;
 
 import com.neueda.jetbrains.plugin.graphdb.database.api.data.GraphRelationship;
 import com.neueda.jetbrains.plugin.graphdb.jetbrains.component.datasource.state.DataSourceApi;
-import com.neueda.jetbrains.plugin.graphdb.jetbrains.ui.console.graph.EntityContextMenu;
 import com.neueda.jetbrains.plugin.graphdb.jetbrains.ui.datasource.metadata.dto.ContextMenu;
 import com.neueda.jetbrains.plugin.graphdb.jetbrains.ui.datasource.tree.Neo4jEntityViewNodeType;
 import com.neueda.jetbrains.plugin.graphdb.jetbrains.ui.datasource.tree.NodeType;
@@ -28,7 +27,8 @@ public class RelationshipModel implements TreeNodeModelApi {
 
     @Override
     public Optional<ContextMenu> getContextMenu() {
-        return Optional.of(new EntityContextMenu(dataSourceApi, relationship));
+       // return Optional.of(new EntityContextMenu(dataSourceApi, relationship));
+        return Optional.empty();
     }
 
     @Override

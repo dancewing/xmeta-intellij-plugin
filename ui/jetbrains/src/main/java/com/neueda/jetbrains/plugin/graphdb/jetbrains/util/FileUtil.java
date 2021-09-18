@@ -11,7 +11,6 @@ import com.intellij.openapi.vfs.newvfs.FileAttribute;
 import com.intellij.openapi.vfs.newvfs.NewVirtualFile;
 import com.intellij.util.io.IOUtil;
 import com.neueda.jetbrains.plugin.graphdb.jetbrains.component.datasource.state.DataSourceApi;
-import com.neueda.jetbrains.plugin.graphdb.jetbrains.ui.console.params.ParameterRootType;
 import com.neueda.jetbrains.plugin.graphdb.jetbrains.ui.datasource.interactions.GraphDbEditorsConsoleRootType;
 
 import java.io.DataInputStream;
@@ -31,13 +30,13 @@ public class FileUtil {
         );
     }
 
-    public static VirtualFile getScratchFile(Project project, String fileName) throws IOException {
-        return ScratchFileService.getInstance().findFile(
-                ParameterRootType.getInstance(),
-                project.getName() + fileName,
-                ScratchFileService.Option.create_if_missing
-        );
-    }
+//    public static VirtualFile getScratchFile(Project project, String fileName) throws IOException {
+//        return ScratchFileService.getInstance().findFile(
+//                ParameterRootType.getInstance(),
+//                project.getName() + fileName,
+//                ScratchFileService.Option.create_if_missing
+//        );
+//    }
 
     public static String getParams(VirtualFile file) {
         String userData = file.getUserData(MY_KEY);
