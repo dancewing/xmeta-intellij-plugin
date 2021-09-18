@@ -1,0 +1,254 @@
+<idea-plugin version="2">
+    <id>com.neueda4j.intellij.plugin.cypher</id>
+    <name>Graph Database support</name>
+    <!-- Should be automatically replaced by gradle build -->
+    <version>9.9.9</version>
+    <vendor email="product.support@neueda.com" url="https://technologies.neueda.com">Neueda Technologies</vendor>
+
+    <description><![CDATA[
+        <p>
+            <a href="https://github.com/neueda/jetbrains-plugin-graph-database-support">
+                Integration with Graph Databases
+            </a>
+        </p>
+
+        <p>
+            <b>Features:</b>
+        <ul>
+            <li>Manage data sources.</li>
+            <li>Write and execute queries.</li>
+            <li>Explore query results in graph or table view.</li>
+        </ul>
+        </p>
+
+        <p>
+            <b>Supported databases:</b>
+        <ul>
+            <li>Neo4j 3.4+ (Bolt)</li>
+            <li>TinkerPop databases (<a href="https://github.com/opencypher/cypher-for-gremlin">Cypher for Gremlin</a> translation)
+                <ul>
+                    <li>AWS Neptune</li>
+                    <li>JanusGraph</li>
+                    <li>Azure Cosmos DB</li>
+                    <li>Other TinkerPop-enabled databases</li>
+                </ul>
+            </li>
+        </ul>
+        </p>
+
+        <p>
+            <b>Supported query languages:</b>
+        <ul>
+            <li>Cypher</li>
+            <ul>
+                <li>Understands queries in `.cyp`, `.cypher` or `.cql` files.</li>
+                <li>Syntax highlight and error reporting.</li>
+                <li>Refactoring support for identifiers, labels, relationship types and properties.</li>
+                <li>
+                    Autocompletion support for identifiers, labels, relationship types, properties and stored procedures.
+                    Information gathered from existing queries and configured data sources.
+                </li>
+                <li>Code reformatting.</li>
+                <li>Inspections: database warnings, function checks, type system.</li>
+                <li>Auto-inject Cypher language for:
+                    <a href="https://github.com/neo4j/neo4j">neo4j</a>,
+                    <a href="https://github.com/neo4j/neo4j-ogm">neo4j-ogm</a>,
+                    <a href="https://github.com/spring-projects/spring-data-neo4j">spring-data-neo4j</a>,
+                    <a href="https://github.com/neo4j/neo4j/tree/3.1/community/neo4j-harness">neo4j-harness</a>,
+                    <a href="https://github.com/nigelsmall/py2neo">py2neo</a>.
+                </li>
+            </ul>
+        </ul>
+        </p>
+        ]]></description>
+
+    <change-notes><![CDATA[
+        See
+        <a href="https://github.com/neueda/jetbrains-plugin-graph-database-support/releases">https://github.com/neueda/jetbrains-plugin-graph-database-support/releases</a>
+        ]]></change-notes>
+
+    <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/build_number_ranges.html for description -->
+    <idea-version since-build="193"/>
+
+    <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
+         on how to target different products -->
+    <depends>com.intellij.modules.lang</depends>
+    <depends optional="true">com.intellij.modules.java</depends>
+    <depends optional="true" config-file="intellilang-cypher-support.xml">org.intellij.intelliLang</depends>
+
+    <application-components>
+        <!-- Settings -->
+        <component>
+            <interface-class>com.neueda.jetbrains.plugin.graphdb.jetbrains.component.settings.SettingsComponent</interface-class>
+            <implementation-class>com.neueda.jetbrains.plugin.graphdb.jetbrains.component.settings.SettingsComponentImpl</implementation-class>
+        </component>
+        <!-- Google analytics component -->
+        <component>
+            <interface-class>com.neueda.jetbrains.plugin.graphdb.jetbrains.component.analytics.AnalyticsApplicationComponent</interface-class>
+            <implementation-class>com.neueda.jetbrains.plugin.graphdb.jetbrains.component.analytics.GoogleAnalyticsApplicationComponent</implementation-class>
+        </component>
+        <!-- Graph Database support - query statement highlighting -->
+        <component>
+            <interface-class>com.neueda.jetbrains.plugin.graphdb.jetbrains.component.highlighter.QueryHighlighterComponent</interface-class>
+            <implementation-class>com.neueda.jetbrains.plugin.graphdb.jetbrains.component.highlighter.QueryHighlighterComponentImpl</implementation-class>
+        </component>
+    </application-components>
+
+    <project-components>
+        <!-- Graph Database support - data sources -->
+        <component>
+            <interface-class>com.neueda.jetbrains.plugin.graphdb.jetbrains.component.datasource.DataSourcesComponent</interface-class>
+            <implementation-class>com.neueda.jetbrains.plugin.graphdb.jetbrains.component.datasource.DataSourcesComponent</implementation-class>
+            <loadForDefaultProject/>
+        </component>
+        <!-- Graph Database support - data sources metadata -->
+        <component>
+            <interface-class>com.neueda.jetbrains.plugin.graphdb.jetbrains.component.datasource.metadata.DataSourcesComponentMetadata</interface-class>
+            <implementation-class>com.neueda.jetbrains.plugin.graphdb.jetbrains.component.datasource.metadata.DataSourcesComponentMetadata</implementation-class>
+            <loadForDefaultProject/>
+        </component>
+    </project-components>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <!-- Graph database support -->
+        <toolWindow id="Graph Database Console"
+                    anchor="bottom"
+                    secondary="false"
+                    factoryClass="com.neueda.jetbrains.plugin.graphdb.jetbrains.ui.console.ConsoleToolWindow"
+                    icon="GraphIcons.Window.GRAPH"/>
+        <toolWindow id="Graph Database"
+                    anchor="right"
+                    secondary="false"
+                    factoryClass="com.neueda.jetbrains.plugin.graphdb.jetbrains.ui.datasource.DataSourcesToolWindow"
+                    icon="GraphIcons.Window.GRAPH"/>
+        <actionPromoter implementation="com.neueda.jetbrains.plugin.graphdb.jetbrains.actions.execute.ExecuteQueryActionPromoter"/>
+        <applicationService serviceInterface="com.neueda.jetbrains.plugin.graphdb.visualization.services.LookAndFeelService"
+                            serviceImplementation="com.neueda.jetbrains.plugin.graphdb.jetbrains.services.IdeaLookAndFeelService"/>
+        <applicationService serviceInterface="com.neueda.jetbrains.plugin.graphdb.jetbrains.database.DatabaseManagerService"
+                            serviceImplementation="com.neueda.jetbrains.plugin.graphdb.jetbrains.database.DatabaseManagerServiceImpl"/>
+        <applicationService
+                serviceInterface="com.neueda.jetbrains.plugin.graphdb.jetbrains.services.ExecutorService"
+                serviceImplementation="com.neueda.jetbrains.plugin.graphdb.jetbrains.services.ExecutorServiceImpl"/>
+        <projectService serviceInterface="com.neueda.jetbrains.plugin.graphdb.jetbrains.ui.console.GraphConsoleView"
+                        serviceImplementation="com.neueda.jetbrains.plugin.graphdb.jetbrains.ui.console.GraphConsoleView"/>
+        <projectService serviceInterface="com.neueda.jetbrains.plugin.graphdb.jetbrains.ui.datasource.DataSourcesView"
+                        serviceImplementation="com.neueda.jetbrains.plugin.graphdb.jetbrains.ui.datasource.DataSourcesView"/>
+        <projectService serviceInterface="com.neueda.jetbrains.plugin.graphdb.jetbrains.ui.console.params.ParametersService"
+                        serviceImplementation="com.neueda.jetbrains.plugin.graphdb.jetbrains.ui.console.params.ParametersService"/>
+        <scratch.rootType implementation="com.neueda.jetbrains.plugin.graphdb.jetbrains.ui.datasource.interactions.GraphDbEditorsConsoleRootType"/>
+        <scratch.rootType implementation="com.neueda.jetbrains.plugin.graphdb.jetbrains.ui.console.params.ParameterRootType"/>
+        <applicationConfigurable groupId="tools"
+                                 instance="com.neueda.jetbrains.plugin.graphdb.jetbrains.configuration.GraphDatabaseSupportConfiguration"/>
+        <!-- Update notification -->
+        <postStartupActivity implementation="com.neueda.jetbrains.plugin.graphdb.jetbrains.component.updater.PluginUpdateActivity" />
+        <!-- Cypher -->
+        <fileTypeFactory implementation="com.neueda.jetbrains.plugin.graphdb.language.cypher.file.CypherFileTypeFactory"/>
+        <lang.parserDefinition
+                language="Cypher" implementationClass="com.neueda.jetbrains.plugin.graphdb.language.cypher.CypherParserDefinition"/>
+        <lang.syntaxHighlighterFactory
+                language="Cypher" implementationClass="com.neueda.jetbrains.plugin.graphdb.language.cypher.highlight.CypherSyntaxHighlighterFactory"/>
+        <annotator language="Cypher" implementationClass="com.neueda.jetbrains.plugin.graphdb.language.cypher.highlight.CypherSyntaxHighlighterAnnotator"/>
+        <lang.commenter language="Cypher" implementationClass="com.neueda.jetbrains.plugin.graphdb.language.cypher.commenter.CypherCommenter"/>
+
+        <colorSettingsPage implementation="com.neueda.jetbrains.plugin.graphdb.language.cypher.settings.CypherColorSettingsPage"/>
+
+        <completion.contributor language="Cypher" implementationClass="com.neueda.jetbrains.plugin.graphdb.language.cypher.completion.CypherCompletionContributor"/>
+        <psi.referenceContributor implementation="com.neueda.jetbrains.plugin.graphdb.language.cypher.references.CypherReferenceContributor"/>
+        <lang.refactoringSupport language="Cypher" implementationClass="com.neueda.jetbrains.plugin.graphdb.language.cypher.references.CypherRefactoringSupportProvider"/>
+        <lang.braceMatcher language="Cypher" implementationClass="com.neueda.jetbrains.plugin.graphdb.language.cypher.lang.CypherBraceMatcher"/>
+        <renameInputValidator implementation="com.neueda.jetbrains.plugin.graphdb.language.cypher.references.CypherRenameInputValidator"/>
+        <lang.namesValidator language="Cypher" implementationClass="com.neueda.jetbrains.plugin.graphdb.language.cypher.lang.CypherNameValidator"/>
+        <spellchecker.support language="Cypher" implementationClass="com.neueda.jetbrains.plugin.graphdb.language.cypher.lang.CypherSpellcheckingStrategy"/>
+        <projectService serviceInterface="com.neueda.jetbrains.plugin.graphdb.language.cypher.completion.metadata.CypherMetadataProviderService"
+                        serviceImplementation="com.neueda.jetbrains.plugin.graphdb.language.cypher.completion.metadata.CypherMetadataProviderServiceImpl"/>
+        <lang.documentationProvider language="Cypher" implementationClass="com.neueda.jetbrains.plugin.graphdb.language.cypher.documentation.CypherDocumentationProvider"/>
+
+        <localInspection language="Cypher" displayName="Cypher EXPLAIN warning inspection" groupPath="Cypher"
+                         groupName="General" enabledByDefault="true" level="WARNING"
+                         implementationClass="com.neueda.jetbrains.plugin.graphdb.jetbrains.inspection.CypherExplainWarningInspection"/>
+        <localInspection language="Cypher" displayName="Function call inspection" groupPath="Cypher"
+                         groupName="General" enabledByDefault="true" level="ERROR"
+                         implementationClass="com.neueda.jetbrains.plugin.graphdb.language.cypher.inspections.CypherFunctionCallInspection"/>
+
+        <codeInsight.parameterInfo language="Cypher" implementationClass="com.neueda.jetbrains.plugin.graphdb.language.cypher.editor.CypherParameterInfoHandler"/>
+
+        <typedHandler implementation="com.neueda.jetbrains.plugin.graphdb.language.cypher.editor.CypherTypedHandlerDelegate" />
+
+        <codeStyleSettingsProvider implementation="com.neueda.jetbrains.plugin.graphdb.jetbrains.formatter.CypherCodeStyleSettingsProvider"/>
+        <langCodeStyleSettingsProvider implementation="com.neueda.jetbrains.plugin.graphdb.jetbrains.formatter.CypherLanguageCodeStyleSettingsProvider"/>
+
+        <lang.formatter language="Cypher" implementationClass="com.neueda.jetbrains.plugin.graphdb.language.cypher.formatter.CypherFormattingModelBuilder"/>
+        <preFormatProcessor implementation="com.neueda.jetbrains.plugin.graphdb.language.cypher.formatter.CypherPreFormatter" />
+        <codeInsight.lineMarkerProvider language="Cypher" implementationClass="com.neueda.jetbrains.plugin.graphdb.jetbrains.component.linemarker.CypherLineMarkerProvider"/>
+    </extensions>
+
+    <actions>
+        <!-- Graph Database support -->
+        <group id="GraphDatabaseActionGroup"
+               text="Graph Database" description="Execute graph database queries"
+               icon="GraphIcons.Window.GRAPH" popup="true">
+
+            <action id="GraphDatabaseActionGroup.ExecuteQuery"
+                    class="com.neueda.jetbrains.plugin.graphdb.jetbrains.actions.execute.ExecuteQueryAction"
+                    text="Execute Query"
+                    icon="AllIcons.RunConfigurations.TestState.Run"
+                    description="Execute query">
+                <keyboard-shortcut first-keystroke="ctrl ENTER"
+                                   keymap="$default"/>
+            </action>
+            <action id="GraphDatabaseActionGroup.ExplainQuery"
+                    class="com.neueda.jetbrains.plugin.graphdb.jetbrains.actions.execute.ExplainQueryAction"
+                    text="Explain Query"
+                    icon="AllIcons.RunConfigurations.TestState.Run"
+                    description="Explain query">
+            </action>
+            <action id="GraphDatabaseActionGroup.ProfileQuery"
+                    class="com.neueda.jetbrains.plugin.graphdb.jetbrains.actions.execute.ProfileQueryAction"
+                    text="Profile Query"
+                    icon="AllIcons.RunConfigurations.TestState.Run"
+                    description="Profile query">
+            </action>
+            <action id="GraphDatabaseActionGroup.TranslateQuery"
+                    class="com.neueda.jetbrains.plugin.graphdb.jetbrains.actions.execute.TranslateQueryAction"
+                    text="Translate Query to Gremlin..."
+                    icon="GraphIcons.Database.OPENCYPHER"
+                    description="Profile query">
+            </action>
+            <add-to-group group-id="EditorPopupMenu"/>
+        </group>
+
+        <group id="GraphDatabaseConsoleToolWindowActions"
+               text="Graph Database Console Tool Window Actions">
+
+            <action id="GraphDatabaseConsoleToolWindowActions.ExecuteQuery"
+                    class="com.neueda.jetbrains.plugin.graphdb.jetbrains.actions.execute.ExecuteQueryAction"
+                    text="Execute Query"
+                    icon="AllIcons.Toolwindows.ToolWindowRun"
+                    description="Execute query">
+            </action>
+            <action id="GraphDatabaseConsoleToolWindowActions.CleanCanvas"
+                    class="com.neueda.jetbrains.plugin.graphdb.jetbrains.actions.ui.console.CleanCanvasAction"
+                    text="Clean Canvas"
+                    icon="AllIcons.Actions.Refresh"
+                    description="Clean canvas">
+            </action>
+            <action id="GraphDatabaseConsoleToolWindowActions.CopyQueryOutput"
+                    class="com.neueda.jetbrains.plugin.graphdb.jetbrains.actions.ui.console.CopyQueryOutputAction"
+                    text="Copy Query Result to Clipboard"
+                    icon="AllIcons.Actions.Copy"
+                    description="Copy query result to clipboard">
+            </action>
+        </group>
+
+        <group id="GraphDatabaseFileActions"
+               text="Graph Database File Actions" description="Graph database file actions"
+               icon="GraphIcons.Window.GRAPH" popup="true">
+            <action id="GraphDatabaseFileActions.ExecuteAll"
+                    class="com.neueda.jetbrains.plugin.graphdb.jetbrains.actions.execute.ExecuteAllAction"
+                    text="Execute All"
+                    icon="AllIcons.RunConfigurations.TestState.Run">
+            </action>
+            <add-to-group group-id="ProjectViewPopupMenu"/>
+        </group>
+    </actions>
+</idea-plugin>

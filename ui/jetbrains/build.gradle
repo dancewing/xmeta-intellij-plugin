@@ -1,0 +1,35 @@
+apply plugin: "org.jetbrains.intellij"
+
+intellij {
+    version intellijSdkVersion
+    instrumentCode = true
+    plugins 'java'
+}
+
+dependencies {
+    compile project(":platform")
+
+    compile project(':language:cypher')
+    compile project(':database:neo4j')
+    compile project(':database:opencypher')
+    annotationProcessor("org.apache.tinkerpop:gremlin-core:$tinkerpopVersion")
+
+    compile project(':ui:visualization')
+
+    compile("com.brsanthu:google-analytics-java:$versionGoogleAnalytics") {
+        exclude group: "org.slf4j", module: "slf4j-api"
+        exclude group: "org.slf4j", module: "jcl-over-slf4j"
+    }
+
+    compile("com.fasterxml.jackson.core:jackson-core:$versionJacksonMapper")
+    compile("com.fasterxml.jackson.core:jackson-databind:$versionJacksonMapper")
+
+    testCompile project(':testing:common')
+
+    testCompile "org.apache.tinkerpop:tinkergraph-gremlin:$tinkerpopVersion"
+    testAnnotationProcessor("org.apache.tinkerpop:gremlin-core:$tinkerpopVersion")
+    testCompile "junit:junit:$versionJunit"
+    testCompile "org.assertj:assertj-core:$versionAssertj"
+    testCompile "org.mockito:mockito-core:$versionMockito"
+}
+

@@ -1,0 +1,18 @@
+apply plugin: "org.jetbrains.intellij"
+
+intellij {
+    version intellijSdkVersion
+    instrumentCode = true
+    plugins 'java'
+}
+
+dependencies {
+    compile "de.sciss:prefuse-core:$versionPrefuse"
+
+    compile project(":platform")
+    compile project(':database:api')
+
+    testCompile "org.mockito:mockito-core:$versionMockito"
+    testCompile "org.assertj:assertj-core:$versionAssertj"
+    testCompile "de.sciss:prefuse-demos:$versionPrefuse"
+}
