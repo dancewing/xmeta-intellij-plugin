@@ -10,7 +10,7 @@ dependencies {
     compile "de.sciss:prefuse-core:$versionPrefuse"
 
     compile project(":platform")
-    compile project(':database:api')
+    compile project(':metadata:api')
 
     testCompile "org.mockito:mockito-core:$versionMockito"
     testCompile "org.assertj:assertj-core:$versionAssertj"

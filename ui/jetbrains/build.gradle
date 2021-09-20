@@ -10,8 +10,8 @@ dependencies {
     compile project(":platform")
 
    // compile project(':language:cypher')
-    compile project(':database:neo4j')
-    compile project(':database:opencypher')
+    compile project(':metadata:neo4j')
+    compile project(':metadata:opencypher')
     annotationProcessor("org.apache.tinkerpop:gremlin-core:$tinkerpopVersion")
 
     compile project(':ui:visualization')

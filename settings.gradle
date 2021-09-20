@@ -1,12 +1,9 @@
-// Languages
-//include 'language'
-//include 'language:cypher'
 
 // Database adaptors
-include 'database'
-include 'database:api'
-include 'database:neo4j'
-include 'database:opencypher'
+include 'metadata'
+include 'metadata:api'
+include 'metadata:neo4j'
+include 'metadata:opencypher'
 
 // UI
 include 'ui'
@@ -16,16 +13,4 @@ include 'ui:jetbrains'
 // Plugin
 include 'intellij-support-plugin'
 include 'platform'
-
-// Testing
-//include 'testing'
-//include 'testing:common'
-//include 'testing:manual'
-//include 'testing:database'
-//include 'testing:database:neo4j-common'
-//include 'testing:database:neo4j-3.4'
-//include 'testing:database:neo4j-3.5'
-//include 'testing:database:neo4j-4.0'
-//include 'testing:integration-neo4j'
-//include 'testing:integration-tinkerpop'
 
