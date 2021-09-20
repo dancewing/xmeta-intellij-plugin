@@ -1,0 +1,11 @@
+apply plugin: "org.jetbrains.intellij"
+
+intellij {
+    version intellijSdkVersion
+    instrumentCode = true
+}
+
+dependencies {
+    compile project(':metadata:api')
+    compileOnly("log4j:log4j:1.2.17")
+}

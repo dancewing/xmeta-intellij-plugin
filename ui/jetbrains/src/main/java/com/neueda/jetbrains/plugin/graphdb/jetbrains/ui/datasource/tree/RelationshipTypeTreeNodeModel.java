@@ -1,15 +1,16 @@
 package com.neueda.jetbrains.plugin.graphdb.jetbrains.ui.datasource.tree;
 
+import com.neueda.jetbrains.plugin.graphdb.database.api.data.GraphRelationship;
 import com.neueda.jetbrains.plugin.graphdb.jetbrains.component.datasource.state.DataSourceApi;
 
 import java.util.Optional;
 
-public class RelationshipTypeTreeNodeModel extends MetadataTreeNodeModel {
+public class RelationshipTypeTreeNodeModel extends MetadataTreeNodeModel<GraphRelationship> {
 
     private static final String NAME_WITH_COUNT = "%s (%d)";
     private Long count;
 
-    public RelationshipTypeTreeNodeModel(Neo4jTreeNodeType type, DataSourceApi dataSourceApi, String value, Long count) {
+    public RelationshipTypeTreeNodeModel(Neo4jTreeNodeType type, DataSourceApi dataSourceApi, GraphRelationship value, Long count) {
         super(type, dataSourceApi, value);
         this.count = count;
     }

@@ -88,7 +88,7 @@ public final class UiHelper {
         } else {
             treeRoot.add(listToTreeNode(graphEntity.getTypesName(), graphEntity.getTypes(), dataSourceApi, graphEntity));
         }
-        treeRoot.add(mapToTreeNode(PROPERTIES, graphEntity.getPropertyContainer().getProperties(), dataSourceApi, graphEntity));
+        treeRoot.add(mapToTreeNode(PROPERTIES, graphEntity.getProperties(), dataSourceApi, graphEntity));
     }
 
     private static PatchedDefaultMutableTreeNode pathToTreeNode(String key, GraphPath path, DataSourceApi dataSourceApi, Object rootObject) {

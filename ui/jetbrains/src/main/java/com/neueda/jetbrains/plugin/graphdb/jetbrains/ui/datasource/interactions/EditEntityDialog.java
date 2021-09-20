@@ -2,14 +2,13 @@ package com.neueda.jetbrains.plugin.graphdb.jetbrains.ui.datasource.interactions
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.base.Strings;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.util.Disposer;
 import com.neueda.jetbrains.plugin.graphdb.database.api.data.GraphEntity;
+import com.neueda.jetbrains.plugin.graphdb.database.api.data.GraphField;
 import com.neueda.jetbrains.plugin.graphdb.database.api.data.GraphNode;
-import com.neueda.jetbrains.plugin.graphdb.database.api.data.GraphPropertyContainer;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
@@ -19,14 +18,12 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
-import java.util.AbstractMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 import static java.util.stream.Collectors.toList;
-import static java.util.stream.Collectors.toMap;
 
 public class EditEntityDialog extends DialogWrapper {
 
@@ -82,7 +79,7 @@ public class EditEntityDialog extends DialogWrapper {
 
         propertyContainer.setLayout(new BoxLayout(propertyContainer, BoxLayout.Y_AXIS));
         if (!isCreateMode) {
-            node.getPropertyContainer().getProperties()
+            node.getProperties()
                     .forEach((key, value) ->
                             propertyContainer.add(createRemovablePairInputs(key, value.toString(), propertyContainer)));
         }
@@ -189,17 +186,6 @@ public class EditEntityDialog extends DialogWrapper {
             }
 
             @Override
-            public GraphPropertyContainer getPropertyContainer() {
-                return () -> Stream.of(EditEntityDialog.this.propertyContainer.getComponents())
-                        .map(Container.class::cast)
-                        .filter(c -> !Strings.isNullOrEmpty(((JTextField) c.getComponent(0)).getText()))
-                        .map(cont -> new AbstractMap.SimpleEntry<>(
-                                ((JTextField) cont.getComponent(0)).getText(),
-                                readValue((JTextField) cont.getComponent(1))))
-                        .collect(toMap(Map.Entry::getKey, Map.Entry::getValue));
-            }
-
-            @Override
             public List<String> getTypes() {
                 return Stream.of(EditEntityDialog.this.labelContainer.getComponents())
                         .map(Container.class::cast)
@@ -217,6 +203,36 @@ public class EditEntityDialog extends DialogWrapper {
             @Override
             public boolean isTypesSingle() {
                 return EditEntityDialog.this.node.isTypesSingle();
+            }
+
+            @Override
+            public String getName() {
+                return null;
+            }
+
+            @Override
+            public String getDisplayName() {
+                return null;
+            }
+
+            @Override
+            public String getPluralDisplayName() {
+                return null;
+            }
+
+            @Override
+            public Map<String, Object> getProperties() {
+                return null;
+            }
+
+            @Override
+            public Integer getVersionNumber() {
+                return null;
+            }
+
+            @Override
+            public List<GraphField> getFields() {
+                return null;
             }
         };
     }

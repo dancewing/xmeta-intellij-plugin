@@ -2,19 +2,15 @@ package com.neueda.jetbrains.plugin.graphdb.jetbrains.ui.datasource.interactions
 
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.ValidationInfo;
-import com.intellij.ui.EnumComboBoxModel;
 import com.intellij.ui.components.JBPasswordField;
 import com.intellij.ui.components.JBTextField;
 import com.intellij.util.ui.AsyncProcessIcon;
-import com.neueda.jetbrains.plugin.graphdb.database.opencypher.gremlin.GremlinFlavor;
 import com.neueda.jetbrains.plugin.graphdb.database.opencypher.gremlin.OpenCypherGremlinConfiguration;
 import com.neueda.jetbrains.plugin.graphdb.jetbrains.component.datasource.DataSourceType;
 import com.neueda.jetbrains.plugin.graphdb.jetbrains.component.datasource.DataSourcesComponent;
 import com.neueda.jetbrains.plugin.graphdb.jetbrains.component.datasource.state.DataSourceApi;
 import com.neueda.jetbrains.plugin.graphdb.jetbrains.ui.datasource.DataSourcesView;
-import com.neueda.jetbrains.plugin.graphdb.jetbrains.ui.datasource.interactions.DataSourceDialog;
 import org.apache.commons.lang.StringUtils;
-import org.apache.tinkerpop.gremlin.driver.ser.Serializers;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -22,8 +18,7 @@ import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.neueda.jetbrains.plugin.graphdb.jetbrains.util.Validation.*;
-import static org.apache.tinkerpop.gremlin.driver.ser.Serializers.*;
+import static com.neueda.jetbrains.plugin.graphdb.jetbrains.util.Validation.validation;
 
 public class OpenCypherGremlinDataSourceDialog extends DataSourceDialog {
 
@@ -40,13 +35,10 @@ public class OpenCypherGremlinDataSourceDialog extends DataSourceDialog {
     private JBTextField dataSourceNameField;
     private JBTextField hostField;
     private JBTextField userField;
-    private JComboBox<GremlinFlavor> flavorField;
-    private JComboBox<Serializers> serializerField;
     private JBPasswordField passwordField;
     private JBTextField portField;
     private JButton testConnectionButton;
     private JCheckBox useSSLCheckBox;
-    private JCheckBox optimizeTranslatedQueriesCheckBox;
     private JPanel loadingPanel;
     private AsyncProcessIcon loadingIcon;
 
@@ -58,15 +50,8 @@ public class OpenCypherGremlinDataSourceDialog extends DataSourceDialog {
     public OpenCypherGremlinDataSourceDialog(Project project, DataSourcesView dataSourcesView) {
         super(project, dataSourcesView);
         loadingPanel.setVisible(false);
-        flavorField.setModel(new EnumComboBoxModel<>(GremlinFlavor.class));
-        serializerField.setModel(new EnumComboBoxModel<>(Serializers.class));
-        serializerField.setSelectedItem(GRAPHSON_V3D0);
         dataSourcesComponent = dataSourcesView.getComponent();
         testConnectionButton.addActionListener(e -> this.validationPopup());
-        optimizeTranslatedQueriesCheckBox.addActionListener(e -> {
-            // LandingPageAction.open();
-            optimizeTranslatedQueriesCheckBox.setSelected(false);
-        });
         initValidation();
     }
 
@@ -86,27 +71,6 @@ public class OpenCypherGremlinDataSourceDialog extends DataSourceDialog {
         }
         if (!StringUtils.isNumeric(portField.getText())) {
             validations.add(validation("Port must be numeric", portField));
-        }
-
-        if (hostField.getText().endsWith("cosmos.azure.com") || GremlinFlavor.COSMOSDB.equals(flavorField.getSelectedItem())) {
-            if (!userField.getText().matches(COSMOS_DB_USER_REGEX)) {
-                validations.add(warning(COSMOS_DB_USER_ERROR, userField));
-            }
-            if (!useSSLCheckBox.isSelected()) {
-                validations.add(warning("SSL is recommended for Cosmos DB", useSSLCheckBox));
-            }
-
-            if (!"443".equals(portField.getText())) {
-                validations.add(warning("443 is recommended for Cosmos DB", portField));
-            }
-
-            if (!GRAPHSON_V2D0.equals(serializerField.getSelectedItem())) {
-                validations.add(warning("GRAPHSON_V2D0 is recommended for Cosmos DB", serializerField));
-            }
-
-            if (!GremlinFlavor.COSMOSDB.equals(flavorField.getSelectedItem())) {
-                validations.add(warning("Cosmos DB flavor is recommended for Cosmos DB", flavorField));
-            }
         }
 
         extractData();
@@ -131,8 +95,6 @@ public class OpenCypherGremlinDataSourceDialog extends DataSourceDialog {
             portField.setText(config.getPort().toString());
             userField.setText(config.getUser());
             passwordField.setText(config.getPassword());
-            flavorField.setSelectedItem(config.getFlavor());
-            serializerField.setSelectedItem(config.getSerializer());
             useSSLCheckBox.setSelected(config.getSSL());
         }
         return content;
@@ -170,8 +132,6 @@ public class OpenCypherGremlinDataSourceDialog extends DataSourceDialog {
         configuration.setPort(portField.getText());
         configuration.setUser(userField.getText());
         configuration.setPassword(String.valueOf(passwordField.getPassword()));
-        configuration.setFlavor((GremlinFlavor) flavorField.getSelectedItem());
-        configuration.setSerializer((Serializers) serializerField.getSelectedItem());
         configuration.setSSL(useSSLCheckBox.isSelected());
     }
 

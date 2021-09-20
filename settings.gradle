@@ -2,8 +2,7 @@
 // Database adaptors
 include 'metadata'
 include 'metadata:api'
-include 'metadata:neo4j'
-include 'metadata:opencypher'
+include 'metadata:impl'
 
 // UI
 include 'ui'
@@ -13,4 +12,6 @@ include 'ui:jetbrains'
 // Plugin
 include 'intellij-support-plugin'
 include 'platform'
+
+include 'generator'
 

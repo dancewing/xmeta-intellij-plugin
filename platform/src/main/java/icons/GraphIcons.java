@@ -27,6 +27,9 @@ public final class GraphIcons {
         public static final Icon LABEL = AllIcons.Nodes.Class;
         public static final Icon RELATIONSHIP_TYPE = AllIcons.Vcs.Arrow_right;
         public static final Icon PROPERTY_KEY = AllIcons.Nodes.Property;
+        public static final Icon ENTITY = AllIcons.Javaee.PersistenceEntity;
+        public static final Icon WORKSPACE = AllIcons.Javaee.Home;
+        public static final Icon APP = AllIcons.RunConfigurations.Application;
         public static final Icon VARIABLE = AllIcons.Nodes.Variable;
         public static final Icon FUNCTION = AllIcons.Nodes.Function;
         public static final Icon STORED_PROCEDURE = AllIcons.Nodes.Function;

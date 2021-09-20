@@ -1,6 +1,5 @@
 package com.neueda.jetbrains.plugin.graphdb.jetbrains.configuration;
 
-import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.ui.components.JBCheckBox;

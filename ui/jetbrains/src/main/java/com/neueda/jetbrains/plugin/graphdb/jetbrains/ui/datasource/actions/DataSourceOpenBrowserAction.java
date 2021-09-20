@@ -2,7 +2,6 @@ package com.neueda.jetbrains.plugin.graphdb.jetbrains.ui.datasource.actions;
 
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.neueda.jetbrains.plugin.graphdb.database.neo4j.bolt.Neo4jBoltConfiguration;
 import com.neueda.jetbrains.plugin.graphdb.jetbrains.component.datasource.state.DataSourceApi;
 
 import javax.swing.*;
@@ -23,7 +22,7 @@ public class DataSourceOpenBrowserAction extends AnAction {
     @Override
     public void actionPerformed(AnActionEvent e) {
         try {
-            String host = dataSource.getConfiguration().get(Neo4jBoltConfiguration.HOST);
+            String host = dataSource.getConfiguration().get("host");
             openWebpage(new URI("http://" + host + ":7474"));
         } catch (IOException | URISyntaxException ex) {
             ex.printStackTrace();

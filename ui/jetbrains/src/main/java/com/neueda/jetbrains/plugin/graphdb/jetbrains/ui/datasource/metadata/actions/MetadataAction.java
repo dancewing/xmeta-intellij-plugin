@@ -2,17 +2,20 @@ package com.neueda.jetbrains.plugin.graphdb.jetbrains.ui.datasource.metadata.act
 
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.project.Project;
+import com.intellij.psi.PsiElement;
 import com.intellij.util.messages.MessageBus;
+import com.neueda.jetbrains.plugin.graphdb.database.api.data.IDNameData;
 
 import javax.swing.*;
 
 public abstract class MetadataAction extends AnAction {
 
-    private String data;
+    private IDNameData data;
     private String dataSourceUuid;
 
-    MetadataAction(String data, String dataSourceUuid, String title, String description, Icon icon) {
+    MetadataAction(IDNameData data, String dataSourceUuid, String title, String description, Icon icon) {
         super(title, description, icon);
         this.data = data;
         this.dataSourceUuid = dataSourceUuid;
@@ -24,6 +27,7 @@ public abstract class MetadataAction extends AnAction {
     public void actionPerformed(AnActionEvent e) {
         Project project = getEventProject(e);
         MessageBus messageBus = project.getMessageBus();
+        PsiElement[] psiElements = e.getData(LangDataKeys.PSI_ELEMENT_ARRAY);
 
 //        ExecuteQueryEvent executeQueryEvent = messageBus.syncPublisher(ExecuteQueryEvent.EXECUTE_QUERY_TOPIC);
 //

@@ -9,9 +9,9 @@ intellij {
 dependencies {
     compile project(":platform")
 
-   // compile project(':language:cypher')
-    compile project(':metadata:neo4j')
-    compile project(':metadata:opencypher')
+    compile project(':metadata:impl')
+    compile project(':generator')
+
     annotationProcessor("org.apache.tinkerpop:gremlin-core:$tinkerpopVersion")
 
     compile project(':ui:visualization')
@@ -20,9 +20,6 @@ dependencies {
         exclude group: "org.slf4j", module: "slf4j-api"
         exclude group: "org.slf4j", module: "jcl-over-slf4j"
     }
-
-//    compile("com.fasterxml.jackson.core:jackson-core:$versionJacksonMapper")
-//    compile("com.fasterxml.jackson.core:jackson-databind:$versionJacksonMapper")
 
     testCompile "org.apache.tinkerpop:tinkergraph-gremlin:$tinkerpopVersion"
     testAnnotationProcessor("org.apache.tinkerpop:gremlin-core:$tinkerpopVersion")

@@ -16,6 +16,9 @@ public enum Neo4jTreeNodeType implements NodeType {
     STORED_PROCEDURES,
     STORED_PROCEDURE,
     USER_FUNCTIONS,
+    WORKSPACE,
+    APP,
+    ENTITY,
     USER_FUNCTION;
 
     Neo4jTreeNodeType() {

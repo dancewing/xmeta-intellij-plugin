@@ -1,15 +1,22 @@
 package com.neueda.jetbrains.plugin.graphdb.database.api.data;
 
 import java.util.List;
+import java.util.Map;
 
-public interface GraphEntity extends NoIdGraphEntity {
+public interface GraphEntity extends NoIdGraphEntity, IDNameData {
 
-    String getId();
+    String getDisplayName();
 
-    GraphPropertyContainer getPropertyContainer();
+    String getPluralDisplayName();
+
+    Map<String, Object> getProperties();
 
     List<String> getTypes();
 
     String getTypesName();
+
+    Integer getVersionNumber();
+
+    List<GraphField> getFields();
 
 }

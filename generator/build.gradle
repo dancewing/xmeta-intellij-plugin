@@ -1,0 +1,35 @@
+apply plugin: "org.jetbrains.intellij"
+
+intellij {
+    version intellijSdkVersion
+    instrumentCode = true
+    plugins 'java'
+}
+
+dependencies {
+    compile project(':metadata:api')
+    //    implementation(kotlin("stdlib-jdk8"))
+    // https://mvnrepository.com/artifact/com.google.guava/guava
+    // implementation("com.google.guava:guava:29.0-jre")
+    // https://mvnrepository.com/artifact/org.freemarker/freemarker
+    implementation("org.freemarker:freemarker:2.3.31")
+    // https://mvnrepository.com/artifact/org.apache.velocity/velocity
+    // implementation("org.apache.velocity:velocity:1.7")
+    // https://mvnrepository.com/artifact/org.apache.velocity/velocity-engine-core
+    // implementation("org.apache.velocity:velocity-engine-core:2.2")
+    // https://mvnrepository.com/artifact/com.ibeetl/beetl
+    implementation("com.ibeetl:beetl:3.3.2.RELEASE")
+    implementation("joda-time:joda-time:2.10.10")
+
+    // implementation("com.google.code.gson:gson:2.8.5")
+    // https://mvnrepository.com/artifact/jalopy/jalopy
+    // implementation("jalopy:jalopy:1.5rc3")
+
+    testImplementation("junit:junit:4.13")
+
+    // https://mvnrepository.com/artifact/org.projectlombok/lombok
+    compileOnly("org.projectlombok:lombok:1.18.12")
+    testCompileOnly("org.projectlombok:lombok:1.18.12")
+    annotationProcessor("org.projectlombok:lombok:1.18.12")
+    testAnnotationProcessor("org.projectlombok:lombok:1.18.12")
+}

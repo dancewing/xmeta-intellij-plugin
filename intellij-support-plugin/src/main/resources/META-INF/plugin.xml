@@ -66,6 +66,8 @@
                     factoryClass="com.neueda.jetbrains.plugin.graphdb.jetbrains.ui.datasource.DataSourcesToolWindow"
                     icon="GraphIcons.Window.GRAPH"/>
 
+        <projectService serviceImplementation="com.github.houkunlin.config.ConfigService"/>
+
         <applicationService serviceInterface="com.neueda.jetbrains.plugin.graphdb.visualization.services.LookAndFeelService"
                             serviceImplementation="com.neueda.jetbrains.plugin.graphdb.jetbrains.services.IdeaLookAndFeelService"/>
         <applicationService serviceInterface="com.neueda.jetbrains.plugin.graphdb.jetbrains.database.DatabaseManagerService"
@@ -73,9 +75,12 @@
         <applicationService
                 serviceInterface="com.neueda.jetbrains.plugin.graphdb.jetbrains.services.ExecutorService"
                 serviceImplementation="com.neueda.jetbrains.plugin.graphdb.jetbrains.services.ExecutorServiceImpl"/>
+
         <projectService serviceInterface="com.neueda.jetbrains.plugin.graphdb.jetbrains.ui.datasource.DataSourcesView"
                         serviceImplementation="com.neueda.jetbrains.plugin.graphdb.jetbrains.ui.datasource.DataSourcesView"/>
+
         <scratch.rootType implementation="com.neueda.jetbrains.plugin.graphdb.jetbrains.ui.datasource.interactions.GraphDbEditorsConsoleRootType"/>
+
         <applicationConfigurable groupId="tools"
                                  instance="com.neueda.jetbrains.plugin.graphdb.jetbrains.configuration.GraphDatabaseSupportConfiguration"/>
         <!-- Update notification -->

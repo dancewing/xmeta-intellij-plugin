@@ -1,5 +1,7 @@
 package com.neueda.jetbrains.plugin.graphdb.jetbrains.ui.datasource.metadata.actions;
 
+import com.neueda.jetbrains.plugin.graphdb.database.api.data.IDNameData;
+
 import javax.swing.*;
 
 public class MetadataPropertyKeyAction extends MetadataAction {
@@ -9,7 +11,7 @@ public class MetadataPropertyKeyAction extends MetadataAction {
             + "UNION ALL MATCH ()-[r]-() WHERE EXISTS(r.%1$s) "
             + "RETURN DISTINCT \"relationship\" AS element, r.%1$s AS %1$s LIMIT 25";
 
-    MetadataPropertyKeyAction(String data, String dataSourceUuid, String title, String description, Icon icon) {
+    MetadataPropertyKeyAction(IDNameData data, String dataSourceUuid, String title, String description, Icon icon) {
         super(data, dataSourceUuid, title, description, icon);
     }
 

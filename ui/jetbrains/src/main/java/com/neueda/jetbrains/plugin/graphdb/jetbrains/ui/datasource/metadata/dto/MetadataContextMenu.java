@@ -3,27 +3,31 @@ package com.neueda.jetbrains.plugin.graphdb.jetbrains.ui.datasource.metadata.dto
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.ui.popup.ListPopup;
+import com.neueda.jetbrains.plugin.graphdb.database.api.data.IDNameData;
 import com.neueda.jetbrains.plugin.graphdb.jetbrains.component.datasource.state.DataSourceApi;
 import com.neueda.jetbrains.plugin.graphdb.jetbrains.ui.datasource.metadata.actions.MetadataActionGroup;
 import com.neueda.jetbrains.plugin.graphdb.jetbrains.ui.datasource.tree.NodeType;
+import com.neueda.jetbrains.plugin.graphdb.jetbrains.ui.datasource.tree.TreeNodeModelApi;
+
+import java.util.List;
 
 public class MetadataContextMenu implements ContextMenu     {
 
     private NodeType metadataType;
     private DataSourceApi dataSourceApi;
-    private String data;
+    private IDNameData data;
 
-    public MetadataContextMenu(NodeType metadataType, DataSourceApi dataSourceApi, String data) {
+    public MetadataContextMenu(NodeType metadataType, DataSourceApi dataSourceApi, IDNameData data) {
         this.metadataType = metadataType;
         this.dataSourceApi = dataSourceApi;
         this.data = data;
     }
 
     @Override
-    public void showPopup(DataContext dataContext) {
+    public void showPopup(DataContext dataContext, List<TreeNodeModelApi> selectedData) {
         ListPopup popup = JBPopupFactory.getInstance().createActionGroupPopup(
-                data,
-                new MetadataActionGroup(metadataType, data, dataSourceApi.getUUID()),
+                data.getName(),
+                new MetadataActionGroup(metadataType, data, dataSourceApi.getUUID(), selectedData),
                 dataContext,
                 JBPopupFactory.ActionSelectionAid.SPEEDSEARCH,
                 true
@@ -41,6 +45,6 @@ public class MetadataContextMenu implements ContextMenu     {
     }
 
     public String getData() {
-        return data;
+        return data.getName();
     }
 }

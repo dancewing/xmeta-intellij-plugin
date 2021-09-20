@@ -10,6 +10,8 @@ import javax.swing.*;
 import javax.swing.tree.TreePath;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static com.neueda.jetbrains.plugin.graphdb.jetbrains.ui.helpers.UiHelper.cast;
@@ -31,7 +33,21 @@ public class TreeMouseAdapter extends MouseAdapter {
         } else if (SwingUtilities.isRightMouseButton(e)) {
             DataContext dataContext = DataManager.getInstance().getDataContext(tree);
             contextMenuService.getContextMenu(pathForLocation)
-                    .ifPresent(dto -> dto.showPopup(dataContext));
+                    .ifPresent(dto -> dto.showPopup(dataContext, getSelectedData(tree)));
         }
+    }
+
+    private List<TreeNodeModelApi> getSelectedData(Tree tree) {
+        TreePath[] selectionPaths = tree.getSelectionPaths();
+        List<TreeNodeModelApi> selectedData = new ArrayList<>();
+        for (TreePath path : selectionPaths) {
+            if (path.getLastPathComponent() instanceof  PatchedDefaultMutableTreeNode) {
+                PatchedDefaultMutableTreeNode lastPathComponent = (PatchedDefaultMutableTreeNode)path.getLastPathComponent();
+               if ( lastPathComponent.getUserObject() instanceof TreeNodeModelApi) {
+                       selectedData.add((TreeNodeModelApi) lastPathComponent.getUserObject());
+               }
+            }
+        }
+        return selectedData;
     }
 }

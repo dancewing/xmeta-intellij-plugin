@@ -25,7 +25,7 @@ public class DisplayUtil {
     public static String getProperty(GraphNode node) {
         Optional<String> backup = Optional.empty();
         Optional<String> fuzzyMatch = Optional.empty();
-        for (Map.Entry<String, Object> entry : node.getPropertyContainer().getProperties().entrySet()) {
+        for (Map.Entry<String, Object> entry : node.getProperties().entrySet()) {
             Object valueObj = entry.getValue();
             if (valueObj instanceof String) {
                 String key = entry.getKey();
@@ -65,7 +65,7 @@ public class DisplayUtil {
     }
 
     public static String getTooltipText(GraphEntity entity) {
-        Map<String, Object> properties = entity.getPropertyContainer().getProperties();
+        Map<String, Object> properties = entity.getProperties();
         String start = "<p width=\"" + LABEL_TEXT_WIDTH + "px\"><b>";
 
         String typesRepresentation = entity.isTypesSingle() ? entity.getTypes().get(0) : entity.getTypes().toString();

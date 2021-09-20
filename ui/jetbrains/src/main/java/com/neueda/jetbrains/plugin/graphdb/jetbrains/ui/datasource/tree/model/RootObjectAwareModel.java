@@ -1,6 +1,5 @@
 package com.neueda.jetbrains.plugin.graphdb.jetbrains.ui.datasource.tree.model;
 
-import com.neueda.jetbrains.plugin.graphdb.database.api.data.NoIdGraphEntity;
 import com.neueda.jetbrains.plugin.graphdb.jetbrains.component.datasource.state.DataSourceApi;
 import com.neueda.jetbrains.plugin.graphdb.jetbrains.ui.datasource.metadata.dto.ContextMenu;
 import com.neueda.jetbrains.plugin.graphdb.jetbrains.ui.datasource.tree.TreeNodeModelApi;

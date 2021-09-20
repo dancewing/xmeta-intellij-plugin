@@ -116,24 +116,7 @@ public class DataSourcesComponentMetadata implements ProjectComponent {
         GraphDatabaseApi db = databaseManager.getDatabaseFor(dataSource);
         Neo4jBoltCypherDataSourceMetadata result = new Neo4jBoltCypherDataSourceMetadata();
 
-        GraphMetadata metadata = db.metadata();
-
-        for (Map.Entry<String, Number> entry : metadata.labels().entrySet()) {
-            result.addLabel(new Neo4jLabelMetadata(entry.getKey(), entry.getValue().longValue()));
-        }
-
-        for (Map.Entry<String, Number> entry : metadata.relationships().entrySet()) {
-            result.addRelationshipType(new Neo4jRelationshipTypeMetadata(entry.getKey(), entry.getValue().longValue()));
-        }
-
-        for (String vertexProperty : metadata.vertexProperties()) {
-            result.addPropertyKey(vertexProperty);
-        }
-
-        for (String edgeProperty : metadata.edgeProperties()) {
-            result.addPropertyKey(edgeProperty);
-        }
-
+        result.setWorkspaces(db.metadata());
         return result;
     }
 

@@ -12,17 +12,17 @@ import com.intellij.openapi.util.Disposer;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.util.ui.JBUI;
 import com.neueda.jetbrains.plugin.graphdb.database.api.GraphDatabaseApi;
-import com.neueda.jetbrains.plugin.graphdb.database.api.query.GraphQueryResult;
 import com.neueda.jetbrains.plugin.graphdb.jetbrains.component.datasource.state.DataSourceApi;
 import com.neueda.jetbrains.plugin.graphdb.jetbrains.database.DatabaseManagerService;
 import com.neueda.jetbrains.plugin.graphdb.jetbrains.services.ExecutorService;
 import com.neueda.jetbrains.plugin.graphdb.jetbrains.ui.datasource.DataSourcesView;
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
 
-import static com.neueda.jetbrains.plugin.graphdb.database.opencypher.gremlin.exceptions.ExceptionWrapper.*;
+import static com.neueda.jetbrains.plugin.graphdb.database.opencypher.gremlin.exceptions.ExceptionWrapper.getCause;
 
 public abstract class DataSourceDialog extends DialogWrapper {
     public static final int THICKNESS = 10;
@@ -92,14 +92,16 @@ public abstract class DataSourceDialog extends DialogWrapper {
         DataSourceApi dataSource = constructDataSource();
         DatabaseManagerService databaseManager = ServiceManager.getService(DatabaseManagerService.class);
         GraphDatabaseApi db = databaseManager.getDatabaseFor(dataSource);
-        GraphQueryResult result = db.execute("RETURN 'ok'");
 
-        Object value = result.getRows().get(0).getValue(result.getColumns().get(0));
-
-        if (value.equals("ok")) {
-            return "ok";
-        } else {
-            throw new RuntimeException("Unexpected test query output: " + value);
+        try {
+            String value =  db.getToken();
+            if (StringUtils.isNotEmpty(value)) {
+                return "ok";
+            } else {
+                return "Test connection failed";
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Unexpected test query output: " + e.getMessage());
         }
     }
 

@@ -1,5 +1,6 @@
 package com.neueda.jetbrains.plugin.graphdb.jetbrains.component.datasource.metadata;
 
+import com.neueda.jetbrains.plugin.graphdb.database.api.data.Workspace;
 import com.neueda.jetbrains.plugin.graphdb.database.api.query.GraphQueryResult;
 import com.neueda.jetbrains.plugin.graphdb.database.api.query.GraphQueryResultColumn;
 import com.neueda.jetbrains.plugin.graphdb.database.api.query.GraphQueryResultRow;
@@ -13,6 +14,7 @@ public class Neo4jBoltCypherDataSourceMetadata implements DataSourceMetadata {
     public static final String PROPERTY_KEYS = "propertyKeys";
     public static final String STORED_PROCEDURES = "procedures";
     public static final String USER_FUNCTIONS = "functions";
+    private List<Workspace> workspaces;
 
     private Map<String, List<Map<String, String>>> dataReceiver = new HashMap<>();
 
@@ -109,5 +111,14 @@ public class Neo4jBoltCypherDataSourceMetadata implements DataSourceMetadata {
 
     public void addConstraints(GraphQueryResult constraintsResult) {
         addDataSourceMetadata(CONSTRAINTS, constraintsResult);
+    }
+
+    public void setWorkspaces(List<Workspace> workspaces) {
+        this.workspaces = workspaces;
+    }
+
+    @Override
+    public List<Workspace> getWorkspaces() {
+        return this.workspaces;
     }
 }
