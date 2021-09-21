@@ -1,5 +1,6 @@
-package com.github.houkunlin.ui.win;
+package com.github.houkunlin.ui.win.server;
 
+import com.github.houkunlin.ui.win.IWindows;
 import com.github.houkunlin.vo.impl.RootModel;
 import com.neueda.jetbrains.plugin.graphdb.database.api.data.GraphEntity;
 import lombok.Data;

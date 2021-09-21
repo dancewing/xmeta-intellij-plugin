@@ -1,6 +1,7 @@
-package com.github.houkunlin.ui.win;
+package com.github.houkunlin.ui.win.server;
 
 import com.github.houkunlin.model.JTableModel;
+import com.github.houkunlin.ui.win.IWindows;
 import com.github.houkunlin.vo.impl.EntityImpl;
 import com.github.houkunlin.vo.impl.RootModel;
 import com.neueda.jetbrains.plugin.graphdb.database.api.data.GraphEntity;

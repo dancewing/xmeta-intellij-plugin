@@ -90,6 +90,10 @@
         <!-- Update notification -->
         <postStartupActivity implementation="com.neueda.jetbrains.plugin.graphdb.jetbrains.component.updater.PluginUpdateActivity" />
 
+        
+        <postStartupActivity
+                implementation="com.neueda.jetbrains.plugin.graphdb.jetbrains.component.startup.PluginStartupActivity" />
+
     </extensions>
 
     <actions>

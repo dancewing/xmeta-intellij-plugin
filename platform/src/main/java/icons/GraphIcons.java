@@ -13,6 +13,9 @@ public final class GraphIcons {
         public static final Icon OPENCYPHER = getIcon("/graphdb/icons/language/cypher.svg");
     }
 
+    public static final Icon Server = AllIcons.Webreferences.Server;
+    public static final Icon Client = AllIcons.General.Web;
+
     public static final class Language {
         public static final Icon CYPHER = getIcon("/graphdb/icons/language/cypher.svg");
     }

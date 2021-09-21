@@ -78,6 +78,8 @@ public abstract class AbstractTableGroupPanel<T extends AbstractGroup<E>, E> {
      */
     private boolean initFlag;
 
+
+
     /**
      * 构造方法
      *

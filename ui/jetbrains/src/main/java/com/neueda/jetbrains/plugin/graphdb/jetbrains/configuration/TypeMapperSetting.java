@@ -6,11 +6,13 @@ import com.github.houkunlin.model.TypeMapper;
 import com.github.houkunlin.model.TypeMapperGroup;
 import com.github.houkunlin.model.TypeMapperModel;
 import com.intellij.openapi.options.Configurable;
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.InputValidator;
 import com.intellij.openapi.ui.MessageDialogBuilder;
 import com.intellij.openapi.ui.Messages;
 import com.neueda.jetbrains.plugin.graphdb.jetbrains.util.CloneUtils;
 import com.neueda.jetbrains.plugin.graphdb.jetbrains.util.MsgValue;
+import com.neueda.jetbrains.plugin.graphdb.jetbrains.util.ProjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.Nullable;
 
@@ -76,9 +78,15 @@ public class TypeMapperSetting implements Configurable {
      */
     private ConfigService settings;
 
+    /**
+     * 项目对象
+     */
+    private Project project;
 
-    public TypeMapperSetting(ConfigService settings) {
-        this.settings = settings;
+    public TypeMapperSetting() {
+        this.project = ProjectUtils.getCurrProject();
+        this.settings = ConfigService.getInstance(project);
+
         this.typeMapperGroupMap = CloneUtils.cloneByJson(settings.getTypeMapperGroupMap(), new TypeReference<Map<String, TypeMapperGroup>>() {});
         this.currGroupName = settings.getCurrTypeMapperGroupName();
         //添加类型
@@ -204,6 +212,8 @@ public class TypeMapperSetting implements Configurable {
 
     @Override
     public void reset() {
+        // 配置服务实例化, 重新加载，因为数据发生变更
+        this.settings = ConfigService.getInstance(this.project);
         this.typeMapperGroupMap = CloneUtils.cloneByJson(settings.getTypeMapperGroupMap(), new TypeReference<Map<String, TypeMapperGroup>>() {});
         this.currGroupName = settings.getCurrTypeMapperGroupName();
         init();

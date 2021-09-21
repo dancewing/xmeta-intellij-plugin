@@ -28,6 +28,7 @@ import java.util.function.Consumer;
 public class PluginUtils {
     public static final String PLUGIN_ID = "com.github.houkunlin.database.generator";
     public static final String CONFIG_DIR = "config";
+    public static final String GLOBAL_CONFIG_DIR = "globalConfig";
     public static final String TEMPLATE_DIR = "templates";
     public static final String PROJECT_WORK_DIR = "generator";
     /**
@@ -38,14 +39,6 @@ public class PluginUtils {
      * 字段类型映射
      */
     private static TableColumnType[] columnTypes;
-    /**
-     * 全局的草稿文件和控制台-扩展 路径： ${PathManager.getConfigPath}/extensions/${PLUGIN_ID}
-     */
-    private static File extensionPluginDir;
-    /**
-     * 当前项目下的插件路径： ${project.dir}/${PROJECT_WORK_DIR}
-     */
-    private static File projectPluginDir;
     /**
      * 当前项目下的idea配置路径下的插件路径： ${project.dir}/.idea/${PROJECT_WORK_DIR}
      */
@@ -58,34 +51,14 @@ public class PluginUtils {
         return project;
     }
 
-    public static File getExtensionPluginDir() {
-        return extensionPluginDir;
-    }
-
-    public static File getProjectPluginDir() {
-        return projectPluginDir;
-    }
-
     public static File getProjectWorkspacePluginDir() {
         return projectWorkspacePluginDir;
     }
 
     public static void setProject(Project project) {
         PluginUtils.project = project;
-
-        extensionPluginDir = new File(PathManager.getConfigPath(), "extensions/" + PLUGIN_ID);
-        projectPluginDir = new File(project.getBasePath(), PROJECT_WORK_DIR);
         projectWorkspacePluginDir = new File(project.getBasePath(), ".idea/" + PROJECT_WORK_DIR);
-
-        mkdirs(extensionPluginDir);
-    }
-
-    public static File getExtensionPluginDirFile(String relativeFilepath) {
-        return new File(extensionPluginDir, relativeFilepath);
-    }
-
-    public static File getProjectPluginDirFile(String relativeFilepath) {
-        return new File(projectPluginDir, relativeFilepath);
+        mkdirs(projectWorkspacePluginDir);
     }
 
     public static File getProjectWorkspacePluginDirFile(String relativeFilepath) {
@@ -163,14 +136,6 @@ public class PluginUtils {
         if (file.exists()) {
             return file;
         }
-        file = new File(projectPluginDir, resource);
-        if (file.exists()) {
-            return file;
-        }
-        file = new File(extensionPluginDir, resource);
-        if (file.exists()) {
-            return file;
-        }
         return null;
     }
 
@@ -218,17 +183,18 @@ public class PluginUtils {
         });
     }
 
-    /**
-     * 刷新项目
-     */
-    public static void refreshWorkspace() {
-        ProgressManager.getInstance().run(new Task.Backgroundable(project, "刷新插件工作空间 ...") {
+    public static void refreshProject(String path) {
+        ProgressManager.getInstance().run(new Task.Backgroundable(project, "刷新项目空间 ...") {
             @Override
             public void run(@NotNull ProgressIndicator indicator) {
-                VirtualFile virtualFile = LocalFileSystem.getInstance().findFileByIoFile(PluginUtils.getExtensionPluginDir());
-                if (virtualFile != null) {
-                    virtualFile.refresh(false, true);
-                }
+                Consumer<VirtualFile> refresh = (virtualFile) -> {
+                    if (virtualFile != null) {
+                        virtualFile.refresh(false, true);
+                    }
+                };
+                refresh.accept(LocalFileSystem.getInstance().findFileByPath(Objects.requireNonNull(path)));
+                refresh.accept(project.getProjectFile());
+                refresh.accept(project.getWorkspaceFile());
             }
         });
     }

@@ -17,6 +17,10 @@ public class TemplateGroup implements AbstractGroup<Template> {
      * 分组名称
      */
     private String name;
+
+
+    private String parentFolder;
+
     /**
      * 元素对象
      */

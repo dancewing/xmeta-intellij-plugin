@@ -4,11 +4,16 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.houkunlin.config.ConfigService;
 import com.github.houkunlin.model.AbstractGroup;
+import com.github.houkunlin.util.PluginUtils;
+import com.intellij.openapi.fileChooser.FileChooserDescriptor;
+import com.intellij.openapi.fileChooser.FileChooserFactory;
+import com.intellij.openapi.fileChooser.PathChooserDialog;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.UnnamedConfigurable;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogBuilder;
+import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.MessageDialogBuilder;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.ui.ex.MultiLineLabel;
@@ -17,6 +22,7 @@ import com.neueda.jetbrains.plugin.graphdb.jetbrains.configuration.base.ListChec
 import com.neueda.jetbrains.plugin.graphdb.jetbrains.util.MsgValue;
 import com.neueda.jetbrains.plugin.graphdb.jetbrains.util.ProjectUtils;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -24,6 +30,7 @@ import org.jetbrains.annotations.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -62,6 +69,9 @@ public class MainSetting implements Configurable, Configurable.Composite {
      * 当前版本号
      */
     private JTextField emailTextField;
+    private JCheckBox customRootDirChx;
+    private JTextField customRootDir;
+    private JButton chooseButton;
 
     /**
      * 重置列表
@@ -146,9 +156,58 @@ public class MainSetting implements Configurable, Configurable.Composite {
                         Messages.showWarningDialog("至少选择一个模板组！", MsgValue.TITLE_INFO);
                         return;
                     }
+
+                    for (String selectedItem : templatePanel.getSelectedItems()) {
+                        File templateDir = PluginUtils.getProjectWorkspacePluginDirFile(PluginUtils.TEMPLATE_DIR);
+                        File destFolder = new File(customRootDir.getText(), PluginUtils.TEMPLATE_DIR + "/" + selectedItem);
+                        destFolder.mkdirs();
+                        try {
+                            FileUtils.copyDirectory(new File(templateDir, selectedItem), destFolder);
+                        } catch (IOException ex) {
+                            ex.printStackTrace();
+                        }
+                    }
+
+                    for (String selectedItem : globalConfigPanel.getSelectedItems()) {
+                        File templateDir = PluginUtils.getProjectWorkspacePluginDirFile(PluginUtils.GLOBAL_CONFIG_DIR);
+                        File destFolder = new File(customRootDir.getText(), PluginUtils.TEMPLATE_DIR + "/" + selectedItem);
+                        destFolder.mkdirs();
+                        try {
+                            FileUtils.copyDirectory(new File(templateDir, selectedItem), destFolder);
+                        } catch (IOException ex) {
+                            ex.printStackTrace();
+                        }
+                    }
+
+                    refreshConfigRootPathChanged();
+
+                    dialogWrapper.close(DialogWrapper.OK_EXIT_CODE);
                 }
             });
             dialogBuilder.show();
+        });
+
+        customRootDirChx.addChangeListener(l->{
+            if (customRootDirChx.isSelected()) {
+                customRootDir.setEnabled(true);
+                chooseButton.setEnabled(true);
+                exportBtn.setEnabled(true);
+            } else {
+                customRootDir.setEnabled(false);
+                chooseButton.setEnabled(false);
+                exportBtn.setEnabled(false);
+            }
+        });
+
+        chooseButton.addActionListener(e->{
+            FileChooserFactory chooserFactory = FileChooserFactory.getInstance();
+            FileChooserDescriptor descriptor = new FileChooserDescriptor(false, true, false, false, false, false);
+            PathChooserDialog chooser = chooserFactory.createPathChooser(descriptor, project, null);
+            chooser.choose(null, virtualFiles -> {
+                if (virtualFiles!=null && virtualFiles.size()>0) {
+                    customRootDir.setText(virtualFiles.get(0).getPath());
+                }
+            });
         });
     }
 
@@ -212,6 +271,17 @@ public class MainSetting implements Configurable, Configurable.Composite {
         authorTextField.setText(settings.getBaseSettings().getAuthor());
         encodeComboBox.setSelectedItem(settings.getBaseSettings().getEncode());
         emailTextField.setText(settings.getBaseSettings().getEmail());
+        customRootDirChx.setSelected(settings.getBaseSettings().isCustomRootDir());
+        customRootDir.setText(settings.getBaseSettings().getConfigRootPath());
+        if (settings.getBaseSettings().isCustomRootDir()) {
+            customRootDir.setEnabled(true);
+            chooseButton.setEnabled(true);
+            exportBtn.setEnabled(true);
+        } else {
+            customRootDir.setEnabled(false);
+            chooseButton.setEnabled(false);
+            exportBtn.setEnabled(false);
+        }
     }
 
     /**
@@ -233,7 +303,7 @@ public class MainSetting implements Configurable, Configurable.Composite {
     @Override
     public Configurable[] getConfigurables() {
         Configurable[] result = new Configurable[4];
-        result[0] = new TypeMapperSetting(settings);
+        result[0] = new TypeMapperSetting();
         result[1] = new TemplateSettingPanel();
         result[2] = new TableSettingPanel();
         result[3] = new GlobalConfigSettingPanel();
@@ -274,7 +344,10 @@ public class MainSetting implements Configurable, Configurable.Composite {
     @Override
     public boolean isModified() {
         return !StringUtils.equals(settings.getBaseSettings().getEncode(), (String)encodeComboBox.getSelectedItem()) ||
-                !StringUtils.equals(settings.getBaseSettings().getAuthor(), authorTextField.getText());
+                !StringUtils.equals(settings.getBaseSettings().getAuthor(), authorTextField.getText()) ||
+                settings.getBaseSettings().isCustomRootDir() != customRootDirChx.isSelected() ||
+                !StringUtils.equals(settings.getBaseSettings().getEmail(), emailTextField.getText()) ||
+                !StringUtils.equals(settings.getBaseSettings().getConfigRootPath(), customRootDir.getText());
     }
 
     /**
@@ -286,6 +359,9 @@ public class MainSetting implements Configurable, Configurable.Composite {
         settings.getBaseSettings().setAuthor(authorTextField.getText());
         settings.getBaseSettings().setEmail(emailTextField.getText());
         settings.getBaseSettings().setEncode((String) encodeComboBox.getSelectedItem());
+        settings.getBaseSettings().setCustomRootDir(customRootDirChx.isSelected());
+        settings.getBaseSettings().setConfigRootPath(customRootDir.getText());
+        refreshConfigRootPathChanged();
     }
 
     /**
@@ -294,5 +370,13 @@ public class MainSetting implements Configurable, Configurable.Composite {
     @Override
     public void reset() {
         init();
+    }
+
+    public void refreshConfigRootPathChanged() {
+        settings.setCurrTemplateGroupName(ConfigService.DEFAULT_NAME);
+        settings.setCurrColumnConfigGroupName(ConfigService.DEFAULT_NAME);
+        settings.setCurrTypeMapperGroupName(ConfigService.DEFAULT_NAME);
+        settings.setCurrGlobalConfigGroupName(ConfigService.DEFAULT_NAME);
+        allList.stream().forEach(UnnamedConfigurable::reset);
     }
 }

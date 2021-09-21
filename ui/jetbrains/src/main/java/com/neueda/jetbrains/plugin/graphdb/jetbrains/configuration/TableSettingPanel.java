@@ -6,6 +6,7 @@ import com.github.houkunlin.model.ColumnConfig;
 import com.github.houkunlin.model.ColumnConfigGroup;
 import com.github.houkunlin.model.ColumnConfigType;
 import com.intellij.openapi.options.Configurable;
+import com.intellij.openapi.project.Project;
 import com.neueda.jetbrains.plugin.graphdb.jetbrains.util.CloneUtils;
 import com.neueda.jetbrains.plugin.graphdb.jetbrains.util.ProjectUtils;
 import org.jetbrains.annotations.Nullable;
@@ -23,13 +24,17 @@ import java.util.Map;
 public class TableSettingPanel extends AbstractTableGroupPanel<ColumnConfigGroup, ColumnConfig> implements Configurable {
 
     private ConfigService settings;
+    /**
+     * 项目对象
+     */
+    private Project project;
 
     public TableSettingPanel() {
 
         super(CloneUtils.cloneByJson(ConfigService.getInstance(ProjectUtils.getCurrProject()).getColumnConfigGroupMap(),
                 new TypeReference<Map<String, ColumnConfigGroup>>() {}), ConfigService.getInstance(ProjectUtils.getCurrProject()).getCurrColumnConfigGroupName());
-        this.settings = ConfigService.getInstance(ProjectUtils.getCurrProject());
-
+        this.project = ProjectUtils.getCurrProject();
+        this.settings = ConfigService.getInstance(this.project);
     }
 
     @Override
@@ -86,6 +91,8 @@ public class TableSettingPanel extends AbstractTableGroupPanel<ColumnConfigGroup
 
     @Override
     public void reset() {
+        // 配置服务实例化, 重新加载，因为数据发生变更
+        this.settings = ConfigService.getInstance(this.project);
         this.group = CloneUtils.cloneByJson(settings.getColumnConfigGroupMap(), new TypeReference<Map<String, ColumnConfigGroup>>() {});
         this.currGroupName = settings.getCurrColumnConfigGroupName();
         init();

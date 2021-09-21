@@ -2,8 +2,10 @@ package com.neueda.jetbrains.plugin.graphdb.jetbrains.configuration;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.github.houkunlin.config.ConfigService;
+import com.github.houkunlin.model.GenMode;
 import com.github.houkunlin.model.Template;
 import com.github.houkunlin.model.TemplateGroup;
+import com.github.houkunlin.util.TemplateFileUtils;
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.fileTemplates.impl.UrlUtil;
 import com.intellij.openapi.actionSystem.*;
@@ -146,8 +148,10 @@ public class TemplateSettingPanel implements Configurable {
             @Override
             protected void copyGroup(String name) {
                 // 复制分组
-                TemplateGroup templateGroup = CloneUtils.cloneByJson(group.get(currGroupName));
+                TemplateGroup currentGroup = group.get(currGroupName);
+                TemplateGroup templateGroup = CloneUtils.cloneByJson(currentGroup);
                 templateGroup.setName(name);
+                TemplateFileUtils.copyTemplateGroup(project, currentGroup.getName(), name);
                 currGroupName = name;
                 group.put(name, templateGroup);
                 baseGroupPanel.reset(new ArrayList<>(group.keySet()), currGroupName);
@@ -174,7 +178,7 @@ public class TemplateSettingPanel implements Configurable {
             protected void addItem(String name) {
                 List<Template> templateList = group.get(currGroupName).getElementList();
                 // 新增模板
-                templateList.add(new Template(name, ""));
+                templateList.add(new Template(name ,"",  GenMode.Server));
                 baseItemSelectPanel.reset(templateList, templateList.size() - 1);
             }
 
@@ -368,6 +372,8 @@ public class TemplateSettingPanel implements Configurable {
         Template template = baseItemSelectPanel.getSelectedItem();
         if (template != null) {
             template.setCode(templateEditor.getEditor().getDocument().getText());
+            TemplateFileUtils.saveTemplateCode(project, currGroupName,
+                    template,templateEditor.getEditor().getDocument().getText());
         }
     }
 
@@ -386,7 +392,7 @@ public class TemplateSettingPanel implements Configurable {
      */
     @Override
     public void apply() {
-        settings.setTemplateGroupMap(group);
+        //settings.setTemplateGroupMap(group);
         settings.setCurrTemplateGroupName(currGroupName);
     }
 
@@ -396,10 +402,12 @@ public class TemplateSettingPanel implements Configurable {
     @Override
     public void reset() {
         // 没修改过的清空下不需要重置
-        if (!isModified()) {
-            return;
-        }
+//        if (!isModified()) {
+//            return;
+//        }
         // 防止对象篡改，需要进行克隆
+        // 配置服务实例化, 重新加载，因为数据发生变更
+        this.settings = ConfigService.getInstance(this.project);
         this.group = CloneUtils.cloneByJson(settings.getTemplateGroupMap(), new TypeReference<Map<String, TemplateGroup>>() {});
         this.currGroupName = settings.getCurrTemplateGroupName();
         this.currGroupName = findExistedGroupName(settings.getCurrTemplateGroupName());

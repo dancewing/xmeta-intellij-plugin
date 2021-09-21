@@ -1,9 +1,13 @@
-package com.github.houkunlin.ui.win;
+package com.github.houkunlin.ui.win.server;
 
+import com.github.houkunlin.config.ConfigService;
+import com.github.houkunlin.model.GenMode;
+import com.github.houkunlin.ui.win.IWindows;
 import com.github.houkunlin.ui.win.tree.CheckBoxTreeCellRenderer;
 import com.github.houkunlin.ui.win.tree.CheckBoxTreeNode;
 import com.github.houkunlin.ui.win.tree.CheckBoxTreeNodeSelectionListener;
 import com.github.houkunlin.util.PluginUtils;
+import com.intellij.openapi.project.Project;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -32,29 +36,17 @@ public class SelectTemplate implements IWindows {
      */
     private JPanel content;
 
-    public SelectTemplate() {
-        File extensionPluginPath = PluginUtils.getExtensionPluginDirFile(PluginUtils.TEMPLATE_DIR);
-        File projectPluginPath = PluginUtils.getProjectPluginDirFile(PluginUtils.TEMPLATE_DIR);
-        File projectWorkspacePluginPath = PluginUtils.getProjectWorkspacePluginDirFile(PluginUtils.TEMPLATE_DIR);
+    public SelectTemplate(Project project, GenMode genMode) {
+
+        ConfigService configService = ConfigService.getInstance(project);
+        String currTemplateGroupName = configService.getCurrTemplateGroupName();
+
+        File projectWorkspacePluginPath = new File(configService.getConfigRootPath(),
+                PluginUtils.TEMPLATE_DIR + "/" + currTemplateGroupName + "/" + genMode.name());
 
         root = new CheckBoxTreeNode("Code Template File");
 
-        CheckBoxTreeNode extTemplate = new CheckBoxTreeNode("Scratches and Consoles - Extensions");
-        getTreeData(extTemplate, extensionPluginPath.listFiles());
-
-        CheckBoxTreeNode projectTemplate = new CheckBoxTreeNode("Current Project");
-        getTreeData(projectTemplate, projectPluginPath.listFiles());
-
-        CheckBoxTreeNode projectWorkspaceTemplate = new CheckBoxTreeNode("Project - IDE");
-        getTreeData(projectWorkspaceTemplate, projectWorkspacePluginPath.listFiles());
-
-        root.add(extTemplate);
-        if (projectWorkspaceTemplate.getChildCount() != 0) {
-            root.add(projectWorkspaceTemplate);
-        }
-        if (projectTemplate.getChildCount() != 0) {
-            root.add(projectTemplate);
-        }
+        getTreeData(root, projectWorkspacePluginPath.listFiles());
 
         tree.addMouseListener(new CheckBoxTreeNodeSelectionListener());
         tree.setModel(new DefaultTreeModel(root));

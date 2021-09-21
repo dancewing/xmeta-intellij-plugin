@@ -1,10 +1,9 @@
 package com.github.houkunlin.util;
 
-import com.github.houkunlin.config.ConfigService;
 import com.github.houkunlin.config.OtherConfig;
+import com.intellij.notification.*;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
-import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.NlsContexts;
 import com.intellij.util.ExceptionUtil;
 import lombok.Data;
@@ -24,6 +23,7 @@ import java.io.InputStream;
  */
 @Data
 public class SyncResources implements Runnable {
+    private static final String NOTIFICATION_ID = "GraphDatabaseBackgroundSyncNotification";
     /**
      * 插件初始化文件
      */
@@ -35,8 +35,8 @@ public class SyncResources implements Runnable {
      */
     @Override
     public void run() {
-        checkOldVersion();
-        File initFile = PluginUtils.getExtensionPluginDirFile(INIT_FILENAME);
+       // checkOldVersion();
+        File initFile = PluginUtils.getProjectWorkspacePluginDirFile(INIT_FILENAME);
         boolean initFileExists = initFile.exists();
         if (initFileExists) {
             // 不再强制覆盖 初始化文件
@@ -55,53 +55,23 @@ public class SyncResources implements Runnable {
             ExceptionUtil.rethrow(new RuntimeException("同步插件文件到本地出现错误：\r\n" + e.getMessage(), e));
         }
 
-        PluginUtils.refreshWorkspace();
+        PluginUtils.refreshProject();
     }
 
     private void checkOldVersion() {
-        OtherConfig otherConfig = null;
-        final ConfigService configService = ConfigService.getInstance(project);
-        if (configService != null) {
-            otherConfig = configService.getOtherConfig();
-            if (!otherConfig.isShowUpgradeMoveTip()) {
-                return;
-            }
-        }
 
-        final File projectPluginDir = PluginUtils.getProjectPluginDir();
-        final File projectWorkspacePluginDir = PluginUtils.getProjectWorkspacePluginDir();
-        final File initFile1 = new File(projectPluginDir, INIT_FILENAME);
-        final File initFile2 = new File(projectWorkspacePluginDir, INIT_FILENAME);
-        if (initFile1.exists() && !initFile2.exists()) {
-            int dialog = Messages.showYesNoDialog(project,
-                    "在当前项目路径下发现 generator/init.properties 配置文件，请问是否需要把 generator/ 迁移到 .idea/generator/ 路径？\n\n我们建议您应该这样操作！",
-                    "插件配置迁移",
-                    Messages.getQuestionIcon(),
-                    getDoNotAskOption(otherConfig));
-            if (dialog == 0) {
-                // 当 projectWorkspacePluginDir.exists() == false 时，projectWorkspacePluginDir.listFiles() == null
-                final File[] listFiles = projectWorkspacePluginDir.listFiles();
-                if (listFiles != null && listFiles.length > 0) {
-                    // 此时 projectWorkspacePluginDir 路径一定存在，并且路径下一定存在文件
-                    Messages.showWarningDialog(".idea/generator/ 路径下存在文件，请手动把 generator/ 迁移到 .idea/generator/ 路径！", "迁移失败");
-                    return;
-                }
-                if (projectWorkspacePluginDir.exists()) {
-                    // 此时 projectWorkspacePluginDir 一定是一个空的文件夹，可以直接删除
-                    projectWorkspacePluginDir.delete();
-                }
-                if (!projectPluginDir.renameTo(projectWorkspacePluginDir)) {
-                    Messages.showWarningDialog("请手动把 generator/ 迁移到 .idea/generator/ 路径！", "迁移失败");
-                } else {
-                    if (projectPluginDir.exists()) {
-                        projectPluginDir.delete();
-                    }
-                    PluginUtils.refreshProject();
-                }
-            }
-        }
     }
 
+    private void showNotification(Project project, String title,  String message, NotificationType type) {
+        NotificationGroup group = new NotificationGroup(NOTIFICATION_ID, NotificationDisplayType.STICKY_BALLOON, true);
+        Notification notification = group.createNotification(
+                title,
+                message,
+                type,
+                null
+        );
+        Notifications.Bus.notify(notification, project);
+    }
     /**
      * 复制插件内部的代码模板到项目路径中
      *
@@ -120,7 +90,7 @@ public class SyncResources implements Runnable {
             }
             String content = IO.read(inputStream);
 
-            FileUtils.copyFile(project, PluginUtils.getExtensionPluginDirFile(filePath), content, true);
+            FileUtils.copyFile(project, PluginUtils.getProjectWorkspacePluginDirFile(filePath), content, true);
         }
     }
 

@@ -48,32 +48,14 @@ public class Generator {
         map.put("date", DateTime.now());
     }
 
-    private File getTemplateWorkspace(File templateFile) {
-        final String absolutePath = templateFile.getAbsolutePath();
-        File file = PluginUtils.getProjectWorkspacePluginDir();
-        if (absolutePath.startsWith(file.getAbsolutePath())) {
-            return file;
-        }
-        file = PluginUtils.getProjectPluginDir();
-        if (absolutePath.startsWith(file.getAbsolutePath())) {
-            return file;
-        }
-        file = PluginUtils.getExtensionPluginDir();
-        if (absolutePath.startsWith(file.getAbsolutePath())) {
-            return file;
-        }
-        throw new RuntimeException("无法找到代码模板文件在插件中的根路径：" + templateFile.getAbsolutePath());
-    }
-
     private TemplateUtils getTemplateUtils(File templateWorkspace) {
         TemplateUtils utils = templates.get(templateWorkspace);
         if (utils == null) {
-            final File templateRoot = new File(templateWorkspace, PluginUtils.TEMPLATE_DIR);
             try {
-                utils = new TemplateUtils(templateRoot);
+                utils = new TemplateUtils(templateWorkspace);
                 templates.put(templateWorkspace, utils);
             } catch (IOException e) {
-                throw new RuntimeException("创建 Root 模板处理器失败：" + templateRoot.getAbsolutePath() + "\r\n" + e.getMessage(), e);
+                throw new RuntimeException("创建 Root 模板处理器失败：" + templateWorkspace.getAbsolutePath() + "\r\n" + e.getMessage(), e);
             }
         }
         return utils;
@@ -82,7 +64,8 @@ public class Generator {
     /**
      * 执行生成代码任务
      */
-    public void generator(RootModel rootModel, List<File> templateFiles, BiConsumer<Integer, String> progress) {
+    public void generator(RootModel rootModel, List<File> templateFiles,
+                          BiConsumer<Integer, String> progress) {
         if (rootModel == null || templateFiles == null || templateFiles.isEmpty()) {
             return;
         }
@@ -94,8 +77,9 @@ public class Generator {
         for (int i = 0; i < templateFiles.size(); i++) {
             File templateFile = templateFiles.get(i);
 
-            final File templateWorkspace = getTemplateWorkspace(templateFile);
-            String templateFilename = FileUtils.relativePath(templateWorkspace, templateFile).replaceFirst(PluginUtils.TEMPLATE_DIR, "");
+            final File templateWorkspace = templateFile.getParentFile();
+//            String templateFilename = FileUtils.relativePath(templateWorkspace, templateFile).replaceFirst(PluginUtils.TEMPLATE_DIR, "");
+            String templateFilename = templateFile.getName();
             if (progress != null) {
                 progress.accept(i, templateFilename);
             }

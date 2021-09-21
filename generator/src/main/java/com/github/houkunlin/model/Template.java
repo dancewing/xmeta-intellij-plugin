@@ -1,5 +1,6 @@
 package com.github.houkunlin.model;
 
+import com.intellij.util.xmlb.annotations.Transient;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -22,5 +23,11 @@ public class Template implements Item {
     /**
      * 模板代码
      */
+    @Transient
     private String code;
+
+    /**
+     * 模版类型
+     */
+    private GenMode mode;
 }

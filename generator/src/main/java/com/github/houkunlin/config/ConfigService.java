@@ -10,13 +10,16 @@ import com.intellij.openapi.project.Project;
 import com.intellij.util.xmlb.XmlSerializerUtil;
 import com.intellij.util.xmlb.annotations.Transient;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.*;
 
 /**
  * 配置 Service
@@ -25,6 +28,7 @@ import java.util.Map;
  * @date 2020/8/18 0018 17:17
  */
 @Data
+@Slf4j
 @State(name = "com.github.houkunlin.database.generator.config.ConfigService",
         defaultStateAsResource = true,
         storages = {@Storage("database-generator-config.xml")})
@@ -36,7 +40,6 @@ public class ConfigService implements PersistentStateComponent<ConfigService> {
 
     private BaseSettings baseSettings;
     private OutputSettings outputSettings;
-    private OtherConfig otherConfig;
 
     /**
      * 当前类型映射组名
@@ -50,10 +53,6 @@ public class ConfigService implements PersistentStateComponent<ConfigService> {
      * 当前模板组名
      */
     private String currTemplateGroupName;
-    /**
-     * 模板组
-     */
-    private Map<String, TemplateGroup> templateGroupMap;
 
     /**
      * 当前全局配置组名
@@ -66,11 +65,6 @@ public class ConfigService implements PersistentStateComponent<ConfigService> {
     private String currColumnConfigGroupName;
 
     /**
-     * 全局配置组
-     */
-    private Map<String, GlobalConfigGroup> globalConfigGroupMap;
-
-    /**
      * 配置表组
      */
     private Map<String, ColumnConfigGroup> columnConfigGroupMap;
@@ -78,7 +72,6 @@ public class ConfigService implements PersistentStateComponent<ConfigService> {
     public ConfigService() {
         baseSettings = PluginUtils.getConfig(BaseSettings.class);
         outputSettings = PluginUtils.getConfig(OutputSettings.class);
-        otherConfig = new OtherConfig();
         assert baseSettings != null;
         assert outputSettings != null;
 
@@ -87,12 +80,6 @@ public class ConfigService implements PersistentStateComponent<ConfigService> {
         this.currTypeMapperGroupName = DEFAULT_NAME;
         this.currColumnConfigGroupName = DEFAULT_NAME;
         this.currGlobalConfigGroupName = DEFAULT_NAME;
-        //配置默认模板
-        if (this.templateGroupMap == null) {
-            this.templateGroupMap = new LinkedHashMap<>();
-        }
-//        this.templateGroupMap.put(DEFAULT_NAME, loadTemplateGroup(DEFAULT_NAME, "entity.java", "dao.java", "service.java", "serviceImpl.java", "controller.java", "mapper.xml", "debug.json"));
-//        this.templateGroupMap.put("MybatisPlus", loadTemplateGroup("MybatisPlus", "entity", "dao", "service", "serviceImpl", "controller"));
 
         //配置默认类型映射
         if (this.typeMapperGroupMap == null) {
@@ -128,11 +115,6 @@ public class ConfigService implements PersistentStateComponent<ConfigService> {
         columnConfigGroup.setElementList(columnConfigList);
         columnConfigGroupMap.put(DEFAULT_NAME, columnConfigGroup);
 
-        //初始化全局配置
-        if (this.globalConfigGroupMap == null) {
-            this.globalConfigGroupMap = new LinkedHashMap<>();
-        }
-//        this.globalConfigGroupMap.put(DEFAULT_NAME, loadGlobalConfigGroup(DEFAULT_NAME, "init", "define", "autoImport", "mybatisSupport"));
     }
 
     @Nullable
@@ -149,5 +131,107 @@ public class ConfigService implements PersistentStateComponent<ConfigService> {
     @Override
     public void loadState(@NotNull ConfigService state) {
         XmlSerializerUtil.copyBean(state, this);
+    }
+
+    /**
+     *
+     * @return
+     */
+    public File getConfigRootPath() {
+        if (this.getBaseSettings().isCustomRootDir()) {
+            return new File(this.getBaseSettings().getConfigRootPath());
+        } else {
+            return PluginUtils.getProjectWorkspacePluginDir();
+        }
+    }
+
+    private static GlobalConfigGroup loadGlobalConfigGroup(File parent, String groupName) {
+        GlobalConfigGroup globalConfigGroup = new GlobalConfigGroup();
+        globalConfigGroup.setName(groupName);
+        globalConfigGroup.setElementList(new ArrayList<>());
+        File root = new File(parent, groupName);
+        String rootDir = root.getAbsolutePath();
+        Collection<File> files = FileUtils.listFiles(root, new String[]{"vm"}, true);
+        files.stream().forEach(file -> {
+            String relativePath = StringUtils.substringAfter(file.getAbsolutePath(), rootDir);
+            String templateName = file.getName();
+            try {
+                String content = FileUtils.readFileToString(file, StandardCharsets.UTF_8);
+                if (StringUtils.startsWith(relativePath, "Server")) {
+                    globalConfigGroup.getElementList().add(new GlobalConfig(templateName, content));
+                } else {
+                    globalConfigGroup.getElementList().add(new GlobalConfig(templateName, content));
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        });
+        return globalConfigGroup;
+    }
+
+    private static TemplateGroup loadTemplateGroup(File parent, String groupName) {
+        TemplateGroup templateGroup = new TemplateGroup();
+        templateGroup.setName(groupName);
+        templateGroup.setElementList(new ArrayList<>());
+        File root = new File(parent, groupName);
+        String rootDir = root.getAbsolutePath();
+        Collection<File> files = FileUtils.listFiles(root, new String[]{"vm"}, true);
+        files.stream().forEach(file -> {
+            String relativePath = StringUtils.substringAfter(file.getAbsolutePath(), rootDir);
+            String templateName = file.getName();
+            try {
+                String content = FileUtils.readFileToString(file, StandardCharsets.UTF_8);
+                if (StringUtils.startsWith(relativePath, "/Server")) {
+                    templateGroup.getElementList().add(new Template(templateName, content, GenMode.Server));
+                } else {
+                    templateGroup.getElementList().add(new Template(templateName, content ,GenMode.Client));
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        });
+        return templateGroup;
+    }
+
+    /**
+     * 模板组
+     */
+    public Map<String, TemplateGroup> getTemplateGroupMap() {
+        Map<String, TemplateGroup> templateGroupMap = new HashMap<>();
+        File templateDir = new File(getConfigRootPath(), PluginUtils.TEMPLATE_DIR);
+        File[] listFiles = templateDir.listFiles();
+        if (listFiles!=null) {
+            Collection<File> files = Arrays.asList(listFiles);
+            files.stream().forEach(file -> {
+                if (file.isDirectory()) {
+                    String groupName = file.getName();
+                    TemplateGroup templateGroup = loadTemplateGroup(templateDir, groupName);
+                    templateGroupMap.put(groupName, templateGroup);
+                }
+            });
+        }
+        return templateGroupMap;
+    }
+
+    /**
+     * 全局配置组
+     */
+    public Map<String, GlobalConfigGroup> getGlobalConfigGroupMap() {
+        Map<String, GlobalConfigGroup> configGroupMap = new HashMap<>();
+        File templateDir = new File(getConfigRootPath(), PluginUtils.GLOBAL_CONFIG_DIR);
+        File[] listFiles = templateDir.listFiles();
+        if (listFiles!=null) {
+            Collection<File> files = Arrays.asList(listFiles);
+            files.stream().forEach(file -> {
+                if (file.isDirectory()) {
+                    String groupName = file.getName();
+                    GlobalConfigGroup templateGroup = loadGlobalConfigGroup(templateDir, groupName);
+                    configGroupMap.put(groupName, templateGroup);
+                }
+            });
+        }
+        return configGroupMap;
     }
 }

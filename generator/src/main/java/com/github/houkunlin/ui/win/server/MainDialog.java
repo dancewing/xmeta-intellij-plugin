@@ -1,9 +1,11 @@
-package com.github.houkunlin.ui.win;
+package com.github.houkunlin.ui.win.server;
 
 import com.github.houkunlin.config.BaseSettings;
 import com.github.houkunlin.config.ConfigService;
 import com.github.houkunlin.config.OutputSettings;
+import com.github.houkunlin.model.GenMode;
 import com.github.houkunlin.task.GeneratorTask;
+import com.github.houkunlin.ui.win.TextFieldDocumentUtil;
 import com.github.houkunlin.util.Generator;
 import com.github.houkunlin.util.PluginUtils;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
@@ -115,7 +117,7 @@ public class MainDialog extends DialogWrapper {
         this.baseSettings = configService.getBaseSettings();
         baseSetting = new BaseSetting(outputSettings, baseSettings);
         packageSetting = new PackageSetting(outputSettings);
-        selectTemplate = new SelectTemplate();
+        selectTemplate = new SelectTemplate(project, GenMode.Server);
         tableSetting = new TableSetting(psiElements);
         tableTabbedPane.addTab("基础配置", baseSetting.getContent());
         tableTabbedPane.addTab("包路径配置", packageSetting.getContent());

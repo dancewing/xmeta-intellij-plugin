@@ -24,6 +24,10 @@ public class BaseSettings {
      */
     private String encode;
 
+    private boolean customRootDir = false;
+
+    private String configRootPath = "";
+
     /**
      * 覆盖Java文件
      */

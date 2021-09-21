@@ -1,8 +1,10 @@
 package com.neueda.jetbrains.plugin.graphdb.jetbrains.configuration.base;
 
+import com.github.houkunlin.config.ConfigService;
 import com.intellij.openapi.ui.VerticalFlowLayout;
 import com.intellij.ui.components.JBCheckBox;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -53,6 +55,10 @@ public class ListCheckboxPanel extends JPanel {
         checkBoxList = new ArrayList<>(items.size());
         for (String item : items) {
             JBCheckBox checkBox = new JBCheckBox(item);
+            if (StringUtils.equals(ConfigService.DEFAULT_NAME, item)) {
+                checkBox.setSelected(true);
+                checkBox.setEnabled(false);
+            }
             checkBoxList.add(checkBox);
             add(checkBox);
         }

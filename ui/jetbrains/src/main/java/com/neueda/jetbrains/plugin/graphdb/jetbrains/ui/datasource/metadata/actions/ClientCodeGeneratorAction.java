@@ -23,11 +23,11 @@ import java.util.List;
  * @author HouKunLin
  * @date 2020/4/6 0006 18:08
  */
-public class ServerCodeGeneratorAction extends AnAction {
+public class ClientCodeGeneratorAction extends AnAction {
 
     private final List<GraphEntity> entities;
 
-    public ServerCodeGeneratorAction(@Nullable List<GraphEntity> entities, @Nullable @NlsActions.ActionText String text,
+    public ClientCodeGeneratorAction(@Nullable List<GraphEntity> entities, @Nullable @NlsActions.ActionText String text,
                                      @Nullable @NlsActions.ActionDescription String description, @Nullable Icon icon) {
         super(text, description, icon);
         this.entities = entities;

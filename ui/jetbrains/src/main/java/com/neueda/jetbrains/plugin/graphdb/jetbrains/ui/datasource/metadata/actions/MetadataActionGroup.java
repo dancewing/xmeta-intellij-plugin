@@ -9,6 +9,7 @@ import com.neueda.jetbrains.plugin.graphdb.jetbrains.ui.datasource.tree.EntityTy
 import com.neueda.jetbrains.plugin.graphdb.jetbrains.ui.datasource.tree.Neo4jTreeNodeType;
 import com.neueda.jetbrains.plugin.graphdb.jetbrains.ui.datasource.tree.NodeType;
 import com.neueda.jetbrains.plugin.graphdb.jetbrains.ui.datasource.tree.TreeNodeModelApi;
+import icons.GraphIcons;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -37,12 +38,9 @@ public class MetadataActionGroup extends ActionGroup {
         if (type == Neo4jTreeNodeType.APP) {
             return new AnAction[]{new MetadataRelationshipAction(data, dataSourceUuid, "Query this relationship", "", NEO4J)};
         } else if (type == Neo4jTreeNodeType.ENTITY) {
-
             return new AnAction[]{
-                    new ServerCodeGeneratorAction(getEntities(), "Nodes with this label", "", NEO4J),
-                    new MetadataLabelAction(data, dataSourceUuid, "Nodes with this label", "", NEO4J),
-                    new MetadataLabelFromAction(data, dataSourceUuid, "Outgoing relationships", "", NEO4J),
-                    new MetadataLabelToAction(data, dataSourceUuid, "Incoming relationships", "", NEO4J)
+                    new ServerCodeGeneratorAction(getEntities(), "Generate Server Code", "", GraphIcons.Server),
+                    new ClientCodeGeneratorAction(getEntities(), "Generate Client Code", "", GraphIcons.Client),
             };
         } else if (type == Neo4jTreeNodeType.PROPERTY_KEY) {
             return new AnAction[]{new MetadataPropertyKeyAction(data, dataSourceUuid, "Query this property", "", NEO4J)};

@@ -243,7 +243,7 @@ public class GlobalConfigSettingPanel implements Configurable {
      */
     @Override
     public void apply() {
-        settings.setGlobalConfigGroupMap(group);
+        //settings.setGlobalConfigGroupMap(group);
         settings.setCurrGlobalConfigGroupName(currGroupName);
     }
 
@@ -253,10 +253,12 @@ public class GlobalConfigSettingPanel implements Configurable {
     @Override
     public void reset() {
         // 没修改过的清空下不需要重置
-        if (!isModified()) {
-            return;
-        }
+//        if (!isModified()) {
+//            return;
+//        }
         // 防止对象篡改，需要进行克隆
+        // 配置服务实例化, 重新加载，因为数据发生变更
+        this.settings = ConfigService.getInstance(this.project);
         this.group = CloneUtils.cloneByJson(settings.getGlobalConfigGroupMap(), new TypeReference<Map<String, GlobalConfigGroup>>() {});
         this.currGroupName = settings.getCurrGlobalConfigGroupName();
         if (baseGroupPanel == null) {

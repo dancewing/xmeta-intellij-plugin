@@ -1,5 +1,6 @@
 package com.github.houkunlin.task;
 
+import com.github.houkunlin.config.ConfigService;
 import com.github.houkunlin.util.FileUtils;
 import com.github.houkunlin.util.Generator;
 import com.github.houkunlin.util.PluginUtils;
@@ -46,6 +47,7 @@ public class GeneratorTask extends Task.Modal {
     }
 
     public void generator(ProgressIndicator indicator) {
+
         indicator.setText("正在生成代码 ......");
 
         indicator.setFraction(0.0);

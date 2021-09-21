@@ -1,6 +1,8 @@
-package com.github.houkunlin.ui.win;
+package com.github.houkunlin.ui.win.server;
 
 import com.github.houkunlin.config.OutputSettings;
+import com.github.houkunlin.ui.win.IWindows;
+import com.github.houkunlin.ui.win.TextFieldDocumentUtil;
 import com.github.houkunlin.util.PluginUtils;
 import com.google.common.collect.Maps;
 import com.intellij.ide.highlighter.JavaFileType;
