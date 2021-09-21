@@ -1,0 +1,7 @@
+package io.xmeta.impl.exceptions;
+
+public class OpenCypherGremlinException extends RuntimeException {
+    public OpenCypherGremlinException(String message, Throwable cause) {
+        super(message, cause);
+    }
+}

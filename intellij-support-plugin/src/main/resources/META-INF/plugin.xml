@@ -1,5 +1,5 @@
 <idea-plugin version="2">
-    <id>com.neueda4j.intellij.plugin.cypher</id>
+    <id>io.xmeta.intellij.plugin</id>
     <name>Graph Database support</name>
     <!-- Should be automatically replaced by gradle build -->
     <version>9.9.9</version>
@@ -38,22 +38,22 @@
     <application-components>
         <!-- OutputSettings -->
         <component>
-            <interface-class>com.neueda.jetbrains.plugin.graphdb.jetbrains.component.settings.SettingsComponent</interface-class>
-            <implementation-class>com.neueda.jetbrains.plugin.graphdb.jetbrains.component.settings.SettingsComponentImpl</implementation-class>
+            <interface-class>io.xmeta.jetbrains.component.settings.SettingsComponent</interface-class>
+            <implementation-class>io.xmeta.jetbrains.component.settings.SettingsComponentImpl</implementation-class>
         </component>
     </application-components>
 
     <project-components>
         <!-- Graph Database support - data sources -->
 <!--        <component>-->
-<!--            <interface-class>com.neueda.jetbrains.plugin.graphdb.jetbrains.configuration.DataSourcesSettings</interface-class>-->
-<!--            <implementation-class>com.neueda.jetbrains.plugin.graphdb.jetbrains.configuration.DataSourcesSettings</implementation-class>-->
+<!--            <interface-class>DataSourcesSettings</interface-class>-->
+<!--            <implementation-class>DataSourcesSettings</implementation-class>-->
 <!--            <loadForDefaultProject/>-->
 <!--        </component>-->
         <!-- Graph Database support - data sources metadata -->
         <component>
-            <interface-class>com.neueda.jetbrains.plugin.graphdb.jetbrains.component.datasource.metadata.DataSourcesComponentMetadata</interface-class>
-            <implementation-class>com.neueda.jetbrains.plugin.graphdb.jetbrains.component.datasource.metadata.DataSourcesComponentMetadata</implementation-class>
+            <interface-class>io.xmeta.jetbrains.component.datasource.metadata.DataSourcesComponentMetadata</interface-class>
+            <implementation-class>io.xmeta.jetbrains.component.datasource.metadata.DataSourcesComponentMetadata</implementation-class>
             <loadForDefaultProject/>
         </component>
     </project-components>
@@ -63,36 +63,36 @@
         <toolWindow id="XMeta"
                     anchor="right"
                     secondary="false"
-                    factoryClass="com.neueda.jetbrains.plugin.graphdb.jetbrains.ui.datasource.DataSourcesToolWindow"
+                    factoryClass="io.xmeta.jetbrains.ui.datasource.DataSourcesToolWindow"
                     icon="GraphIcons.Window.GRAPH"/>
 
-        <projectService serviceImplementation="com.github.houkunlin.config.ConfigService"/>
-        <projectService serviceImplementation="com.neueda.jetbrains.plugin.graphdb.jetbrains.configuration.DataSourcesSettings"/>
+        <projectService serviceImplementation="io.xmeta.generator.config.ConfigService"/>
+        <projectService serviceImplementation="io.xmeta.jetbrains.configuration.DataSourcesSettings"/>
 
-        <applicationService serviceInterface="com.neueda.jetbrains.plugin.graphdb.visualization.services.LookAndFeelService"
-                            serviceImplementation="com.neueda.jetbrains.plugin.graphdb.jetbrains.services.IdeaLookAndFeelService"/>
-        <applicationService serviceInterface="com.neueda.jetbrains.plugin.graphdb.jetbrains.database.DatabaseManagerService"
-                            serviceImplementation="com.neueda.jetbrains.plugin.graphdb.jetbrains.database.DatabaseManagerServiceImpl"/>
+        <applicationService serviceInterface="io.xmeta.visualization.services.LookAndFeelService"
+                            serviceImplementation="io.xmeta.jetbrains.services.IdeaLookAndFeelService"/>
+        <applicationService serviceInterface="io.xmeta.jetbrains.database.DatabaseManagerService"
+                            serviceImplementation="io.xmeta.jetbrains.database.DatabaseManagerServiceImpl"/>
         <applicationService
-                serviceInterface="com.neueda.jetbrains.plugin.graphdb.jetbrains.services.ExecutorService"
-                serviceImplementation="com.neueda.jetbrains.plugin.graphdb.jetbrains.services.ExecutorServiceImpl"/>
+                serviceInterface="io.xmeta.jetbrains.services.ExecutorService"
+                serviceImplementation="io.xmeta.jetbrains.services.ExecutorServiceImpl"/>
 
-        <projectService serviceInterface="com.neueda.jetbrains.plugin.graphdb.jetbrains.ui.datasource.DataSourcesView"
-                        serviceImplementation="com.neueda.jetbrains.plugin.graphdb.jetbrains.ui.datasource.DataSourcesView"/>
+        <projectService serviceInterface="io.xmeta.jetbrains.ui.datasource.DataSourcesView"
+                        serviceImplementation="io.xmeta.jetbrains.ui.datasource.DataSourcesView"/>
 
-        <scratch.rootType implementation="com.neueda.jetbrains.plugin.graphdb.jetbrains.ui.datasource.interactions.GraphDbEditorsConsoleRootType"/>
+        <scratch.rootType implementation="io.xmeta.jetbrains.ui.datasource.interactions.GraphDbEditorsConsoleRootType"/>
 
-<!--        <applicationConfigurable instance="com.neueda.jetbrains.plugin.graphdb.jetbrains.configuration.GraphDatabaseSupportConfiguration"/>-->
+<!--        <applicationConfigurable instance="GraphDatabaseSupportConfiguration"/>-->
 
         <applicationConfigurable dynamic="true"
-                                 instance="com.neueda.jetbrains.plugin.graphdb.jetbrains.configuration.MainSetting"/>
+                                 instance="io.xmeta.jetbrains.configuration.MainSetting"/>
 
         <!-- Update notification -->
-        <postStartupActivity implementation="com.neueda.jetbrains.plugin.graphdb.jetbrains.component.updater.PluginUpdateActivity" />
+        <postStartupActivity implementation="io.xmeta.jetbrains.component.updater.PluginUpdateActivity" />
 
-        
+
         <postStartupActivity
-                implementation="com.neueda.jetbrains.plugin.graphdb.jetbrains.component.startup.PluginStartupActivity" />
+                implementation="io.xmeta.jetbrains.component.startup.PluginStartupActivity" />
 
     </extensions>
 
