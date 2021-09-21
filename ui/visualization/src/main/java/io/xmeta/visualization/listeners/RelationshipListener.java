@@ -1,6 +1,6 @@
 package io.xmeta.visualization.listeners;
 
-import io.xmeta.api.data.GraphRelationship;
+import io.xmeta.api.data.EntityRelationship;
 import io.xmeta.visualization.events.EventType;
 import io.xmeta.visualization.events.RelationshipCallback;
 import prefuse.controls.ControlAdapter;
@@ -14,9 +14,9 @@ public class RelationshipListener extends ControlAdapter {
 
     private EventType type;
     private RelationshipCallback callback;
-    private Map<String, GraphRelationship> graphRelationshipMap;
+    private Map<String, EntityRelationship> graphRelationshipMap;
 
-    public RelationshipListener(EventType type, RelationshipCallback callback, Map<String, GraphRelationship> graphRelationshipMap) {
+    public RelationshipListener(EventType type, RelationshipCallback callback, Map<String, EntityRelationship> graphRelationshipMap) {
         this.type = type;
         this.callback = callback;
         this.graphRelationshipMap = graphRelationshipMap;

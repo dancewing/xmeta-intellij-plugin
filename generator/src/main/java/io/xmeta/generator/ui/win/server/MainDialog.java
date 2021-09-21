@@ -15,7 +15,7 @@ import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.ui.TextBrowseFolderListener;
 import com.intellij.openapi.ui.TextFieldWithBrowseButton;
-import io.xmeta.api.data.GraphEntity;
+import io.xmeta.api.data.MetaEntity;
 import org.apache.commons.lang.StringUtils;
 import org.jetbrains.annotations.Nullable;
 
@@ -93,8 +93,9 @@ public class MainDialog extends DialogWrapper {
          */
         public void documentChanged(DocumentEvent e) {
             javax.swing.text.Document document = e.getDocument();
-            if (!TextFieldDocumentUtil.updateSettingValue(document, javaPathField, outputSettings::setJavaPath)) {
-                if (!TextFieldDocumentUtil.updateSettingValue(document, sourcesPathField, outputSettings::setSourcesPath)) {
+            if (!TextFieldDocumentUtil.updateSettingValue(document, javaPathField, outputSettings.getServer()::setJavaPath)) {
+                if (!TextFieldDocumentUtil.updateSettingValue(document, sourcesPathField,
+                        outputSettings.getServer()::setSourcesPath)) {
                     TextFieldDocumentUtil.updateSettingValue(document, projectPathField.getTextField(), outputSettings::setProjectPath);
                 }
             }
@@ -109,7 +110,7 @@ public class MainDialog extends DialogWrapper {
      */
     private JPanel content;
 
-    public MainDialog(Project project, GraphEntity[] psiElements, ConfigService configService) {
+    public MainDialog(Project project, MetaEntity[] psiElements, ConfigService configService) {
         // super("代码生成器");
         super(project);
         this.configService = configService;
@@ -187,8 +188,8 @@ public class MainDialog extends DialogWrapper {
             projectPath = PluginUtils.getProject().getBasePath();
         }
         projectPathField.setText(projectPath);
-        javaPathField.setText(outputSettings.getJavaPath());
-        sourcesPathField.setText(outputSettings.getSourcesPath());
+        javaPathField.setText(outputSettings.getServer().getJavaPath());
+        sourcesPathField.setText(outputSettings.getServer().getSourcesPath());
     }
 
     @Override

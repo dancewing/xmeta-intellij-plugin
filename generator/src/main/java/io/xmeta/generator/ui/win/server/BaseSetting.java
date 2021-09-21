@@ -138,7 +138,7 @@ public class BaseSetting implements IWindows {
             private final Map<Consumer<String>, EditorTextField> map = Maps.newHashMap();
 
             public EditorTextFieldDocumentListener() {
-                map.put(outputSettings::setRootPackage, rootPackageField);
+                map.put(outputSettings.getServer()::setRootPackage, rootPackageField);
             }
 
             /**
@@ -234,7 +234,7 @@ public class BaseSetting implements IWindows {
     private void initConfig() {
         authorField.setText(baseSettings.getAuthor());
         emailField.setText(baseSettings.getEmail());
-        rootPackageField.setText(outputSettings.getRootPackage());
+        rootPackageField.setText(outputSettings.getServer().getRootPackage());
         overrideJavaCheckBox.setSelected(baseSettings.isOverrideJava());
         overrideXmlCheckBox.setSelected(baseSettings.isOverrideXml());
         overrideOtherCheckBox.setSelected(baseSettings.isOverrideOther());

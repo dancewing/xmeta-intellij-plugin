@@ -1,10 +1,10 @@
 package io.xmeta.jetbrains.ui.datasource.metadata;
 
 import com.intellij.ui.treeStructure.PatchedDefaultMutableTreeNode;
-import io.xmeta.api.data.App;
-import io.xmeta.api.data.GraphEntity;
-import io.xmeta.api.data.GraphField;
-import io.xmeta.api.data.Workspace;
+import io.xmeta.api.data.MetaApp;
+import io.xmeta.api.data.MetaEntity;
+import io.xmeta.api.data.EntityField;
+import io.xmeta.api.data.MetaWorkspace;
 import io.xmeta.jetbrains.component.datasource.DataSourceType;
 import io.xmeta.jetbrains.component.datasource.metadata.DataSourcesComponentMetadata;
 import io.xmeta.jetbrains.component.datasource.metadata.Neo4jBoltCypherDataSourceMetadata;
@@ -52,36 +52,36 @@ public class DataSourceMetadataUi {
         TreeNodeModelApi model = (TreeNodeModelApi) dataSourceRootTreeNode.getUserObject();
         DataSource dataSourceApi = model.getDataSourceApi();
 
-        List<Workspace> workspaces = dataSourceMetadata.getWorkspaces();
-        for (Workspace workspaceDomain : workspaces) {
-            dataSourceRootTreeNode.add(createWorkspaceNode(workspaceDomain, dataSourceApi));
+        List<MetaWorkspace> metaWorkspaces = dataSourceMetadata.getWorkspaces();
+        for (MetaWorkspace metaWorkspaceDomain : metaWorkspaces) {
+            dataSourceRootTreeNode.add(createWorkspaceNode(metaWorkspaceDomain, dataSourceApi));
         }
 
         return true;
     }
 
-    private PatchedDefaultMutableTreeNode createWorkspaceNode(Workspace workspaceDomain, DataSource dataSourceApi) {
+    private PatchedDefaultMutableTreeNode createWorkspaceNode(MetaWorkspace metaWorkspaceDomain, DataSource dataSourceApi) {
         PatchedDefaultMutableTreeNode workspaceTreeNode = new PatchedDefaultMutableTreeNode(
-                new WorkspaceTypeTreeNodeModel(Neo4jTreeNodeType.WORKSPACE, dataSourceApi, workspaceDomain,
-                        workspaceDomain.getApps().size()));
+                new WorkspaceTypeTreeNodeModel(Neo4jTreeNodeType.WORKSPACE, dataSourceApi, metaWorkspaceDomain,
+                        metaWorkspaceDomain.getApps().size()));
 
-        for (App appDomain : workspaceDomain.getApps()) {
+        for (MetaApp metaAppDomain : metaWorkspaceDomain.getApps()) {
 
             AppTypeTreeNodeModel appTypeTreeNodeModel = new AppTypeTreeNodeModel(Neo4jTreeNodeType.APP, dataSourceApi,
-                    appDomain, appDomain.getEntities().size());
+                    metaAppDomain, metaAppDomain.getEntities().size());
             PatchedDefaultMutableTreeNode appTypeTreeNode = of(appTypeTreeNodeModel);
 
-            List<GraphEntity> entities = appDomain.getEntities();
+            List<MetaEntity> entities = metaAppDomain.getEntities();
 
-            for (GraphEntity entityDomain : entities) {
+            for (MetaEntity entityDomain : entities) {
                 EntityTypeTreeNodeModel entityTypeTreeNodeModel = new EntityTypeTreeNodeModel(Neo4jTreeNodeType.ENTITY, dataSourceApi,
                         entityDomain, entityDomain.getFields().size());
 
                 PatchedDefaultMutableTreeNode entityTypeTreeNode = of(entityTypeTreeNodeModel);
 
-                List<GraphField> fields = entityDomain.getFields();
+                List<EntityField> fields = entityDomain.getFields();
 
-                for (GraphField fieldDomain : fields) {
+                for (EntityField fieldDomain : fields) {
                     FieldTypeTreeNodeModel fieldTypeTreeNodeModel = new FieldTypeTreeNodeModel(Neo4jTreeNodeType.PROPERTY_KEY,
                             dataSourceApi, fieldDomain);
                     entityTypeTreeNode.add(of(fieldTypeTreeNodeModel));

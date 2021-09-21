@@ -1,7 +1,7 @@
 package io.xmeta.jetbrains.database;
 
 import com.intellij.openapi.project.Project;
-import io.xmeta.api.data.GraphEntity;
+import io.xmeta.api.data.MetaEntity;
 import io.xmeta.jetbrains.component.datasource.state.DataSource;
 
 import java.util.Collection;
@@ -17,7 +17,7 @@ public class DiffService {
         // this.service = new QueryExecutionService(project.getMessageBus());
     }
 
-    public void updateNode(DataSource api, GraphEntity oldNode, GraphEntity newNode) {
+    public void updateNode(DataSource api, MetaEntity oldNode, MetaEntity newNode) {
 
         String query = "MATCH (n) WHERE ID(n) = $id " +
                 diffLabels(oldNode.getTypes(), newNode.getTypes()) +
@@ -31,8 +31,8 @@ public class DiffService {
     }
 
 
-    public void updateRelationShip(DataSource api, GraphEntity relationship,
-                                   GraphEntity updatedRel) {
+    public void updateRelationShip(DataSource api, MetaEntity relationship,
+                                   MetaEntity updatedRel) {
 
         String query = "MATCH ()-[n]->() WHERE ID(n) = $id " +
                 " SET n = $props" +
@@ -44,7 +44,7 @@ public class DiffService {
 //                null));
     }
 
-    public void saveNewNode(DataSource api, GraphEntity newNode) {
+    public void saveNewNode(DataSource api, MetaEntity newNode) {
         StringBuilder sb = new StringBuilder("CREATE (n ");
         newNode.getTypes().forEach(newLabel -> sb.append(":").append(newLabel));
         sb.append(" $props) RETURN n");

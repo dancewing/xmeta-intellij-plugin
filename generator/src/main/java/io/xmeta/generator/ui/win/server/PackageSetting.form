@@ -47,6 +47,78 @@
           </component>
         </children>
       </grid>
+      <grid id="8f11a" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="0">
+        <constraints/>
+        <properties>
+          <preferredSize width="940" height="68"/>
+        </properties>
+        <border type="etched" title-resource-bundle="i18n/language" title-key="panel.domain.title"/>
+        <children>
+          <component id="dfd6d" class="javax.swing.JLabel">
+            <constraints/>
+            <properties>
+              <requestFocusEnabled value="true"/>
+              <text resource-bundle="i18n/language" key="panel.entity.suffix"/>
+            </properties>
+          </component>
+          <component id="be96d" class="javax.swing.JTextField" binding="domainSuffixField">
+            <constraints/>
+            <properties>
+              <preferredSize width="100" height="29"/>
+              <text value="Domain"/>
+            </properties>
+          </component>
+          <component id="8d10a" class="javax.swing.JLabel">
+            <constraints/>
+            <properties>
+              <text resource-bundle="i18n/language" key="panel.entity.sub_package"/>
+            </properties>
+          </component>
+          <component id="c90b9" class="com.intellij.ui.EditorTextField" binding="domainPackageField" custom-create="true">
+            <constraints/>
+            <properties>
+              <preferredSize width="240" height="29"/>
+              <text value="domain"/>
+            </properties>
+          </component>
+        </children>
+      </grid>
+      <grid id="8f12a" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="0">
+        <constraints/>
+        <properties>
+          <preferredSize width="940" height="68"/>
+        </properties>
+        <border type="etched" title-resource-bundle="i18n/language" title-key="panel.mapper.title"/>
+        <children>
+          <component id="dfd7d" class="javax.swing.JLabel">
+            <constraints/>
+            <properties>
+              <requestFocusEnabled value="true"/>
+              <text resource-bundle="i18n/language" key="panel.entity.suffix"/>
+            </properties>
+          </component>
+          <component id="be97d" class="javax.swing.JTextField" binding="mapperSuffixField">
+            <constraints/>
+            <properties>
+              <preferredSize width="100" height="29"/>
+              <text value="Mapper"/>
+            </properties>
+          </component>
+          <component id="8d11a" class="javax.swing.JLabel">
+            <constraints/>
+            <properties>
+              <text resource-bundle="i18n/language" key="panel.entity.sub_package"/>
+            </properties>
+          </component>
+          <component id="c91b8" class="com.intellij.ui.EditorTextField" binding="mapperPackageField" custom-create="true">
+            <constraints/>
+            <properties>
+              <preferredSize width="240" height="29"/>
+              <text value="mapper"/>
+            </properties>
+          </component>
+        </children>
+      </grid>
       <grid id="b10d9" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="0">
         <constraints/>
         <properties>
@@ -78,19 +150,6 @@
             <properties>
               <preferredSize width="240" height="29"/>
               <text value="repository"/>
-            </properties>
-          </component>
-          <component id="159b8" class="javax.swing.JLabel">
-            <constraints/>
-            <properties>
-              <text resource-bundle="i18n/language" key="panel.dao.xml-package"/>
-            </properties>
-          </component>
-          <component id="95e0" class="javax.swing.JTextField" binding="xmlPackageField">
-            <constraints/>
-            <properties>
-              <preferredSize width="180" height="29"/>
-              <text value="mapper"/>
             </properties>
           </component>
         </children>

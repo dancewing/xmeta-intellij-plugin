@@ -2,7 +2,7 @@ package io.xmeta.generator.vo.impl;
 
 import io.xmeta.generator.vo.IEntityField;
 import io.xmeta.generator.vo.ITableColumn;
-import io.xmeta.api.data.GraphField;
+import io.xmeta.api.data.EntityField;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -22,7 +22,7 @@ public class TableColumnImpl implements ITableColumn {
      */
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
-    private final GraphField dbColumn;
+    private final EntityField dbColumn;
     private final String name;
     private final String comment;
     private final String typeName;
@@ -47,7 +47,7 @@ public class TableColumnImpl implements ITableColumn {
         this.selected = selected;
     }
 
-    public TableColumnImpl(GraphField dbColumn) {
+    public TableColumnImpl(EntityField dbColumn) {
         this.dbColumn = dbColumn;
         this.name = dbColumn.getName();
         this.dataType = dbColumn.getDataType();

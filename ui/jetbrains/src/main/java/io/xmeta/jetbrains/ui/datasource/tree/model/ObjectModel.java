@@ -1,6 +1,6 @@
 package io.xmeta.jetbrains.ui.datasource.tree.model;
 
-import io.xmeta.api.data.NoIdGraphEntity;
+import io.xmeta.api.data.NoIdEntity;
 import io.xmeta.jetbrains.component.datasource.state.DataSource;
 import io.xmeta.jetbrains.ui.datasource.tree.Neo4jEntityViewNodeType;
 import io.xmeta.jetbrains.ui.datasource.tree.NodeType;
@@ -9,7 +9,7 @@ import org.apache.commons.lang.StringUtils;
 import javax.swing.*;
 import java.util.Optional;
 
-public class ObjectModel extends RootObjectAwareModel implements NoIdGraphEntity {
+public class ObjectModel extends RootObjectAwareModel implements NoIdEntity {
 
     private NodeType type = Neo4jEntityViewNodeType.OTHER;
     private Object object;

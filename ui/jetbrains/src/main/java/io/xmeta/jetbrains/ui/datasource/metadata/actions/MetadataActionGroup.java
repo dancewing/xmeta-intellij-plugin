@@ -3,20 +3,20 @@ package io.xmeta.jetbrains.ui.datasource.metadata.actions;
 import com.intellij.openapi.actionSystem.ActionGroup;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import io.xmeta.api.data.GraphEntity;
+import io.xmeta.api.data.MetaEntity;
 import io.xmeta.api.data.IDNameData;
 import io.xmeta.jetbrains.ui.datasource.tree.EntityTypeTreeNodeModel;
 import io.xmeta.jetbrains.ui.datasource.tree.Neo4jTreeNodeType;
 import io.xmeta.jetbrains.ui.datasource.tree.NodeType;
 import io.xmeta.jetbrains.ui.datasource.tree.TreeNodeModelApi;
-import icons.GraphIcons;
+import icons.MetaIcons;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static icons.GraphIcons.Database.NEO4J;
+import static icons.MetaIcons.Database.NEO4J;
 
 public class MetadataActionGroup extends ActionGroup {
 
@@ -39,8 +39,8 @@ public class MetadataActionGroup extends ActionGroup {
             return new AnAction[]{new MetadataRelationshipAction(data, dataSourceUuid, "Query this relationship", "", NEO4J)};
         } else if (type == Neo4jTreeNodeType.ENTITY) {
             return new AnAction[]{
-                    new ServerCodeGeneratorAction(getEntities(), "Generate Server Code", "", GraphIcons.Server),
-                    new ClientCodeGeneratorAction(getEntities(), "Generate Client Code", "", GraphIcons.Client),
+                    new ServerCodeGeneratorAction(getEntities(), "Generate Server Code", "", MetaIcons.Server),
+                    new ClientCodeGeneratorAction(getEntities(), "Generate Client Code", "", MetaIcons.Client),
             };
         } else if (type == Neo4jTreeNodeType.PROPERTY_KEY) {
             return new AnAction[]{new MetadataPropertyKeyAction(data, dataSourceUuid, "Query this property", "", NEO4J)};
@@ -49,8 +49,8 @@ public class MetadataActionGroup extends ActionGroup {
         }
     }
 
-    private List<GraphEntity> getEntities() {
-        List<GraphEntity> graphEntities = new ArrayList<>();
+    private List<MetaEntity> getEntities() {
+        List<MetaEntity> graphEntities = new ArrayList<>();
         for (TreeNodeModelApi treeNodeModel : selectedData) {
             if (treeNodeModel instanceof EntityTypeTreeNodeModel) {
                 EntityTypeTreeNodeModel entityTypeTreeNodeModel = (EntityTypeTreeNodeModel) treeNodeModel;

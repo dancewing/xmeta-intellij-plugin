@@ -1,6 +1,6 @@
 package io.xmeta.jetbrains.database;
 
-import io.xmeta.api.GraphDatabaseApi;
+import io.xmeta.api.MetaDatabaseApi;
 import io.xmeta.impl.OpenCypherGremlinDatabase;
 import io.xmeta.jetbrains.component.datasource.state.DataSource;
 
@@ -9,7 +9,7 @@ public class DatabaseManagerServiceImpl implements DatabaseManagerService {
     public DatabaseManagerServiceImpl() {
     }
 
-    public GraphDatabaseApi getDatabaseFor(DataSource dataSource) {
+    public MetaDatabaseApi getDatabaseFor(DataSource dataSource) {
         switch (dataSource.getDataSourceType()) {
             case OPENCYPHER_GREMLIN:
                 return new OpenCypherGremlinDatabase(dataSource.getConfiguration());

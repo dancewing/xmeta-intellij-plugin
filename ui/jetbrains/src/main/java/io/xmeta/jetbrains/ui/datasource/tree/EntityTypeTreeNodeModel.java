@@ -1,18 +1,18 @@
 package io.xmeta.jetbrains.ui.datasource.tree;
 
-import io.xmeta.api.data.GraphEntity;
+import io.xmeta.api.data.MetaEntity;
 import io.xmeta.jetbrains.component.datasource.state.DataSource;
-import icons.GraphIcons;
+import icons.MetaIcons;
 
 import java.util.Optional;
 
-public class EntityTypeTreeNodeModel extends MetadataTreeNodeModel<GraphEntity> {
+public class EntityTypeTreeNodeModel extends MetadataTreeNodeModel<MetaEntity> {
 
     private static final String NAME_WITH_COUNT = "%s (%d)";
     private int count;
 
-    public EntityTypeTreeNodeModel(Neo4jTreeNodeType type, DataSource dataSourceApi, GraphEntity value, int count) {
-        super(type, dataSourceApi, value, GraphIcons.Nodes.ENTITY);
+    public EntityTypeTreeNodeModel(Neo4jTreeNodeType type, DataSource dataSourceApi, MetaEntity value, int count) {
+        super(type, dataSourceApi, value, MetaIcons.Nodes.ENTITY);
         this.count = count;
     }
 

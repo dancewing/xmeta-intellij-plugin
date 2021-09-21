@@ -1,7 +1,7 @@
 package io.xmeta.visualization.util;
 
-import io.xmeta.api.data.GraphEntity;
-import io.xmeta.api.data.GraphNode;
+import io.xmeta.api.data.MetaEntity;
+import io.xmeta.api.data.MetaNode;
 
 import java.util.List;
 import java.util.Map;
@@ -22,7 +22,7 @@ public class DisplayUtil {
     private static final List<String> TITLE_INDICATORS = unmodifiableList(newArrayList("name", "title"));
     private static final Predicate<Map.Entry<String, Object>> IS_STRING_VALUE = o -> String.class.isAssignableFrom(o.getValue().getClass());
 
-    public static String getProperty(GraphNode node) {
+    public static String getProperty(MetaNode node) {
         Optional<String> backup = Optional.empty();
         Optional<String> fuzzyMatch = Optional.empty();
         for (Map.Entry<String, Object> entry : node.getProperties().entrySet()) {
@@ -52,7 +52,7 @@ public class DisplayUtil {
         return fuzzyMatch.orElse(backup.orElse(node.getId()));
     }
 
-    public static String getType(GraphNode node) {
+    public static String getType(MetaNode node) {
         return node.getTypes().size() > 0 ? node.getTypes().get(0) : "";
     }
 
@@ -60,11 +60,11 @@ public class DisplayUtil {
         return title.length() < MAX_TITLE_LENGTH;
     }
 
-    public static String getTooltipTitle(GraphEntity entity) {
+    public static String getTooltipTitle(MetaEntity entity) {
         return entity.getId() + ": " + entity.getTypes();
     }
 
-    public static String getTooltipText(GraphEntity entity) {
+    public static String getTooltipText(MetaEntity entity) {
         Map<String, Object> properties = entity.getProperties();
         String start = "<p width=\"" + LABEL_TEXT_WIDTH + "px\"><b>";
 

@@ -1,9 +1,9 @@
 package io.xmeta.jetbrains.component.datasource.metadata;
 
-import io.xmeta.api.data.Workspace;
-import io.xmeta.api.query.GraphQueryResult;
-import io.xmeta.api.query.GraphQueryResultColumn;
-import io.xmeta.api.query.GraphQueryResultRow;
+import io.xmeta.api.data.MetaWorkspace;
+import io.xmeta.api.query.MetaQueryResult;
+import io.xmeta.api.query.MetaQueryResultColumn;
+import io.xmeta.api.query.MetaQueryResultRow;
 
 import java.util.*;
 
@@ -14,7 +14,7 @@ public class Neo4jBoltCypherDataSourceMetadata implements DataSourceMetadata {
     public static final String PROPERTY_KEYS = "propertyKeys";
     public static final String STORED_PROCEDURES = "procedures";
     public static final String USER_FUNCTIONS = "functions";
-    private List<Workspace> workspaces;
+    private List<MetaWorkspace> metaWorkspaces;
 
     private Map<String, List<Map<String, String>>> dataReceiver = new HashMap<>();
 
@@ -31,26 +31,26 @@ public class Neo4jBoltCypherDataSourceMetadata implements DataSourceMetadata {
         return dataReceiver.containsKey(metadataKey);
     }
 
-    public void addPropertyKeys(GraphQueryResult propertyKeysResult) {
+    public void addPropertyKeys(MetaQueryResult propertyKeysResult) {
         addDataSourceMetadata(PROPERTY_KEYS, propertyKeysResult);
     }
 
-    public void addStoredProcedures(GraphQueryResult storedProceduresResult) {
+    public void addStoredProcedures(MetaQueryResult storedProceduresResult) {
         addDataSourceMetadata(STORED_PROCEDURES, storedProceduresResult);
     }
 
-    public void addUserFunctions(GraphQueryResult userFunctionsResult) {
+    public void addUserFunctions(MetaQueryResult userFunctionsResult) {
         addDataSourceMetadata(USER_FUNCTIONS, userFunctionsResult);
     }
 
-    private void addDataSourceMetadata(String key, GraphQueryResult graphQueryResult) {
+    private void addDataSourceMetadata(String key, MetaQueryResult metaQueryResult) {
         List<Map<String, String>> dataSourceMetadata = new ArrayList<>();
 
-        List<GraphQueryResultColumn> columns = graphQueryResult.getColumns();
-        for (GraphQueryResultRow row : graphQueryResult.getRows()) {
+        List<MetaQueryResultColumn> columns = metaQueryResult.getColumns();
+        for (MetaQueryResultRow row : metaQueryResult.getRows()) {
             Map<String, String> data = new HashMap<>();
 
-            for (GraphQueryResultColumn column : columns) {
+            for (MetaQueryResultColumn column : columns) {
                 Object value = row.getValue(column);
                 if (value != null) {
                     data.put(column.getName(), value.toString());
@@ -67,10 +67,10 @@ public class Neo4jBoltCypherDataSourceMetadata implements DataSourceMetadata {
         dataReceiver.put(key, data);
     }
 
-    public void addLabels(GraphQueryResult labelCountResult, List<String> labelNames) {
-        GraphQueryResultColumn column = labelCountResult.getColumns().get(0);
+    public void addLabels(MetaQueryResult labelCountResult, List<String> labelNames) {
+        MetaQueryResultColumn column = labelCountResult.getColumns().get(0);
         for (int i = 0; i < labelCountResult.getRows().size(); i++) {
-            GraphQueryResultRow row = labelCountResult.getRows().get(i);
+            MetaQueryResultRow row = labelCountResult.getRows().get(i);
             labels.add(new Neo4jLabelMetadata(labelNames.get(i), (Long) row.getValue(column)));
         }
     }
@@ -83,10 +83,10 @@ public class Neo4jBoltCypherDataSourceMetadata implements DataSourceMetadata {
         return labels;
     }
 
-    public void addRelationshipTypes(GraphQueryResult relationshipTypeCountResult, List<String> relationshipTypeNames) {
-        GraphQueryResultColumn column = relationshipTypeCountResult.getColumns().get(0);
+    public void addRelationshipTypes(MetaQueryResult relationshipTypeCountResult, List<String> relationshipTypeNames) {
+        MetaQueryResultColumn column = relationshipTypeCountResult.getColumns().get(0);
         for (int i = 0; i < relationshipTypeCountResult.getRows().size(); i++) {
-            GraphQueryResultRow row = relationshipTypeCountResult.getRows().get(i);
+            MetaQueryResultRow row = relationshipTypeCountResult.getRows().get(i);
             relationshipTypes.add(new Neo4jRelationshipTypeMetadata(relationshipTypeNames.get(i), (Long) row.getValue(column)));
         }
     }
@@ -105,20 +105,20 @@ public class Neo4jBoltCypherDataSourceMetadata implements DataSourceMetadata {
         return relationshipTypes;
     }
 
-    public void addIndexes(GraphQueryResult indexesResult) {
+    public void addIndexes(MetaQueryResult indexesResult) {
         addDataSourceMetadata(INDEXES, indexesResult);
     }
 
-    public void addConstraints(GraphQueryResult constraintsResult) {
+    public void addConstraints(MetaQueryResult constraintsResult) {
         addDataSourceMetadata(CONSTRAINTS, constraintsResult);
     }
 
-    public void setWorkspaces(List<Workspace> workspaces) {
-        this.workspaces = workspaces;
+    public void setWorkspaces(List<MetaWorkspace> metaWorkspaces) {
+        this.metaWorkspaces = metaWorkspaces;
     }
 
     @Override
-    public List<Workspace> getWorkspaces() {
-        return this.workspaces;
+    public List<MetaWorkspace> getWorkspaces() {
+        return this.metaWorkspaces;
     }
 }

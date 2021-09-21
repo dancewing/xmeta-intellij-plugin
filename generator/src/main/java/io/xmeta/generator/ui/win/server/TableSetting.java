@@ -1,8 +1,8 @@
 package io.xmeta.generator.ui.win.server;
 
+import io.xmeta.api.data.MetaEntity;
 import io.xmeta.generator.ui.win.IWindows;
 import io.xmeta.generator.vo.impl.RootModel;
-import io.xmeta.api.data.GraphEntity;
 import lombok.Data;
 
 import javax.swing.*;
@@ -27,8 +27,8 @@ public class TableSetting implements IWindows {
     private JTabbedPane tableTabbedPane;
     private List<TablePanel> tablePanels = new ArrayList<>();
 
-    public TableSetting(GraphEntity[] psiElements) {
-        for (GraphEntity psiElement : psiElements) {
+    public TableSetting(MetaEntity[] psiElements) {
+        for (MetaEntity psiElement : psiElements) {
             TablePanel tablePanel = new TablePanel(psiElement);
             tableTabbedPane.addTab(psiElement.getName(), tablePanel.getContent());
             tablePanels.add(tablePanel);

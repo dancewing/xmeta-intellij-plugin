@@ -5,7 +5,7 @@ import io.xmeta.generator.util.PluginUtils;
 import io.xmeta.generator.vo.IEntityField;
 import io.xmeta.generator.vo.ITableColumn;
 import com.google.common.base.CaseFormat;
-import io.xmeta.api.data.GraphField;
+import io.xmeta.api.data.EntityField;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -44,7 +44,7 @@ public class EntityFieldImpl implements IEntityField {
         this.selected = selected;
     }
 
-    public EntityFieldImpl(GraphField dbColumn) {
+    public EntityFieldImpl(EntityField dbColumn) {
         this.name = new FieldNameInfo(dbColumn);
         this.dataType = dbColumn.getDataType();
       //  String typeName = ReflectionUtil.getField(DataType.class, dataType, String.class, "typeName");

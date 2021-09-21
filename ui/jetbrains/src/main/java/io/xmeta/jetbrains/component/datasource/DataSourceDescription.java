@@ -1,6 +1,6 @@
 package io.xmeta.jetbrains.component.datasource;
 
-import icons.GraphIcons;
+import icons.MetaIcons;
 
 import javax.swing.*;
 
@@ -22,7 +22,7 @@ public interface DataSourceDescription {
 
         @Override
         public Icon getIcon() {
-            return GraphIcons.Database.NEO4J;
+            return MetaIcons.Database.NEO4J;
         }
 
         @Override
@@ -44,7 +44,7 @@ public interface DataSourceDescription {
 
         @Override
         public Icon getIcon() {
-            return GraphIcons.Database.OPENCYPHER;
+            return MetaIcons.Database.OPENCYPHER;
         }
 
         @Override

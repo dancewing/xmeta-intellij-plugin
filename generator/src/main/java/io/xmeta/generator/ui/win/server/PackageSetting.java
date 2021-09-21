@@ -44,6 +44,24 @@ public class PackageSetting implements IWindows {
     private EditorTextField entityPackageField;
 
     /**
+     * 输入框：Entity前缀
+     */
+    private JTextField domainSuffixField;
+    /**
+     * 输入框：Entity包名
+     */
+    private EditorTextField domainPackageField;
+
+    /**
+     * 输入框：Dao前缀
+     */
+    private JTextField mapperSuffixField;
+    /**
+     * 输入框：Dao包名
+     */
+    private EditorTextField mapperPackageField;
+
+    /**
      * 输入框：Dao前缀
      */
     private JTextField daoSuffixField;
@@ -52,10 +70,6 @@ public class PackageSetting implements IWindows {
      */
     private EditorTextField daoPackageField;
 
-    /**
-     * 输入框：XML包名
-     */
-    private JTextField xmlPackageField;
     /**
      * 输入框：Service前缀
      */
@@ -92,11 +106,12 @@ public class PackageSetting implements IWindows {
             private final Map<Consumer<String>, JTextComponent> map = Maps.newHashMap();
 
             public TextFieldDocumentListener() {
-                map.put(outputSettings::setEntitySuffix, entitySuffixField);
-                map.put(outputSettings::setDaoSuffix, daoSuffixField);
-                map.put(outputSettings::setServiceSuffix, serviceSuffixField);
-                map.put(outputSettings::setControllerSuffix, controllerSuffixField);
-                map.put(outputSettings::setXmlPackage, xmlPackageField);
+                map.put(outputSettings.getServer()::setEntitySuffix, entitySuffixField);
+                map.put(outputSettings.getServer()::setDaoSuffix, daoSuffixField);
+                map.put(outputSettings.getServer()::setServiceSuffix, serviceSuffixField);
+                map.put(outputSettings.getServer()::setControllerSuffix, controllerSuffixField);
+                map.put(outputSettings.getServer()::setDomainSubPackage, domainSuffixField);
+                map.put(outputSettings.getServer()::setMapperSubPackage, mapperSuffixField);
             }
 
             @Override
@@ -134,7 +149,8 @@ public class PackageSetting implements IWindows {
         daoSuffixField.getDocument().addDocumentListener(textFieldDocumentListener);
         serviceSuffixField.getDocument().addDocumentListener(textFieldDocumentListener);
         controllerSuffixField.getDocument().addDocumentListener(textFieldDocumentListener);
-        xmlPackageField.getDocument().addDocumentListener(textFieldDocumentListener);
+        domainSuffixField.getDocument().addDocumentListener(textFieldDocumentListener);
+        mapperSuffixField.getDocument().addDocumentListener(textFieldDocumentListener);
 
         /* 包名输入框的输入事件监听 */
         class EditorTextFieldDocumentListener implements com.intellij.openapi.editor.event.DocumentListener {
@@ -144,10 +160,12 @@ public class PackageSetting implements IWindows {
             private final Map<Consumer<String>, EditorTextField> map = Maps.newHashMap();
 
             public EditorTextFieldDocumentListener() {
-                map.put(outputSettings::setEntitySubPackage, entityPackageField);
-                map.put(outputSettings::setDaoSubPackage, daoPackageField);
-                map.put(outputSettings::setServiceSubPackage, servicePackageField);
-                map.put(outputSettings::setControllerSubPackage, controllerPackageField);
+                map.put(outputSettings.getServer()::setEntitySubPackage, entityPackageField);
+                map.put(outputSettings.getServer()::setDaoSubPackage, daoPackageField);
+                map.put(outputSettings.getServer()::setServiceSubPackage, servicePackageField);
+                map.put(outputSettings.getServer()::setControllerSubPackage, controllerPackageField);
+                map.put(outputSettings.getServer()::setDomainSubPackage, domainPackageField);
+                map.put(outputSettings.getServer()::setMapperSubPackage, mapperPackageField);
             }
 
             /**
@@ -172,6 +190,8 @@ public class PackageSetting implements IWindows {
         daoPackageField.getDocument().addDocumentListener(editorTextFieldDocumentListener);
         servicePackageField.getDocument().addDocumentListener(editorTextFieldDocumentListener);
         controllerPackageField.getDocument().addDocumentListener(editorTextFieldDocumentListener);
+        domainPackageField.getDocument().addDocumentListener(editorTextFieldDocumentListener);
+        mapperPackageField.getDocument().addDocumentListener(editorTextFieldDocumentListener);
     }
 
     private void createUIComponents() {
@@ -180,6 +200,8 @@ public class PackageSetting implements IWindows {
         daoPackageField = createEditorTextField(project);
         servicePackageField = createEditorTextField(project);
         controllerPackageField = createEditorTextField(project);
+        domainPackageField = createEditorTextField(project);
+        mapperPackageField = createEditorTextField(project);
     }
 
     /**
@@ -202,16 +224,20 @@ public class PackageSetting implements IWindows {
      */
     private void initConfig() {
 
-        entitySuffixField.setText(outputSettings.getEntitySuffix());
-        daoSuffixField.setText(outputSettings.getDaoSuffix());
-        serviceSuffixField.setText(outputSettings.getServiceSuffix());
-        controllerSuffixField.setText(outputSettings.getControllerSuffix());
+        entitySuffixField.setText(outputSettings.getServer().getEntitySuffix());
+        daoSuffixField.setText(outputSettings.getServer().getDaoSuffix());
+        serviceSuffixField.setText(outputSettings.getServer().getServiceSuffix());
+        controllerSuffixField.setText(outputSettings.getServer().getControllerSuffix());
+        domainSuffixField.setText(outputSettings.getServer().getDomainSuffix());
+        mapperSuffixField.setText(outputSettings.getServer().getMapperSuffix());
 
-        entityPackageField.setText(outputSettings.getEntitySubPackage());
-        daoPackageField.setText(outputSettings.getDaoSubPackage());
-        servicePackageField.setText(outputSettings.getServiceSubPackage());
-        controllerPackageField.setText(outputSettings.getControllerSubPackage());
-        xmlPackageField.setText(outputSettings.getXmlPackage());
+
+        entityPackageField.setText(outputSettings.getServer().getEntitySubPackage());
+        daoPackageField.setText(outputSettings.getServer().getDaoSubPackage());
+        servicePackageField.setText(outputSettings.getServer().getServiceSubPackage());
+        controllerPackageField.setText(outputSettings.getServer().getControllerSubPackage());
+        domainPackageField.setText(outputSettings.getServer().getDomainSubPackage());
+        mapperPackageField.setText(outputSettings.getServer().getMapperSubPackage());
 
     }
 

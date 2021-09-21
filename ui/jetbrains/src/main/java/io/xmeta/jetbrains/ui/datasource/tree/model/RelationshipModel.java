@@ -1,6 +1,6 @@
 package io.xmeta.jetbrains.ui.datasource.tree.model;
 
-import io.xmeta.api.data.GraphRelationship;
+import io.xmeta.api.data.EntityRelationship;
 import io.xmeta.jetbrains.component.datasource.state.DataSource;
 import io.xmeta.jetbrains.ui.datasource.metadata.dto.ContextMenu;
 import io.xmeta.jetbrains.ui.datasource.tree.Neo4jEntityViewNodeType;
@@ -14,12 +14,12 @@ import java.util.Optional;
 public class RelationshipModel implements TreeNodeModelApi {
 
     private NodeType type = Neo4jEntityViewNodeType.RELATIONSHIP;
-    private GraphRelationship relationship;
+    private EntityRelationship relationship;
     private String text;
     private String description = "relationship";
     private DataSource dataSourceApi;
 
-    public RelationshipModel(GraphRelationship relationship, String text, DataSource dataSourceApi) {
+    public RelationshipModel(EntityRelationship relationship, String text, DataSource dataSourceApi) {
         this.relationship = relationship;
         this.text = text;
         this.dataSourceApi = dataSourceApi;

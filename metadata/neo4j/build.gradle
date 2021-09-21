@@ -1,4 +1,0 @@
-dependencies {
-    compile project(':metadata:api')
-    compile "org.neo4j.driver:neo4j-java-driver:$versionNeo4jJavaBoltDriver"
-}

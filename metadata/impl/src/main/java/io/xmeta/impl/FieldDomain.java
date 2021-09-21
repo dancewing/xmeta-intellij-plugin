@@ -1,10 +1,10 @@
 package io.xmeta.impl;
 
-import io.xmeta.api.data.GraphField;
+import io.xmeta.api.data.EntityField;
 
 import java.util.Map;
 
-public class FieldDomain implements GraphField {
+public class FieldDomain implements EntityField {
     private String id;
     private String permanentId;
     private String name;

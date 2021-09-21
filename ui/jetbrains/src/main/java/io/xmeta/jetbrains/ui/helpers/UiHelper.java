@@ -1,10 +1,9 @@
 package io.xmeta.jetbrains.ui.helpers;
 
 import com.intellij.ui.treeStructure.PatchedDefaultMutableTreeNode;
-import io.xmeta.api.data.GraphEntity;
-import io.xmeta.api.data.GraphNode;
-import io.xmeta.api.data.GraphPath;
-import io.xmeta.api.data.GraphRelationship;
+import io.xmeta.api.data.*;
+import io.xmeta.api.data.MetaNode;
+import io.xmeta.api.data.MetaEntity;
 import io.xmeta.jetbrains.component.datasource.state.DataSource;
 import io.xmeta.jetbrains.ui.datasource.tree.TreeNodeModelApi;
 import io.xmeta.jetbrains.ui.datasource.tree.model.*;
@@ -35,9 +34,9 @@ public final class UiHelper {
     public static boolean canBeTree(Object object) {
         return object instanceof List
                 || object instanceof Map
-                || object instanceof GraphNode
-                || object instanceof GraphRelationship
-                || object instanceof GraphPath;
+                || object instanceof MetaNode
+                || object instanceof EntityRelationship
+                || object instanceof EntityPath;
     }
 
     public static PatchedDefaultMutableTreeNode keyValueToTreeNode(String key, Object value, DataSource dataSourceApi, Object rootObject) {
@@ -47,25 +46,25 @@ public final class UiHelper {
         if (value instanceof Map) {
             return mapToTreeNode(key, (Map) value, dataSourceApi, rootObject);
         }
-        if (value instanceof GraphNode) {
-            return nodeToTreeNode(key, (GraphNode) value, dataSourceApi);
+        if (value instanceof MetaNode) {
+            return nodeToTreeNode(key, (MetaNode) value, dataSourceApi);
         }
-        if (value instanceof GraphRelationship) {
-            return relationshipToTreeNode(key, (GraphRelationship) value, dataSourceApi);
+        if (value instanceof EntityRelationship) {
+            return relationshipToTreeNode(key, (EntityRelationship) value, dataSourceApi);
         }
-        if (value instanceof GraphPath) {
-            return pathToTreeNode(key, (GraphPath) value, dataSourceApi, rootObject);
+        if (value instanceof EntityPath) {
+            return pathToTreeNode(key, (EntityPath) value, dataSourceApi, rootObject);
         }
         return objectToTreeNode(key, value, dataSourceApi, rootObject);
     }
 
-    public static PatchedDefaultMutableTreeNode nodeToTreeNode(String key, GraphNode node, DataSource dataSourceApi) {
+    public static PatchedDefaultMutableTreeNode nodeToTreeNode(String key, MetaNode node, DataSource dataSourceApi) {
         PatchedDefaultMutableTreeNode treeRoot = new PatchedDefaultMutableTreeNode(modelOf(node, key, NODE, dataSourceApi, node));
         addGraphEntityData(treeRoot, node, dataSourceApi);
         return treeRoot;
     }
 
-    public static PatchedDefaultMutableTreeNode relationshipToTreeNode(String key, GraphRelationship relationship, DataSource dataSourceApi) {
+    public static PatchedDefaultMutableTreeNode relationshipToTreeNode(String key, EntityRelationship relationship, DataSource dataSourceApi) {
         PatchedDefaultMutableTreeNode treeRoot = new PatchedDefaultMutableTreeNode(modelOf(relationship, key, RELATIONSHIP, dataSourceApi, relationship));
 
         addGraphEntityData(treeRoot, relationship, dataSourceApi);
@@ -81,17 +80,17 @@ public final class UiHelper {
         return treeRoot;
     }
 
-    private static void addGraphEntityData(PatchedDefaultMutableTreeNode treeRoot, GraphEntity graphEntity, DataSource dataSourceApi) {
-        treeRoot.add(objectToTreeNode(ID, graphEntity.getId(), dataSourceApi, graphEntity));
-        if (graphEntity.isTypesSingle()) {
-            treeRoot.add(objectToTreeNode(graphEntity.getTypesName(), graphEntity.getTypes().get(0), dataSourceApi, graphEntity));
+    private static void addGraphEntityData(PatchedDefaultMutableTreeNode treeRoot, MetaEntity metaEntity, DataSource dataSourceApi) {
+        treeRoot.add(objectToTreeNode(ID, metaEntity.getId(), dataSourceApi, metaEntity));
+        if (metaEntity.isTypesSingle()) {
+            treeRoot.add(objectToTreeNode(metaEntity.getTypesName(), metaEntity.getTypes().get(0), dataSourceApi, metaEntity));
         } else {
-            treeRoot.add(listToTreeNode(graphEntity.getTypesName(), graphEntity.getTypes(), dataSourceApi, graphEntity));
+            treeRoot.add(listToTreeNode(metaEntity.getTypesName(), metaEntity.getTypes(), dataSourceApi, metaEntity));
         }
-        treeRoot.add(mapToTreeNode(PROPERTIES, graphEntity.getProperties(), dataSourceApi, graphEntity));
+        treeRoot.add(mapToTreeNode(PROPERTIES, metaEntity.getProperties(), dataSourceApi, metaEntity));
     }
 
-    private static PatchedDefaultMutableTreeNode pathToTreeNode(String key, GraphPath path, DataSource dataSourceApi, Object rootObject) {
+    private static PatchedDefaultMutableTreeNode pathToTreeNode(String key, EntityPath path, DataSource dataSourceApi, Object rootObject) {
         PatchedDefaultMutableTreeNode root = new PatchedDefaultMutableTreeNode(modelOf(null, key, PATH, dataSourceApi, rootObject));
         List<Object> components = path.getComponents();
         for (int i = 0; i < components.size(); i++) {
@@ -141,10 +140,10 @@ public final class UiHelper {
     }
 
     private static TreeNodeModelApi modelOf(Object value, String key, String description, DataSource dataSourceApi, Object rootObject) {
-        if (value instanceof GraphNode) {
-            return new NodeModel((GraphNode) value, key, dataSourceApi);
-        } else if (value instanceof GraphRelationship) {
-            return new RelationshipModel((GraphRelationship) value, key, dataSourceApi);
+        if (value instanceof MetaNode) {
+            return new NodeModel((MetaNode) value, key, dataSourceApi);
+        } else if (value instanceof EntityRelationship) {
+            return new RelationshipModel((EntityRelationship) value, key, dataSourceApi);
         } else if (value instanceof List) {
             return new ListModel(key, dataSourceApi);
         } else if (value instanceof Map) {

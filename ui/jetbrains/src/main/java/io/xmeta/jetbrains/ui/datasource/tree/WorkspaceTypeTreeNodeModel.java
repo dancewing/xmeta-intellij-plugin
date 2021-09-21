@@ -1,19 +1,19 @@
 package io.xmeta.jetbrains.ui.datasource.tree;
 
-import io.xmeta.api.data.Workspace;
+import io.xmeta.api.data.MetaWorkspace;
 import io.xmeta.jetbrains.component.datasource.state.DataSource;
-import icons.GraphIcons;
+import icons.MetaIcons;
 
 import java.util.Optional;
 
-public class WorkspaceTypeTreeNodeModel extends MetadataTreeNodeModel<Workspace> {
+public class WorkspaceTypeTreeNodeModel extends MetadataTreeNodeModel<MetaWorkspace> {
 
     private static final String NAME_WITH_COUNT = "%s (%d)";
     private int count;
 
-    public WorkspaceTypeTreeNodeModel(Neo4jTreeNodeType type, DataSource dataSourceApi, Workspace value, int count) {
+    public WorkspaceTypeTreeNodeModel(Neo4jTreeNodeType type, DataSource dataSourceApi, MetaWorkspace value, int count) {
         super(type, dataSourceApi, value,
-                GraphIcons.Nodes.WORKSPACE);
+                MetaIcons.Nodes.WORKSPACE);
         this.count = count;
     }
 

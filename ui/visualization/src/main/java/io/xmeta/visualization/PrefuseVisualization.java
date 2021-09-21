@@ -1,7 +1,7 @@
 package io.xmeta.visualization;
 
-import io.xmeta.api.data.GraphNode;
-import io.xmeta.api.data.GraphRelationship;
+import io.xmeta.api.data.MetaNode;
+import io.xmeta.api.data.EntityRelationship;
 import io.xmeta.visualization.events.EventType;
 import io.xmeta.visualization.events.NodeCallback;
 import io.xmeta.visualization.events.RelationshipCallback;
@@ -18,12 +18,12 @@ public class PrefuseVisualization implements VisualizationApi {
     }
 
     @Override
-    public void addNode(GraphNode node) {
+    public void addNode(MetaNode node) {
         display.addNode(node);
     }
 
     @Override
-    public void addRelation(GraphRelationship relationship) {
+    public void addRelation(EntityRelationship relationship) {
         display.addRelationship(relationship);
     }
 

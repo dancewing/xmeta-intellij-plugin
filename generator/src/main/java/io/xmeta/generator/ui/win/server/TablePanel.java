@@ -4,7 +4,7 @@ import io.xmeta.generator.model.JTableModel;
 import io.xmeta.generator.ui.win.IWindows;
 import io.xmeta.generator.vo.impl.EntityImpl;
 import io.xmeta.generator.vo.impl.RootModel;
-import io.xmeta.api.data.GraphEntity;
+import io.xmeta.api.data.MetaEntity;
 import lombok.Data;
 import org.apache.commons.lang.StringUtils;
 
@@ -21,7 +21,7 @@ public class TablePanel implements IWindows {
     /**
      * 数据库表对象
      */
-    private final GraphEntity dbTable;
+    private final MetaEntity dbTable;
     /**
      * 面板：顶级内容面板
      */
@@ -52,7 +52,7 @@ public class TablePanel implements IWindows {
      */
     private RootModel rootModel;
 
-    public TablePanel(GraphEntity dbTable) {
+    public TablePanel(MetaEntity dbTable) {
         this.dbTable = dbTable;
 
         model = new JTableModel(table1, dbTable);

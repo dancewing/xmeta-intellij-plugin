@@ -19,10 +19,10 @@ public abstract class RootObjectAwareModel implements TreeNodeModelApi {
 
     @Override
     public Optional<ContextMenu> getContextMenu() {
-//        if (rootObject instanceof NoIdGraphEntity) {
-//            return Optional.of(new EntityContextMenu(dataSourceApi, (NoIdGraphEntity) rootObject));
-//        } else if (this instanceof NoIdGraphEntity) {
-//            return Optional.of(new EntityContextMenu(dataSourceApi, (NoIdGraphEntity) this));
+//        if (rootObject instanceof NoIdEntity) {
+//            return Optional.of(new EntityContextMenu(dataSourceApi, (NoIdEntity) rootObject));
+//        } else if (this instanceof NoIdEntity) {
+//            return Optional.of(new EntityContextMenu(dataSourceApi, (NoIdEntity) this));
 //        }
         return Optional.empty();
     }

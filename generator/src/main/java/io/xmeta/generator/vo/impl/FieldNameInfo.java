@@ -2,7 +2,7 @@ package io.xmeta.generator.vo.impl;
 
 import io.xmeta.generator.vo.IName;
 import com.google.common.base.CaseFormat;
-import io.xmeta.api.data.GraphField;
+import io.xmeta.api.data.EntityField;
 import lombok.Getter;
 
 /**
@@ -23,7 +23,7 @@ public class FieldNameInfo implements IName {
         this.firstLower = firstLower;
     }
 
-    public FieldNameInfo(GraphField dbColumn) {
+    public FieldNameInfo(EntityField dbColumn) {
         this.value = CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, dbColumn.getName());
         this.firstUpper = CaseFormat.LOWER_CAMEL.to(CaseFormat.UPPER_CAMEL, value);
         this.firstLower = value;

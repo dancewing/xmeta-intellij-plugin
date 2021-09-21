@@ -26,7 +26,8 @@ public class SaveFilePath {
         types.add("service");
         types.add("serviceImpl");
         types.add("controller");
-        types.add("xml");
+        types.add("domain");
+        types.add("mapper");
     }
 
     /**
@@ -58,36 +59,40 @@ public class SaveFilePath {
         String entityName = String.valueOf(rootModel.getEntity().getName());
         if (Variable.type == null) {
             return new SaveFilePath(entityName + ".java",
-                    outputSettings.getSourcesPathAt("temp"));
+                    outputSettings.getServer().getSourcesPathAt("temp"));
         }
         switch (Variable.type) {
             case "entity":
-                saveFilePath = new SaveFilePath(entityName + outputSettings.getEntitySuffix() + ".java",
-                        outputSettings.getJavaPathAt(outputSettings.getEntityPackage()));
+                saveFilePath = new SaveFilePath(entityName + outputSettings.getServer().getEntitySuffix() + ".java",
+                        outputSettings.getServer().getJavaPathAt(outputSettings.getServer().getEntityPackage()));
                 break;
             case "dao":
-                saveFilePath = new SaveFilePath(entityName + outputSettings.getDaoSuffix() + ".java",
-                        outputSettings.getJavaPathAt(outputSettings.getDaoPackage()));
+                saveFilePath = new SaveFilePath(entityName + outputSettings.getServer().getDaoSuffix() + ".java",
+                        outputSettings.getServer().getJavaPathAt(outputSettings.getServer().getDaoPackage()));
                 break;
             case "service":
-                saveFilePath = new SaveFilePath(entityName + outputSettings.getServiceSuffix() + ".java",
-                        outputSettings.getJavaPathAt(outputSettings.getServicePackage()));
+                saveFilePath = new SaveFilePath(entityName + outputSettings.getServer().getServiceSuffix() + ".java",
+                        outputSettings.getServer().getJavaPathAt(outputSettings.getServer().getServicePackage()));
                 break;
             case "serviceImpl":
-                saveFilePath = new SaveFilePath(entityName + outputSettings.getServiceSuffix() + "Impl.java",
-                        outputSettings.getJavaPathAt(outputSettings.getServicePackage() + ".impl"));
+                saveFilePath = new SaveFilePath(entityName + outputSettings.getServer().getServiceSuffix() + "Impl.java",
+                        outputSettings.getServer().getJavaPathAt(outputSettings.getServer().getServicePackage() + ".impl"));
                 break;
             case "controller":
-                saveFilePath = new SaveFilePath(entityName + outputSettings.getControllerSuffix() + ".java",
-                        outputSettings.getJavaPathAt(outputSettings.getControllerPackage()));
+                saveFilePath = new SaveFilePath(entityName + outputSettings.getServer().getControllerSuffix() + ".java",
+                        outputSettings.getServer().getJavaPathAt(outputSettings.getServer().getControllerPackage()));
                 break;
-            case "xml":
-                saveFilePath = new SaveFilePath(entityName + outputSettings.getDaoSuffix() + ".xml",
-                        outputSettings.getSourcesPathAt(outputSettings.getXmlPackage()));
+            case "domain":
+                saveFilePath = new SaveFilePath(entityName + outputSettings.getServer().getDomainSuffix() + ".java",
+                        outputSettings.getServer().getJavaPathAt(outputSettings.getServer().getDomainPackage()));
+                break;
+            case "mapper":
+                saveFilePath = new SaveFilePath(entityName + outputSettings.getServer().getMapperSuffix() + ".java",
+                        outputSettings.getServer().getJavaPathAt(outputSettings.getServer().getMapperPackage()));
                 break;
             default:
                 saveFilePath = new SaveFilePath(entityName + ".java",
-                        outputSettings.getSourcesPathAt("temp"));
+                        outputSettings.getServer().getSourcesPathAt("temp"));
         }
         return saveFilePath;
     }

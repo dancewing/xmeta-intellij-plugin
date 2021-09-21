@@ -1,5 +1,6 @@
 package io.xmeta.jetbrains.ui.datasource.metadata.actions;
 
+import io.xmeta.api.data.MetaEntity;
 import io.xmeta.generator.config.ConfigService;
 import io.xmeta.generator.task.GeneratorTask;
 import io.xmeta.generator.ui.win.server.MainDialog;
@@ -11,7 +12,6 @@ import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.NlsActions;
-import io.xmeta.api.data.GraphEntity;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
@@ -25,9 +25,9 @@ import java.util.List;
  */
 public class ServerCodeGeneratorAction extends AnAction {
 
-    private final List<GraphEntity> entities;
+    private final List<MetaEntity> entities;
 
-    public ServerCodeGeneratorAction(@Nullable List<GraphEntity> entities, @Nullable @NlsActions.ActionText String text,
+    public ServerCodeGeneratorAction(@Nullable List<MetaEntity> entities, @Nullable @NlsActions.ActionText String text,
                                      @Nullable @NlsActions.ActionDescription String description, @Nullable Icon icon) {
         super(text, description, icon);
         this.entities = entities;
@@ -57,7 +57,7 @@ public class ServerCodeGeneratorAction extends AnAction {
             Messages.showWarningDialog("初始化配置信息失败，但并不影响继续使用！", "错误");
             configService = new ConfigService();
         }
-        MainDialog dialog = new MainDialog(project, entities.toArray(new GraphEntity[]{}), configService);
+        MainDialog dialog = new MainDialog(project, entities.toArray(new MetaEntity[]{}), configService);
         if (dialog.go()) {
             GeneratorTask task = dialog.getTask();
             if (task != null) {

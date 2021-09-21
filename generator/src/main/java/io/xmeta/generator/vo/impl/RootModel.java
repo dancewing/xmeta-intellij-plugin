@@ -4,7 +4,7 @@ import io.xmeta.generator.config.OutputSettings;
 import io.xmeta.generator.vo.IEntityField;
 import io.xmeta.generator.vo.ITable;
 import io.xmeta.generator.vo.ITableColumn;
-import io.xmeta.api.data.GraphEntity;
+import io.xmeta.api.data.MetaEntity;
 import lombok.Getter;
 
 import java.util.List;
@@ -38,7 +38,7 @@ public class RootModel {
 
     private final PrimaryInfo primary;
 
-    public RootModel(GraphEntity dbTable, List<EntityFieldImpl> fields, List<TableColumnImpl> columns) {
+    public RootModel(MetaEntity dbTable, List<EntityFieldImpl> fields, List<TableColumnImpl> columns) {
         this.table = new TableImpl(dbTable);
         this.entity = new EntityImpl(dbTable);
         this.fields = fields;

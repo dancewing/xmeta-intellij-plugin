@@ -1,8 +1,8 @@
 package io.xmeta.generator.vo.impl;
 
+import io.xmeta.api.data.MetaEntity;
 import io.xmeta.generator.config.OutputSettings;
 import io.xmeta.generator.vo.IEntity;
-import io.xmeta.api.data.GraphEntity;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.lang.StringUtils;
@@ -24,7 +24,7 @@ public class EntityImpl implements IEntity {
     @Setter
     private String uri;
 
-    public EntityImpl(GraphEntity dbTable) {
+    public EntityImpl(MetaEntity dbTable) {
         this.comment = StringUtils.defaultString(dbTable.getName(), "");
         this.name = new EntityName(dbTable);
     }

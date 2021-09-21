@@ -11,7 +11,7 @@ import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.util.ui.JBUI;
-import io.xmeta.api.GraphDatabaseApi;
+import io.xmeta.api.MetaDatabaseApi;
 import io.xmeta.jetbrains.component.datasource.state.DataSource;
 import io.xmeta.jetbrains.database.DatabaseManagerService;
 import io.xmeta.jetbrains.services.ExecutorService;
@@ -91,7 +91,7 @@ public abstract class DataSourceDialog extends DialogWrapper {
     private String executeOkQuery() {
         DataSource dataSource = constructDataSource();
         DatabaseManagerService databaseManager = ServiceManager.getService(DatabaseManagerService.class);
-        GraphDatabaseApi db = databaseManager.getDatabaseFor(dataSource);
+        MetaDatabaseApi db = databaseManager.getDatabaseFor(dataSource);
 
         try {
             String value = db.getToken();

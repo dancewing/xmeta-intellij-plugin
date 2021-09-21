@@ -1,9 +1,9 @@
 package io.xmeta.generator.vo.impl;
 
+import io.xmeta.api.data.MetaEntity;
 import io.xmeta.generator.config.OutputSettings;
 import io.xmeta.generator.vo.IName;
 import com.google.common.base.CaseFormat;
-import io.xmeta.api.data.GraphEntity;
 import lombok.Getter;
 
 /**
@@ -21,6 +21,17 @@ public class EntityName implements IName {
      * 实体类完整名称
      */
     private IName entity;
+
+    /**
+     * Domain完整名称
+     */
+    private IName domain;
+
+    /**
+     * Mapper完整名称
+     */
+    private IName mapper;
+
     /**
      * Service 完整名称
      */
@@ -38,7 +49,7 @@ public class EntityName implements IName {
      */
     private IName controller;
 
-    public EntityName(GraphEntity dbTable) {
+    public EntityName(MetaEntity dbTable) {
         this.value = CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, dbTable.getName());
         this.firstUpper = value;
         this.firstLower = CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, value);
@@ -56,11 +67,13 @@ public class EntityName implements IName {
     }
 
     public void initMore(OutputSettings outputSettings) {
-        this.entity = build(outputSettings.getEntitySuffix());
-        this.service = build(outputSettings.getServiceSuffix());
-        this.serviceImpl = build(outputSettings.getServiceSuffix() + "Impl");
-        this.dao = build(outputSettings.getDaoSuffix());
-        this.controller = build(outputSettings.getControllerSuffix());
+        this.entity = build(outputSettings.getServer().getEntitySuffix());
+        this.service = build(outputSettings.getServer().getServiceSuffix());
+        this.serviceImpl = build(outputSettings.getServer().getServiceSuffix() + "Impl");
+        this.dao = build(outputSettings.getServer().getDaoSuffix());
+        this.controller = build(outputSettings.getServer().getControllerSuffix());
+        this.domain = build(outputSettings.getServer().getDomainSuffix());
+        this.mapper = build(outputSettings.getServer().getMapperSuffix());
     }
 
     private IName build(String suffix) {

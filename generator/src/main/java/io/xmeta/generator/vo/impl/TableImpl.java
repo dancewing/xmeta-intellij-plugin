@@ -1,7 +1,7 @@
 package io.xmeta.generator.vo.impl;
 
+import io.xmeta.api.data.MetaEntity;
 import io.xmeta.generator.vo.ITable;
-import io.xmeta.api.data.GraphEntity;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
@@ -20,12 +20,12 @@ public class TableImpl implements ITable {
      */
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
-    private final GraphEntity dbTable;
+    private final MetaEntity dbTable;
 
     private final String name;
     private final String comment;
 
-    public TableImpl(GraphEntity dbTable) {
+    public TableImpl(MetaEntity dbTable) {
         this.dbTable = dbTable;
         this.name = dbTable.getName();
         this.comment = StringUtils.defaultString(dbTable.getName(), "");

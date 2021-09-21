@@ -98,7 +98,7 @@ public class Generator {
             }
             SaveFilePath saveFilePath;
             if (Variable.type == null) {
-                saveFilePath = new SaveFilePath(templateFile.getName(), outputSettings.getSourcesPathAt("temp"));
+                saveFilePath = new SaveFilePath(templateFile.getName(), outputSettings.getServer().getSourcesPathAt("temp"));
             } else {
                 saveFilePath = SaveFilePath.create(rootModel, outputSettings);
             }

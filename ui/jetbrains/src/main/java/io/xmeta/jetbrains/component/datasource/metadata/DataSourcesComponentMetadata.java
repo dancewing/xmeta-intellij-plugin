@@ -2,9 +2,9 @@ package io.xmeta.jetbrains.component.datasource.metadata;
 
 import com.intellij.openapi.components.ProjectComponent;
 import com.intellij.util.messages.MessageBus;
-import io.xmeta.api.GraphDatabaseApi;
-import io.xmeta.api.query.GraphQueryResult;
-import io.xmeta.api.query.GraphQueryResultColumn;
+import io.xmeta.api.MetaDatabaseApi;
+import io.xmeta.api.query.MetaQueryResult;
+import io.xmeta.api.query.MetaQueryResultColumn;
 import io.xmeta.jetbrains.component.datasource.DataSourceType;
 import io.xmeta.jetbrains.component.datasource.state.DataSource;
 import io.xmeta.jetbrains.database.DatabaseManagerService;
@@ -69,28 +69,28 @@ public class DataSourcesComponentMetadata implements ProjectComponent {
     }
 
     private DataSourceMetadata getNeo4jBoltMetadata(DataSource dataSource) {
-        GraphDatabaseApi db = databaseManager.getDatabaseFor(dataSource);
+        MetaDatabaseApi db = databaseManager.getDatabaseFor(dataSource);
         Neo4jBoltCypherDataSourceMetadata metadata = new Neo4jBoltCypherDataSourceMetadata();
 
-        GraphQueryResult indexesResult = db.execute("CALL db.indexes()");
-        GraphQueryResult constraintsResult = db.execute("CALL db.constraints()");
-        GraphQueryResult labelsQueryResult = db.execute("CALL db.labels()");
-        GraphQueryResult relationshipQueryResult = db.execute("CALL db.relationshipTypes()");
-        GraphQueryResult propertyKeysResult = db.execute("CALL db.propertyKeys()");
-        GraphQueryResult storedProceduresResult = db.execute("CALL dbms.procedures()");
+        MetaQueryResult indexesResult = db.execute("CALL db.indexes()");
+        MetaQueryResult constraintsResult = db.execute("CALL db.constraints()");
+        MetaQueryResult labelsQueryResult = db.execute("CALL db.labels()");
+        MetaQueryResult relationshipQueryResult = db.execute("CALL db.relationshipTypes()");
+        MetaQueryResult propertyKeysResult = db.execute("CALL db.propertyKeys()");
+        MetaQueryResult storedProceduresResult = db.execute("CALL dbms.procedures()");
 
         metadata.addIndexes(indexesResult);
         metadata.addConstraints(constraintsResult);
 
         List<String> listOfLabels = extractLabels(labelsQueryResult);
         if (!listOfLabels.isEmpty()) {
-            GraphQueryResult labelCount = db.execute(queryLabelCount(listOfLabels));
+            MetaQueryResult labelCount = db.execute(queryLabelCount(listOfLabels));
             metadata.addLabels(labelCount, listOfLabels);
         }
 
         List<String> listOfRelationshipTypes = extractRelationshipTypes(relationshipQueryResult);
         if (!listOfRelationshipTypes.isEmpty()) {
-            GraphQueryResult relationshipTypeCountResult = db.execute(queryRelationshipTypeCount(listOfRelationshipTypes));
+            MetaQueryResult relationshipTypeCountResult = db.execute(queryRelationshipTypeCount(listOfRelationshipTypes));
             metadata.addRelationshipTypes(relationshipTypeCountResult, listOfRelationshipTypes);
         }
 
@@ -102,7 +102,7 @@ public class DataSourcesComponentMetadata implements ProjectComponent {
                 .anyMatch((map) -> map.get("name").equals("dbms.functions"));
 
         if (supportsUserFunctions) {
-            GraphQueryResult userFunctionsResult = db.execute("CALL dbms.functions()");
+            MetaQueryResult userFunctionsResult = db.execute("CALL dbms.functions()");
             metadata.addUserFunctions(userFunctionsResult);
         }
 
@@ -110,23 +110,23 @@ public class DataSourcesComponentMetadata implements ProjectComponent {
     }
 
     private DataSourceMetadata getOpenCypherGremlinMetadata(DataSource dataSource) {
-        GraphDatabaseApi db = databaseManager.getDatabaseFor(dataSource);
+        MetaDatabaseApi db = databaseManager.getDatabaseFor(dataSource);
         Neo4jBoltCypherDataSourceMetadata result = new Neo4jBoltCypherDataSourceMetadata();
 
         result.setWorkspaces(db.metadata());
         return result;
     }
 
-    private List<String> extractRelationshipTypes(GraphQueryResult relationshipQueryResult) {
-        GraphQueryResultColumn column = relationshipQueryResult.getColumns().get(0);
+    private List<String> extractRelationshipTypes(MetaQueryResult relationshipQueryResult) {
+        MetaQueryResultColumn column = relationshipQueryResult.getColumns().get(0);
         return relationshipQueryResult.getRows()
                 .stream()
                 .map(row -> (String) row.getValue(column))
                 .collect(toList());
     }
 
-    private List<String> extractLabels(GraphQueryResult labelsQueryResult) {
-        GraphQueryResultColumn column = labelsQueryResult.getColumns().get(0);
+    private List<String> extractLabels(MetaQueryResult labelsQueryResult) {
+        MetaQueryResultColumn column = labelsQueryResult.getColumns().get(0);
         return labelsQueryResult.getRows()
                 .stream()
                 .map(row -> (String) row.getValue(column))

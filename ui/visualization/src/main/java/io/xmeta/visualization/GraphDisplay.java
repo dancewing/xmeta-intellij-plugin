@@ -1,8 +1,8 @@
 package io.xmeta.visualization;
 
 import com.intellij.util.ui.UIUtil;
-import io.xmeta.api.data.GraphNode;
-import io.xmeta.api.data.GraphRelationship;
+import io.xmeta.api.data.MetaNode;
+import io.xmeta.api.data.EntityRelationship;
 import io.xmeta.visualization.controls.CustomNeighborHighlightControl;
 import io.xmeta.visualization.events.EventType;
 import io.xmeta.visualization.events.NodeCallback;
@@ -47,8 +47,8 @@ public class GraphDisplay extends Display {
     private Graph graph;
 
     private Map<String, Node> nodeMap = new HashMap<>();
-    private Map<String, GraphNode> graphNodeMap = new HashMap<>();
-    private Map<String, GraphRelationship> graphRelationshipMap = new HashMap<>();
+    private Map<String, MetaNode> graphNodeMap = new HashMap<>();
+    private Map<String, EntityRelationship> graphRelationshipMap = new HashMap<>();
     private CustomNeighborHighlightControl highlightControl;
     private WheelZoomControl zoomControl;
     private LookAndFeelService lookAndFeel;
@@ -106,7 +106,7 @@ public class GraphDisplay extends Display {
         addControlListener(new RelationshipListener(type, callback, graphRelationshipMap));
     }
 
-    public void addNode(GraphNode graphNode) {
+    public void addNode(MetaNode graphNode) {
         Node node = graph.addNode();
         node.set(ID, graphNode.getId());
         node.set(TYPE, DisplayUtil.getType(graphNode));
@@ -116,7 +116,7 @@ public class GraphDisplay extends Display {
         graphNodeMap.put(graphNode.getId(), graphNode);
     }
 
-    public void addRelationship(GraphRelationship graphRelationship) {
+    public void addRelationship(EntityRelationship graphRelationship) {
         if (graphRelationship.hasStartAndEndNode()) {
             String start = graphRelationship.getStartNode().getId();
             String end = graphRelationship.getEndNode().getId();

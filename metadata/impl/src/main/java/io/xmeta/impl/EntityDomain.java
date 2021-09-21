@@ -1,20 +1,20 @@
 package io.xmeta.impl;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import io.xmeta.api.data.GraphEntity;
-import io.xmeta.api.data.GraphField;
+import io.xmeta.api.data.MetaEntity;
+import io.xmeta.api.data.EntityField;
 
 import java.util.List;
 import java.util.Map;
 
-public class EntityDomain implements GraphEntity {
+public class EntityDomain implements MetaEntity {
 
     private String id;
     private String name;
     private String displayName;
     private String pluralDisplayName;
     private Integer versionNumber;
-    private List<GraphField> fields;
+    private List<EntityField> fields;
 
     public String getId() {
         return id;
@@ -49,11 +49,11 @@ public class EntityDomain implements GraphEntity {
     }
 
     @JsonDeserialize(contentAs = FieldDomain.class)
-    public List<GraphField> getFields() {
+    public List<EntityField> getFields() {
         return fields;
     }
 
-    public void setFields(List<GraphField> fields) {
+    public void setFields(List<EntityField> fields) {
         this.fields = fields;
     }
 

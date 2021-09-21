@@ -1,14 +1,20 @@
 {
-  "javaPath": "src/main/java",
-  "sourcesPath": "src/main/resources",
-  "entitySuffix": "Entity",
-  "daoSuffix": "Repository",
-  "serviceSuffix": "Service",
-  "controllerSuffix": "Controller",
-  "rootPackage": "com.example",
-  "entitySubPackage": "entity",
-  "daoSubPackage": "repository",
-  "serviceSubPackage": "service",
-  "controllerSubPackage": "controller",
-  "xmlPackage": "mapper"
+  "server": {
+    "javaPath": "src/main/java",
+    "sourcesPath": "src/main/resources",
+    "entitySuffix": "Entity",
+    "domainSuffix": "Domain",
+    "mapperSuffix": "Mapper",
+    "daoSuffix": "Repository",
+    "serviceSuffix": "Service",
+    "controllerSuffix": "Controller",
+    "rootPackage": "com.example",
+    "domainSubPackage" : "domain",
+    "mapperSubPackage": "mapper",
+    "entitySubPackage": "entity",
+    "daoSubPackage": "repository",
+    "serviceSubPackage": "service",
+    "controllerSubPackage": "controller",
+    "xmlPackage": "mapper"
+  }
 }

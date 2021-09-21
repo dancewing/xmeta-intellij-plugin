@@ -1,11 +1,11 @@
 package io.xmeta.generator.model;
 
+import io.xmeta.api.data.MetaEntity;
 import io.xmeta.generator.vo.impl.EntityFieldImpl;
 import io.xmeta.generator.vo.impl.TableColumnImpl;
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
-import io.xmeta.api.data.GraphEntity;
-import io.xmeta.api.data.GraphField;
+import io.xmeta.api.data.EntityField;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -31,7 +31,7 @@ public class JTableModel extends AbstractTableModel {
     String[] names = {"选中", "DB列名", "Java字段", "DB类型", "Java类型", "注释"};
     Boolean[] editable = {true, false, false, false, false, true};
 
-    public JTableModel(JTable columnTable, GraphEntity dbTable) {
+    public JTableModel(JTable columnTable, MetaEntity dbTable) {
         initTableContent(dbTable);
         columnTable.setModel(this);
         setColumnSelected(columnTable);
@@ -45,14 +45,14 @@ public class JTableModel extends AbstractTableModel {
         column.setMinWidth(width);
     }
 
-    private void initTableContent(GraphEntity dbTable) {
+    private void initTableContent(MetaEntity dbTable) {
         // ((DbTableImpl) psiElements[0]).getDelegate().getDasChildren(ObjectKind.COLUMN).get(3)
         // ((DbTableImpl)((DbColumnImpl) psiElement).getTable()).getDelegate().getDasChildren(ObjectKind.COLUMN).get(5).getName()
         // ((MysqlImplModel.Table) delegate).getKeys().myElements.get(0).getColNames()
         // ((MysqlImplModel.Table) delegate).getPrimaryKey().getColNames()
         int rowIndex = -1;
-        List<GraphField> columns = dbTable.getFields();
-        for (GraphField column : columns) {
+        List<EntityField> columns = dbTable.getFields();
+        for (EntityField column : columns) {
             EntityFieldImpl entityField = new EntityFieldImpl(column);
             TableColumnImpl tableColumn = new TableColumnImpl(column);
             entityField.setColumn(tableColumn);

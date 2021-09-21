@@ -24,6 +24,17 @@ public class EntityPackage {
      * 实体类包名信息
      */
     private EntityPackageInfo entity;
+
+    /**
+     * Domain包名信息
+     */
+    private EntityPackageInfo domain;
+
+    /**
+     * Mapper 包名信息
+     */
+    private EntityPackageInfo mapper;
+
     /**
      * Service 包名信息
      */
@@ -62,10 +73,12 @@ public class EntityPackage {
     }
 
     public void initMore(OutputSettings outputSettings, EntityName entityName) {
-        this.entity = new EntityPackageInfo(outputSettings.getEntityPackage(), entityName.getEntity());
-        this.service = new EntityPackageInfo(outputSettings.getServicePackage(), entityName.getService());
-        this.serviceImpl = new EntityPackageInfo(outputSettings.getServicePackage() + ".impl", entityName.getServiceImpl());
-        this.dao = new EntityPackageInfo(outputSettings.getDaoPackage(), entityName.getDao());
-        this.controller = new EntityPackageInfo(outputSettings.getControllerPackage(), entityName.getController());
+        this.entity = new EntityPackageInfo(outputSettings.getServer().getEntityPackage(), entityName.getEntity());
+        this.service = new EntityPackageInfo(outputSettings.getServer().getServicePackage(), entityName.getService());
+        this.serviceImpl = new EntityPackageInfo(outputSettings.getServer().getServicePackage() + ".impl", entityName.getServiceImpl());
+        this.dao = new EntityPackageInfo(outputSettings.getServer().getDaoPackage(), entityName.getDao());
+        this.controller = new EntityPackageInfo(outputSettings.getServer().getControllerPackage(), entityName.getController());
+        this.domain = new EntityPackageInfo(outputSettings.getServer().getDomainPackage(), entityName.getDomain());
+        this.mapper = new EntityPackageInfo(outputSettings.getServer().getMapperPackage(), entityName.getMapper());
     }
 }

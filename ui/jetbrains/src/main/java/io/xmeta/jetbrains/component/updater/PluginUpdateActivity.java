@@ -6,8 +6,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.startup.StartupActivity;
 import io.xmeta.jetbrains.component.settings.SettingsComponent;
 import io.xmeta.jetbrains.util.PluginUtil;
-import io.xmeta.platform.GraphBundle;
-import io.xmeta.platform.GraphConstants;
+import io.xmeta.platform.MetaBundle;
+import io.xmeta.platform.MetaConstants;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.event.HyperlinkEvent;
@@ -23,7 +23,7 @@ public class PluginUpdateActivity implements StartupActivity, DumbAware {
         String knownVersion = SettingsComponent.getInstance().getKnownPluginVersion();
 
         boolean isUpdated = !currentVersion.equals(knownVersion);
-        if (isUpdated || GraphConstants.IS_DEVELOPMENT) {
+        if (isUpdated || MetaConstants.IS_DEVELOPMENT) {
             if (!isUpdateNotificationShown) {
                 SettingsComponent.getInstance().setKnownPluginVersion(currentVersion);
                 showNotification(project, currentVersion);
@@ -35,8 +35,8 @@ public class PluginUpdateActivity implements StartupActivity, DumbAware {
     private void showNotification(Project project, String currentVersion) {
         NotificationGroup group = new NotificationGroup(NOTIFICATION_ID, NotificationDisplayType.STICKY_BALLOON, true);
         Notification notification = group.createNotification(
-                GraphBundle.message("updater.title", currentVersion),
-                GraphBundle.message("updater.notification"),
+                MetaBundle.message("updater.title", currentVersion),
+                MetaBundle.message("updater.notification"),
                 NotificationType.INFORMATION,
                 new UrlOpeningListenerWithAnalytics(false)
         );

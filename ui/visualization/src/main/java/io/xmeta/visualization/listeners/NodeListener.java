@@ -1,6 +1,6 @@
 package io.xmeta.visualization.listeners;
 
-import io.xmeta.api.data.GraphNode;
+import io.xmeta.api.data.MetaNode;
 import io.xmeta.visualization.events.EventType;
 import io.xmeta.visualization.events.NodeCallback;
 import prefuse.controls.ControlAdapter;
@@ -14,9 +14,9 @@ public class NodeListener extends ControlAdapter {
 
     private EventType type;
     private NodeCallback callback;
-    private Map<String, GraphNode> graphNodeMap;
+    private Map<String, MetaNode> graphNodeMap;
 
-    public NodeListener(EventType type, NodeCallback callback, Map<String, GraphNode> graphNodeMap) {
+    public NodeListener(EventType type, NodeCallback callback, Map<String, MetaNode> graphNodeMap) {
         this.type = type;
         this.callback = callback;
         this.graphNodeMap = graphNodeMap;

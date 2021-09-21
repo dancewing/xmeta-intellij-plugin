@@ -1,7 +1,7 @@
 package io.xmeta.generator.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import io.xmeta.api.data.GraphField;
+import io.xmeta.api.data.EntityField;
 import lombok.Data;
 
 import java.util.Map;
@@ -19,7 +19,7 @@ public class ColumnInfo {
      * 原始对象
      */
     @JsonIgnore
-    private GraphField obj;
+    private EntityField obj;
     /**
      * 名称
      */

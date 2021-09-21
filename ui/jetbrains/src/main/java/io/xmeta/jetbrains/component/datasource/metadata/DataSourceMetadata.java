@@ -1,6 +1,6 @@
 package io.xmeta.jetbrains.component.datasource.metadata;
 
-import io.xmeta.api.data.Workspace;
+import io.xmeta.api.data.MetaWorkspace;
 
 import java.util.List;
 import java.util.Map;
@@ -11,5 +11,5 @@ public interface DataSourceMetadata {
 
     boolean isMetadataExists(String metadataKey);
 
-    List<Workspace> getWorkspaces();
+    List<MetaWorkspace> getWorkspaces();
 }

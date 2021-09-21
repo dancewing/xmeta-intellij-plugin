@@ -6,9 +6,9 @@ globalConfig/Default/init.vm
 templates/Default/Server/ServiceImpl.java.vm
 templates/Default/Server/Service.java.vm
 templates/Default/Server/Controller.java.vm
-templates/Default/Server/MyBatisUtils.java.vm
 templates/Default/Server/Repository.java.vm
 templates/Default/Server/Entity.java.vm
-templates/Default/Server/Mapper.xml.vm
+templates/Default/Server/Domain.java.vm
+templates/Default/Server/Mapper.java.vm
 templates/Default/Client/Domain.ts.vm
 templates/README.md

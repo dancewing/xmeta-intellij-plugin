@@ -1,6 +1,6 @@
 package io.xmeta.jetbrains.ui.datasource.tree.model;
 
-import io.xmeta.api.data.GraphNode;
+import io.xmeta.api.data.MetaNode;
 import io.xmeta.jetbrains.component.datasource.state.DataSource;
 import io.xmeta.jetbrains.ui.datasource.metadata.dto.ContextMenu;
 import io.xmeta.jetbrains.ui.datasource.tree.Neo4jEntityViewNodeType;
@@ -14,12 +14,12 @@ import java.util.Optional;
 public class NodeModel implements TreeNodeModelApi {
 
     private NodeType type = Neo4jEntityViewNodeType.NODE;
-    private GraphNode node;
+    private MetaNode node;
     private String text;
     private String description = "node";
     private DataSource dataSourceApi;
 
-    public NodeModel(GraphNode node, String text, DataSource dataSourceApi) {
+    public NodeModel(MetaNode node, String text, DataSource dataSourceApi) {
         this.node = node;
         this.text = text;
         this.dataSourceApi = dataSourceApi;

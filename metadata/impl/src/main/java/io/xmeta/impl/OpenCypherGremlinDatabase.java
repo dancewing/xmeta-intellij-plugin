@@ -3,9 +3,9 @@ package io.xmeta.impl;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.xmeta.api.GraphDatabaseApi;
-import io.xmeta.api.data.Workspace;
-import io.xmeta.api.query.GraphQueryResult;
+import io.xmeta.api.MetaDatabaseApi;
+import io.xmeta.api.data.MetaWorkspace;
+import io.xmeta.api.query.MetaQueryResult;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -25,7 +25,7 @@ import java.util.*;
 /**
  * Communicates with TinkerPop database by translating Cypher to Gremlin
  */
-public class OpenCypherGremlinDatabase implements GraphDatabaseApi {
+public class OpenCypherGremlinDatabase implements MetaDatabaseApi {
 
     private final OpenCypherGremlinConfiguration configuration;
     private final ObjectMapper objectMapper = new ObjectMapper();
@@ -52,12 +52,12 @@ public class OpenCypherGremlinDatabase implements GraphDatabaseApi {
     }
 
     @Override
-    public GraphQueryResult execute(String query) {
+    public MetaQueryResult execute(String query) {
         return execute(query, Collections.emptyMap());
     }
 
     @Override
-    public GraphQueryResult execute(String query, Map<String, Object> statementParameters) {
+    public MetaQueryResult execute(String query, Map<String, Object> statementParameters) {
 //        Client gremlinClient = cluster.connect();
 //
 //        try (CypherGremlinClient client = flavor.client(gremlinClient)) {
@@ -70,14 +70,14 @@ public class OpenCypherGremlinDatabase implements GraphDatabaseApi {
 //            List<Map<String, Object>> result = client.submit(query, serializableMap).all();
 //            long endTime = System.currentTimeMillis();
 //
-//            List<GraphQueryResultColumn> headers = getHeaders(result);
+//            List<MetaQueryResultColumn> headers = getHeaders(result);
 //
-//            List<GraphQueryResultRow> rows = result.stream()
+//            List<MetaQueryResultRow> rows = result.stream()
 //                    .map(converter::toRecord)
 //                    .collect(toList());
 //
-//            List<GraphNode> nodes = rows.stream().flatMap(e -> e.getNodes().stream()).distinct().collect(toList());
-//            List<GraphRelationship> relationships = rows.stream().flatMap(e -> e.getRelationships().stream()).distinct().collect(toList());
+//            List<MetaNode> nodes = rows.stream().flatMap(e -> e.getNodes().stream()).distinct().collect(toList());
+//            List<EntityRelationship> relationships = rows.stream().flatMap(e -> e.getRelationships().stream()).distinct().collect(toList());
 //
 //            return new OpenCypherGremlinQueryResult(endTime - startTime,
 //                    headers,
@@ -95,7 +95,7 @@ public class OpenCypherGremlinDatabase implements GraphDatabaseApi {
         return null;
     }
 
-//    private List<GraphQueryResultColumn> getHeaders(List<Map<String, Object>> result) {
+//    private List<MetaQueryResultColumn> getHeaders(List<Map<String, Object>> result) {
 //        if (result.isEmpty()) {
 //            return emptyList();
 //        } else {
@@ -176,7 +176,7 @@ public class OpenCypherGremlinDatabase implements GraphDatabaseApi {
     }
 
     @Override
-    public List<Workspace> metadata() {
+    public List<MetaWorkspace> metadata() {
         String token = "";
         try {
             token = getToken();
@@ -202,14 +202,14 @@ public class OpenCypherGremlinDatabase implements GraphDatabaseApi {
             httpResponse = httpClient.execute(httpGet);
             HttpEntity httpEntity = httpResponse.getEntity();
             // 输出请求结果
-            List<WorkspaceDomain> workspaceDomains = objectMapper.readValue(EntityUtils.toByteArray(httpEntity),
-                    new TypeReference<List<WorkspaceDomain>>() {
+            List<MetaWorkspaceDomain> workspaceDomains = objectMapper.readValue(EntityUtils.toByteArray(httpEntity),
+                    new TypeReference<List<MetaWorkspaceDomain>>() {
             });
 
-            List<Workspace> workspaces = new ArrayList<>();
-            workspaceDomains.stream().forEach(workspaceDomain -> workspaces.add(workspaceDomain));
+            List<MetaWorkspace> metaWorkspaces = new ArrayList<>();
+            workspaceDomains.stream().forEach(workspaceDomain -> metaWorkspaces.add(workspaceDomain));
 
-            return workspaces;
+            return metaWorkspaces;
 
         } catch (IOException e) {
             e.printStackTrace();

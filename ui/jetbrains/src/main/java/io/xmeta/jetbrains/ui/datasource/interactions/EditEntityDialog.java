@@ -6,9 +6,9 @@ import com.intellij.icons.AllIcons;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.util.Disposer;
-import io.xmeta.api.data.GraphEntity;
-import io.xmeta.api.data.GraphField;
-import io.xmeta.api.data.GraphNode;
+import io.xmeta.api.data.MetaEntity;
+import io.xmeta.api.data.EntityField;
+import io.xmeta.api.data.MetaNode;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
@@ -37,14 +37,14 @@ public class EditEntityDialog extends DialogWrapper {
     private JPanel container;
     private JPanel labelsPanel;
 
-    private GraphEntity node;
+    private MetaEntity node;
 
-    public EditEntityDialog(Project project, GraphEntity node) {
+    public EditEntityDialog(Project project, MetaEntity node) {
         super(project);
         this.node = node;
 
         boolean isCreateMode = node == null;
-        boolean isNodeEdit = isCreateMode || node instanceof GraphNode;
+        boolean isNodeEdit = isCreateMode || node instanceof MetaNode;
 
         Disposer.register(project, myDisposable);
         init();
@@ -173,8 +173,8 @@ public class EditEntityDialog extends DialogWrapper {
         });
     }
 
-    public GraphEntity getUpdatedEntity() {
-        return new GraphEntity() {
+    public MetaEntity getUpdatedEntity() {
+        return new MetaEntity() {
             @Override
             public String getRepresentation() {
                 return EditEntityDialog.this.node.getRepresentation();
@@ -231,7 +231,7 @@ public class EditEntityDialog extends DialogWrapper {
             }
 
             @Override
-            public List<GraphField> getFields() {
+            public List<EntityField> getFields() {
                 return null;
             }
         };

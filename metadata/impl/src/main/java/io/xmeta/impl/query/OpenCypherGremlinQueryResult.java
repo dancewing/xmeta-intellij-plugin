@@ -1,25 +1,25 @@
 package io.xmeta.impl.query;
 
-import io.xmeta.api.data.GraphNode;
-import io.xmeta.api.data.GraphRelationship;
+import io.xmeta.api.data.EntityRelationship;
+import io.xmeta.api.data.MetaNode;
 import io.xmeta.api.query.*;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-public class OpenCypherGremlinQueryResult implements GraphQueryResult {
+public class OpenCypherGremlinQueryResult implements MetaQueryResult {
     private final long executionTimeMs;
-    private List<GraphQueryResultColumn> columns;
-    private List<GraphQueryResultRow> rows;
-    private List<GraphNode> nodes;
-    private List<GraphRelationship> relationships;
+    private List<MetaQueryResultColumn> columns;
+    private List<MetaQueryResultRow> rows;
+    private List<MetaNode> nodes;
+    private List<EntityRelationship> relationships;
 
     public OpenCypherGremlinQueryResult(long executionTimeMs,
-                                        List<GraphQueryResultColumn> columns,
-                                        List<GraphQueryResultRow> rows,
-                                        List<GraphNode> nodes,
-                                        List<GraphRelationship> relationships) {
+                                        List<MetaQueryResultColumn> columns,
+                                        List<MetaQueryResultRow> rows,
+                                        List<MetaNode> nodes,
+                                        List<EntityRelationship> relationships) {
         this.executionTimeMs = executionTimeMs;
         this.columns = columns;
         this.rows = rows;
@@ -39,27 +39,27 @@ public class OpenCypherGremlinQueryResult implements GraphQueryResult {
     }
 
     @Override
-    public List<GraphQueryResultColumn> getColumns() {
+    public List<MetaQueryResultColumn> getColumns() {
         return columns;
     }
 
     @Override
-    public List<GraphQueryResultRow> getRows() {
+    public List<MetaQueryResultRow> getRows() {
         return rows;
     }
 
     @Override
-    public List<GraphNode> getNodes() {
+    public List<MetaNode> getNodes() {
         return nodes;
     }
 
     @Override
-    public List<GraphRelationship> getRelationships() {
+    public List<EntityRelationship> getRelationships() {
         return relationships;
     }
 
     @Override
-    public List<GraphQueryNotification> getNotifications() {
+    public List<MetaQueryNotification> getNotifications() {
         return Collections.emptyList();
     }
 
@@ -74,7 +74,7 @@ public class OpenCypherGremlinQueryResult implements GraphQueryResult {
     }
 
     @Override
-    public Optional<GraphQueryPlan> getPlan() {
+    public Optional<MetaQueryPlan> getPlan() {
         return Optional.empty();
     }
 }
