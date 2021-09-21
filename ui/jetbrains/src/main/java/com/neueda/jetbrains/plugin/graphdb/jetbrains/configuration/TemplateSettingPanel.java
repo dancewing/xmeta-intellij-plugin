@@ -70,9 +70,15 @@ public class TemplateSettingPanel implements Configurable {
     private BaseGroupPanel baseGroupPanel;
 
     /**
-     * 基本的元素选择面板
+     * 服务端的元素选择面板
      */
-    private BaseItemSelectPanel<Template> baseItemSelectPanel;
+    private BaseItemSelectPanel<Template> serverItemSelectPanel;
+    /**
+     * 服务端的元素选择面板
+     */
+    private BaseItemSelectPanel<Template> clientItemSelectPanel;
+
+    private JTabbedPane tabbedPane;
 
     /**
      * 当前分组
@@ -83,6 +89,7 @@ public class TemplateSettingPanel implements Configurable {
      * 当前选中分组
      */
     private String currGroupName;
+
 
     /**
      * 项目对象
@@ -160,11 +167,11 @@ public class TemplateSettingPanel implements Configurable {
             @Override
             protected void changeGroup(String name) {
                 currGroupName = name;
-                if (baseItemSelectPanel == null) {
+                if (serverItemSelectPanel == null) {
                     return;
                 }
                 // 重置模板选择
-                baseItemSelectPanel.reset(group.get(currGroupName).getElementList(), 0);
+                serverItemSelectPanel.reset(group.get(currGroupName).getElementList(), 0);
                 if (group.get(currGroupName).getElementList().isEmpty()) {
                     // 没有元素时，需要清空编辑框
                     templateEditor.reset("empty", "");
@@ -173,13 +180,13 @@ public class TemplateSettingPanel implements Configurable {
         };
 
         // 创建元素选择面板
-        this.baseItemSelectPanel = new BaseItemSelectPanel<Template>(group.get(currGroupName).getElementList(), true) {
+        this.serverItemSelectPanel = new BaseItemSelectPanel<Template>(group.get(currGroupName).getElementList(), true) {
             @Override
             protected void addItem(String name) {
                 List<Template> templateList = group.get(currGroupName).getElementList();
                 // 新增模板
                 templateList.add(new Template(name ,"",  GenMode.Server));
-                baseItemSelectPanel.reset(templateList, templateList.size() - 1);
+                serverItemSelectPanel.reset(templateList, templateList.size() - 1);
             }
 
             @Override
@@ -189,14 +196,14 @@ public class TemplateSettingPanel implements Configurable {
                 template.setName(newName);
                 List<Template> templateList = group.get(currGroupName).getElementList();
                 templateList.add(template);
-                baseItemSelectPanel.reset(templateList, templateList.size() - 1);
+                serverItemSelectPanel.reset(templateList, templateList.size() - 1);
             }
 
             @Override
             protected void deleteItem(Template item) {
                 // 删除模板
                 group.get(currGroupName).getElementList().remove(item);
-                baseItemSelectPanel.reset(group.get(currGroupName).getElementList(), 0);
+                serverItemSelectPanel.reset(group.get(currGroupName).getElementList(), 0);
                 if (group.get(currGroupName).getElementList().isEmpty()) {
                     // 没有元素时，需要清空编辑框
                     templateEditor.reset("empty", "");
@@ -211,7 +218,7 @@ public class TemplateSettingPanel implements Configurable {
                     templateEditor = new TemplateEditor(project, item.getName() + ".vm", item.getCode(), TEMPLATE_DESCRIPTION_INFO, velocityFileType);
                     // 代码修改回调
                     templateEditor.setCallback(() -> onUpdate());
-                    baseItemSelectPanel.getRightPanel().add(templateEditor.createComponent(), BorderLayout.CENTER);
+                    serverItemSelectPanel.getRightPanel().add(templateEditor.createComponent(), BorderLayout.CENTER);
                 } else {
                     // 更新代码
                     templateEditor.reset(item.getName(), item.getCode());
@@ -219,11 +226,62 @@ public class TemplateSettingPanel implements Configurable {
             }
         };
 
+        // 创建元素选择面板
+        this.clientItemSelectPanel = new BaseItemSelectPanel<Template>(group.get(currGroupName).getElementList(), true) {
+            @Override
+            protected void addItem(String name) {
+                List<Template> templateList = group.get(currGroupName).getElementList();
+                // 新增模板
+                templateList.add(new Template(name ,"",  GenMode.Server));
+                serverItemSelectPanel.reset(templateList, templateList.size() - 1);
+            }
+
+            @Override
+            protected void copyItem(String newName, Template item) {
+                // 复制模板
+                Template template = CloneUtils.cloneByJson(item);
+                template.setName(newName);
+                List<Template> templateList = group.get(currGroupName).getElementList();
+                templateList.add(template);
+                serverItemSelectPanel.reset(templateList, templateList.size() - 1);
+            }
+
+            @Override
+            protected void deleteItem(Template item) {
+                // 删除模板
+                group.get(currGroupName).getElementList().remove(item);
+                serverItemSelectPanel.reset(group.get(currGroupName).getElementList(), 0);
+                if (group.get(currGroupName).getElementList().isEmpty()) {
+                    // 没有元素时，需要清空编辑框
+                    templateEditor.reset("empty", "");
+                }
+            }
+
+            @Override
+            protected void selectedItem(Template item) {
+                // 如果编辑面板已经实例化，需要选释放后再初始化
+                if (templateEditor == null) {
+                    FileType velocityFileType = FileTypeManager.getInstance().getFileTypeByExtension("vm");
+                    templateEditor = new TemplateEditor(project, item.getName() + ".vm", item.getCode(), TEMPLATE_DESCRIPTION_INFO, velocityFileType);
+                    // 代码修改回调
+                    templateEditor.setCallback(() -> onUpdate());
+                    serverItemSelectPanel.getRightPanel().add(templateEditor.createComponent(), BorderLayout.CENTER);
+                } else {
+                    // 更新代码
+                    templateEditor.reset(item.getName(), item.getCode());
+                }
+            }
+        };
+
+
         // 添加调试面板
         this.addDebugPanel();
 
         mainPanel.add(baseGroupPanel, BorderLayout.NORTH);
-        mainPanel.add(baseItemSelectPanel.getComponent(), BorderLayout.CENTER);
+        this.tabbedPane = new JTabbedPane();
+        this.tabbedPane.addTab("Server", this.serverItemSelectPanel.getComponent());
+        this.tabbedPane.addTab("Client", this.clientItemSelectPanel.getComponent());
+        mainPanel.add(tabbedPane, BorderLayout.CENTER);
         return mainPanel;
     }
 
@@ -369,7 +427,7 @@ public class TemplateSettingPanel implements Configurable {
      */
     private void onUpdate() {
         // 同步修改的代码
-        Template template = baseItemSelectPanel.getSelectedItem();
+        Template template = serverItemSelectPanel.getSelectedItem();
         if (template != null) {
             template.setCode(templateEditor.getEditor().getDocument().getText());
             TemplateFileUtils.saveTemplateCode(project, currGroupName,

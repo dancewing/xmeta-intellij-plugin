@@ -10,4 +10,5 @@ templates/Default/Server/MyBatisUtils.java.vm
 templates/Default/Server/Repository.java.vm
 templates/Default/Server/Entity.java.vm
 templates/Default/Server/Mapper.xml.vm
+templates/Default/Client/Domain.ts.vm
 templates/README.md
