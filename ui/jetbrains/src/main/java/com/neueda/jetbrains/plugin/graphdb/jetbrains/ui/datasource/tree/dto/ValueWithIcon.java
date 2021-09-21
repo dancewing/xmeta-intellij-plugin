@@ -1,7 +1,7 @@
 package com.neueda.jetbrains.plugin.graphdb.jetbrains.ui.datasource.tree.dto;
 
 
-import javax.swing.Icon;
+import javax.swing.*;
 
 public class ValueWithIcon {
 

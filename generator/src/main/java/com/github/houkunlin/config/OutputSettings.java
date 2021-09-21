@@ -9,7 +9,7 @@ import lombok.Data;
  * @date 2020/4/3 0003 14:56
  */
 @Data
-public class Settings {
+public class OutputSettings {
     /**
      * 项目路径
      */
@@ -41,23 +41,41 @@ public class Settings {
     /**
      * Entity 包名
      */
-    private String entityPackage = "com.example.entity";
+    private String entitySubPackage = "entity";
     /**
      * Dao 包名
      */
-    private String daoPackage = "com.example.repository";
+    private String daoSubPackage = "repository";
     /**
      * Service 包名
      */
-    private String servicePackage = "com.example.service";
+    private String serviceSubPackage = "service";
     /**
      * Controller 包名
      */
-    private String controllerPackage = "com.example.controller";
+    private String controllerSubPackage = "controller";
     /**
      * Mapper XML 包名
      */
     private String xmlPackage = "mapper";
+
+    private String rootPackage = "com.test";
+
+    public String getDaoPackage() {
+        return rootPackage + "." + daoSubPackage;
+    }
+
+    public String getEntityPackage () {
+        return rootPackage + "." + entitySubPackage;
+    }
+
+    public String getServicePackage () {
+        return rootPackage + "." + serviceSubPackage;
+    }
+
+    public String getControllerPackage () {
+        return rootPackage + "." + controllerSubPackage;
+    }
 
     public String getSourcesPathAt(String filename) {
         return sourcesPath + "/" + filename;

@@ -1,7 +1,7 @@
 package com.neueda.jetbrains.plugin.graphdb.jetbrains.ui.datasource.tree.model;
 
 import com.neueda.jetbrains.plugin.graphdb.database.api.data.NoIdGraphEntity;
-import com.neueda.jetbrains.plugin.graphdb.jetbrains.component.datasource.state.DataSourceApi;
+import com.neueda.jetbrains.plugin.graphdb.jetbrains.component.datasource.state.DataSource;
 import com.neueda.jetbrains.plugin.graphdb.jetbrains.ui.datasource.tree.Neo4jEntityViewNodeType;
 import com.neueda.jetbrains.plugin.graphdb.jetbrains.ui.datasource.tree.NodeType;
 import org.apache.commons.lang.StringUtils;
@@ -16,7 +16,7 @@ public class ObjectModel extends RootObjectAwareModel implements NoIdGraphEntity
     private String text;
     private String description;
 
-    public ObjectModel(Object object, String text, String description, DataSourceApi dataSourceApi, Object rootObject) {
+    public ObjectModel(Object object, String text, String description, DataSource dataSourceApi, Object rootObject) {
         super(dataSourceApi, rootObject);
         this.object = object;
         this.text = text;

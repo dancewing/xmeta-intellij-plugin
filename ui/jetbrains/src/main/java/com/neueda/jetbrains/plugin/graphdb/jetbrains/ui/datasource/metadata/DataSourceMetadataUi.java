@@ -8,7 +8,7 @@ import com.neueda.jetbrains.plugin.graphdb.database.api.data.Workspace;
 import com.neueda.jetbrains.plugin.graphdb.jetbrains.component.datasource.DataSourceType;
 import com.neueda.jetbrains.plugin.graphdb.jetbrains.component.datasource.metadata.DataSourcesComponentMetadata;
 import com.neueda.jetbrains.plugin.graphdb.jetbrains.component.datasource.metadata.Neo4jBoltCypherDataSourceMetadata;
-import com.neueda.jetbrains.plugin.graphdb.jetbrains.component.datasource.state.DataSourceApi;
+import com.neueda.jetbrains.plugin.graphdb.jetbrains.component.datasource.state.DataSource;
 import com.neueda.jetbrains.plugin.graphdb.jetbrains.ui.datasource.tree.*;
 
 import java.util.HashMap;
@@ -33,7 +33,7 @@ public class DataSourceMetadataUi {
         handlers.put(OPENCYPHER_GREMLIN, this::updateOpenCypherGremlinMetadataUi);
     }
 
-    public CompletableFuture<Boolean> updateDataSourceMetadataUi(PatchedDefaultMutableTreeNode node, DataSourceApi nodeDataSource) {
+    public CompletableFuture<Boolean> updateDataSourceMetadataUi(PatchedDefaultMutableTreeNode node, DataSource nodeDataSource) {
         DataSourceType sourceType = nodeDataSource.getDataSourceType();
         if (handlers.containsKey(sourceType)) {
             return dataSourcesComponent.getMetadata(nodeDataSource)
@@ -51,7 +51,7 @@ public class DataSourceMetadataUi {
         // Remove existing metadata from ui
         dataSourceRootTreeNode.removeAllChildren();
         TreeNodeModelApi model = (TreeNodeModelApi) dataSourceRootTreeNode.getUserObject();
-        DataSourceApi dataSourceApi = model.getDataSourceApi();
+        DataSource dataSourceApi = model.getDataSourceApi();
 
         List<Workspace> workspaces = dataSourceMetadata.getWorkspaces();
         for (Workspace workspaceDomain : workspaces) {
@@ -61,7 +61,7 @@ public class DataSourceMetadataUi {
         return true;
     }
 
-    private PatchedDefaultMutableTreeNode createWorkspaceNode(Workspace workspaceDomain, DataSourceApi dataSourceApi) {
+    private PatchedDefaultMutableTreeNode createWorkspaceNode(Workspace workspaceDomain, DataSource dataSourceApi) {
         PatchedDefaultMutableTreeNode workspaceTreeNode = new PatchedDefaultMutableTreeNode(
                 new WorkspaceTypeTreeNodeModel(WORKSPACE, dataSourceApi, workspaceDomain,
                         workspaceDomain.getApps().size()));

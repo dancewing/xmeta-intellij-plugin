@@ -1,8 +1,7 @@
 package com.github.houkunlin.ui.win;
 
-import com.github.houkunlin.config.Developer;
-import com.github.houkunlin.config.Options;
-import com.github.houkunlin.config.Settings;
+import com.github.houkunlin.config.BaseSettings;
+import com.github.houkunlin.config.OutputSettings;
 import com.github.houkunlin.util.PluginUtils;
 import com.google.common.collect.Maps;
 import com.intellij.ide.highlighter.JavaFileType;
@@ -36,67 +35,22 @@ public class BaseSetting implements IWindows {
     /**
      * 配置对象：设置信息
      */
-    private final Settings settings;
-    /**
-     * 配置对象：是否覆盖文件
-     */
-    private final Options options;
+    private final OutputSettings outputSettings;
     /**
      * 配置对象：开发者信息
      */
-    private final Developer developer;
+    private final BaseSettings baseSettings;
+
     /**
-     * 输入框：Entity前缀
+     * 输入框：Root package 前缀
      */
-    private JTextField entitySuffixField;
+    private EditorTextField rootPackageField;
+
     /**
-     * 输入框：Entity包名
+     * 按钮：Root package 包选择
      */
-    private EditorTextField entityPackageField;
-    /**
-     * 按钮：Entity 包选择
-     */
-    private JButton selectEntityPackageButton;
-    /**
-     * 输入框：Dao前缀
-     */
-    private JTextField daoSuffixField;
-    /**
-     * 输入框：Dao包名
-     */
-    private EditorTextField daoPackageField;
-    /**
-     * 按钮：Dao 包选择
-     */
-    private JButton selectDaoPackageButton;
-    /**
-     * 输入框：XML包名
-     */
-    private JTextField xmlPackageField;
-    /**
-     * 输入框：Service前缀
-     */
-    private JTextField serviceSuffixField;
-    /**
-     * 输入框：Service包名
-     */
-    private EditorTextField servicePackageField;
-    /**
-     * 按钮：Service 包选择
-     */
-    private JButton selectServicePackageButton;
-    /**
-     * 输入框：Controller前缀
-     */
-    private JTextField controllerSuffixField;
-    /**
-     * 输入框：Controller包名
-     */
-    private EditorTextField controllerPackageField;
-    /**
-     * 按钮：Controller 包选择
-     */
-    private JButton selectControllerPackageButton;
+    private JButton selectRootPackageButton;
+
     /**
      * 输入框：开发者姓名
      */
@@ -122,10 +76,9 @@ public class BaseSetting implements IWindows {
      */
     private JCheckBox overrideOtherCheckBox;
 
-    public BaseSetting(Settings settings, Developer developer, Options options) {
-        this.settings = settings;
-        this.developer = developer;
-        this.options = options;
+    public BaseSetting(OutputSettings outputSettings, BaseSettings baseSettings) {
+        this.outputSettings = outputSettings;
+        this.baseSettings = baseSettings;
         initConfig();
         configSelectPackage();
 
@@ -137,13 +90,8 @@ public class BaseSetting implements IWindows {
             private final Map<Consumer<String>, JTextComponent> map = Maps.newHashMap();
 
             public TextFieldDocumentListener() {
-                map.put(developer::setAuthor, authorField);
-                map.put(developer::setEmail, emailField);
-                map.put(settings::setEntitySuffix, entitySuffixField);
-                map.put(settings::setDaoSuffix, daoSuffixField);
-                map.put(settings::setServiceSuffix, serviceSuffixField);
-                map.put(settings::setControllerSuffix, controllerSuffixField);
-                map.put(settings::setXmlPackage, xmlPackageField);
+                map.put(baseSettings::setAuthor, authorField);
+                map.put(baseSettings::setEmail, emailField);
             }
 
             @Override
@@ -179,11 +127,6 @@ public class BaseSetting implements IWindows {
         TextFieldDocumentListener textFieldDocumentListener = new TextFieldDocumentListener();
         authorField.getDocument().addDocumentListener(textFieldDocumentListener);
         emailField.getDocument().addDocumentListener(textFieldDocumentListener);
-        entitySuffixField.getDocument().addDocumentListener(textFieldDocumentListener);
-        daoSuffixField.getDocument().addDocumentListener(textFieldDocumentListener);
-        serviceSuffixField.getDocument().addDocumentListener(textFieldDocumentListener);
-        controllerSuffixField.getDocument().addDocumentListener(textFieldDocumentListener);
-        xmlPackageField.getDocument().addDocumentListener(textFieldDocumentListener);
 
         /* 包名输入框的输入事件监听 */
         class EditorTextFieldDocumentListener implements com.intellij.openapi.editor.event.DocumentListener {
@@ -193,10 +136,7 @@ public class BaseSetting implements IWindows {
             private final Map<Consumer<String>, EditorTextField> map = Maps.newHashMap();
 
             public EditorTextFieldDocumentListener() {
-                map.put(settings::setEntityPackage, entityPackageField);
-                map.put(settings::setDaoPackage, daoPackageField);
-                map.put(settings::setServicePackage, servicePackageField);
-                map.put(settings::setControllerPackage, controllerPackageField);
+                map.put(outputSettings::setRootPackage, rootPackageField);
             }
 
             /**
@@ -217,10 +157,7 @@ public class BaseSetting implements IWindows {
         }
 
         EditorTextFieldDocumentListener editorTextFieldDocumentListener = new EditorTextFieldDocumentListener();
-        entityPackageField.getDocument().addDocumentListener(editorTextFieldDocumentListener);
-        daoPackageField.getDocument().addDocumentListener(editorTextFieldDocumentListener);
-        servicePackageField.getDocument().addDocumentListener(editorTextFieldDocumentListener);
-        controllerPackageField.getDocument().addDocumentListener(editorTextFieldDocumentListener);
+        rootPackageField.getDocument().addDocumentListener(editorTextFieldDocumentListener);
 
         ItemListener checkBoxItemListener = new ItemListener() {
             /**
@@ -231,11 +168,11 @@ public class BaseSetting implements IWindows {
             public void itemStateChanged(ItemEvent e) {
                 Object item = e.getItem();
                 if (overrideJavaCheckBox == item) {
-                    options.setOverrideJava(overrideJavaCheckBox.isSelected());
+                    baseSettings.setOverrideJava(overrideJavaCheckBox.isSelected());
                 } else if (overrideXmlCheckBox == item) {
-                    options.setOverrideXml(overrideXmlCheckBox.isSelected());
+                    baseSettings.setOverrideXml(overrideXmlCheckBox.isSelected());
                 } else if (overrideOtherCheckBox == item) {
-                    options.setOverrideOther(overrideOtherCheckBox.isSelected());
+                    baseSettings.setOverrideOther(overrideOtherCheckBox.isSelected());
                 }
             }
         };
@@ -246,10 +183,7 @@ public class BaseSetting implements IWindows {
 
     private void createUIComponents() {
         Project project = PluginUtils.getProject();
-        entityPackageField = createEditorTextField(project);
-        daoPackageField = createEditorTextField(project);
-        servicePackageField = createEditorTextField(project);
-        controllerPackageField = createEditorTextField(project);
+        rootPackageField = createEditorTextField(project);
     }
 
     /**
@@ -270,17 +204,8 @@ public class BaseSetting implements IWindows {
      * 配置选择包名的按钮事件
      */
     private void configSelectPackage() {
-        selectEntityPackageButton.addActionListener(e -> {
-            chooserPackage(entityPackageField.getText(), entityPackageField::setText);
-        });
-        selectDaoPackageButton.addActionListener(e -> {
-            chooserPackage(daoPackageField.getText(), daoPackageField::setText);
-        });
-        selectServicePackageButton.addActionListener(e -> {
-            chooserPackage(servicePackageField.getText(), servicePackageField::setText);
-        });
-        selectControllerPackageButton.addActionListener(e -> {
-            chooserPackage(controllerPackageField.getText(), controllerPackageField::setText);
+        selectRootPackageButton.addActionListener(e -> {
+            chooserPackage(rootPackageField.getText(), rootPackageField::setText);
         });
     }
 
@@ -305,23 +230,12 @@ public class BaseSetting implements IWindows {
      * 初始化开发者信息的输入框内容
      */
     private void initConfig() {
-        authorField.setText(developer.getAuthor());
-        emailField.setText(developer.getEmail());
-
-        entitySuffixField.setText(settings.getEntitySuffix());
-        daoSuffixField.setText(settings.getDaoSuffix());
-        serviceSuffixField.setText(settings.getServiceSuffix());
-        controllerSuffixField.setText(settings.getControllerSuffix());
-
-        entityPackageField.setText(settings.getEntityPackage());
-        daoPackageField.setText(settings.getDaoPackage());
-        servicePackageField.setText(settings.getServicePackage());
-        controllerPackageField.setText(settings.getControllerPackage());
-        xmlPackageField.setText(settings.getXmlPackage());
-
-        overrideJavaCheckBox.setSelected(options.isOverrideJava());
-        overrideXmlCheckBox.setSelected(options.isOverrideXml());
-        overrideOtherCheckBox.setSelected(options.isOverrideOther());
+        authorField.setText(baseSettings.getAuthor());
+        emailField.setText(baseSettings.getEmail());
+        rootPackageField.setText(outputSettings.getRootPackage());
+        overrideJavaCheckBox.setSelected(baseSettings.isOverrideJava());
+        overrideXmlCheckBox.setSelected(baseSettings.isOverrideXml());
+        overrideOtherCheckBox.setSelected(baseSettings.isOverrideOther());
     }
 
     @Override

@@ -1,21 +1,18 @@
 package com.github.houkunlin.ui.win;
 
+import com.github.houkunlin.config.BaseSettings;
 import com.github.houkunlin.config.ConfigService;
-import com.github.houkunlin.config.Developer;
-import com.github.houkunlin.config.Options;
-import com.github.houkunlin.config.Settings;
+import com.github.houkunlin.config.OutputSettings;
 import com.github.houkunlin.task.GeneratorTask;
 import com.github.houkunlin.util.Generator;
 import com.github.houkunlin.util.PluginUtils;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
-import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.ui.TextBrowseFolderListener;
 import com.intellij.openapi.ui.TextFieldWithBrowseButton;
-import com.intellij.psi.PsiElement;
 import com.neueda.jetbrains.plugin.graphdb.database.api.data.GraphEntity;
 import org.apache.commons.lang.StringUtils;
 import org.jetbrains.annotations.Nullable;
@@ -35,15 +32,11 @@ public class MainDialog extends DialogWrapper {
     /**
      * 配置对象：设置信息
      */
-    private final Settings settings;
+    private final OutputSettings outputSettings;
     /**
      * 配置对象：开发者信息
      */
-    private final Developer developer;
-    /**
-     * 配置对象：参数信息
-     */
-    private final Options options;
+    private final BaseSettings baseSettings;
     /**
      * 面板对象：数据库表配置
      */
@@ -52,6 +45,9 @@ public class MainDialog extends DialogWrapper {
      * 面板对象：基础信息配置
      */
     private final BaseSetting baseSetting;
+
+    private final PackageSetting packageSetting;
+
     /**
      * 面板对象：模板选择配置
      */
@@ -95,9 +91,9 @@ public class MainDialog extends DialogWrapper {
          */
         public void documentChanged(DocumentEvent e) {
             javax.swing.text.Document document = e.getDocument();
-            if (!TextFieldDocumentUtil.updateSettingValue(document, javaPathField, settings::setJavaPath)) {
-                if (!TextFieldDocumentUtil.updateSettingValue(document, sourcesPathField, settings::setSourcesPath)) {
-                    TextFieldDocumentUtil.updateSettingValue(document, projectPathField.getTextField(), settings::setProjectPath);
+            if (!TextFieldDocumentUtil.updateSettingValue(document, javaPathField, outputSettings::setJavaPath)) {
+                if (!TextFieldDocumentUtil.updateSettingValue(document, sourcesPathField, outputSettings::setSourcesPath)) {
+                    TextFieldDocumentUtil.updateSettingValue(document, projectPathField.getTextField(), outputSettings::setProjectPath);
                 }
             }
         }
@@ -115,13 +111,14 @@ public class MainDialog extends DialogWrapper {
         // super("代码生成器");
         super(project);
         this.configService = configService;
-        this.settings = configService.getSettings();
-        this.developer = configService.getDeveloper();
-        this.options = configService.getOptions();
-        baseSetting = new BaseSetting(settings, developer, options);
+        this.outputSettings = configService.getOutputSettings();
+        this.baseSettings = configService.getBaseSettings();
+        baseSetting = new BaseSetting(outputSettings, baseSettings);
+        packageSetting = new PackageSetting(outputSettings);
         selectTemplate = new SelectTemplate();
         tableSetting = new TableSetting(psiElements);
         tableTabbedPane.addTab("基础配置", baseSetting.getContent());
+        tableTabbedPane.addTab("包路径配置", packageSetting.getContent());
         tableTabbedPane.addTab("模板选择", selectTemplate.getContent());
         tableTabbedPane.addTab("数据库表配置", tableSetting.getContent());
     }
@@ -162,7 +159,7 @@ public class MainDialog extends DialogWrapper {
                 return null;
             }
             // setVisible(false);
-            Generator generator = new Generator(settings, options, developer);
+            Generator generator = new Generator(outputSettings, baseSettings);
             GeneratorTask generatorTask = new GeneratorTask(project, this, generator, allSelectFile, tableSetting.getRootModels());
             return generatorTask;
         } catch (Throwable throwable) {
@@ -170,9 +167,8 @@ public class MainDialog extends DialogWrapper {
             //   setVisible(true);
             Messages.showErrorDialog("初始化代码生成处理器失败，请联系开发者。\n\n" + throwable.getMessage(), "生成代码失败");
         }
-        configService.setDeveloper(developer);
-        configService.setOptions(options);
-        configService.setSettings(settings);
+        configService.setBaseSettings(baseSettings);
+        configService.setOutputSettings(outputSettings);
         return null;
     }
 
@@ -184,13 +180,13 @@ public class MainDialog extends DialogWrapper {
         javaPathField.getDocument().addDocumentListener(documentListener);
         sourcesPathField.getDocument().addDocumentListener(documentListener);
 
-        String projectPath = settings.getProjectPath();
+        String projectPath = outputSettings.getProjectPath();
         if (StringUtils.isBlank(projectPath)) {
             projectPath = PluginUtils.getProject().getBasePath();
         }
         projectPathField.setText(projectPath);
-        javaPathField.setText(settings.getJavaPath());
-        sourcesPathField.setText(settings.getSourcesPath());
+        javaPathField.setText(outputSettings.getJavaPath());
+        sourcesPathField.setText(outputSettings.getSourcesPath());
     }
 
     @Override
@@ -203,5 +199,11 @@ public class MainDialog extends DialogWrapper {
         initWindows();
         initConfig();
         return showAndGet();
+    }
+
+    @Override
+    protected void doOKAction() {
+        //validate
+        super.doOKAction();
     }
 }

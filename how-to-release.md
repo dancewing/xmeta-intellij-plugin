@@ -25,7 +25,7 @@ Please note that:
 - The next version code will be added to gradle.properties
   - So you can start working on the next version right away3.
 - `[skip ci]` git commit message prefix tells Travis not to execute a build (because unnecessary) 
-- JetBrains credentials are [stored in Travis](https://travis-ci.org/neueda/jetbrains-plugin-graph-database-support/settings#ember7449)
+- JetBrains credentials are [stored in Travis](https://travis-ci.org/neueda/jetbrains-plugin-graph-database-support/outputSettings#ember7449)
   - Currently, only INTELLIJ_TOKEN environment variable is needed for publishing
 
 ## Secondary option: manual release

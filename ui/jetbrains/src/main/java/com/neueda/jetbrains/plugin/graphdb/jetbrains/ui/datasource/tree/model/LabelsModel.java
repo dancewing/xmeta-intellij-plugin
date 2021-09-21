@@ -1,6 +1,6 @@
 package com.neueda.jetbrains.plugin.graphdb.jetbrains.ui.datasource.tree.model;
 
-import com.neueda.jetbrains.plugin.graphdb.jetbrains.component.datasource.state.DataSourceApi;
+import com.neueda.jetbrains.plugin.graphdb.jetbrains.component.datasource.state.DataSource;
 import com.neueda.jetbrains.plugin.graphdb.jetbrains.ui.datasource.tree.Neo4jEntityViewNodeType;
 import com.neueda.jetbrains.plugin.graphdb.jetbrains.ui.datasource.tree.NodeType;
 
@@ -12,7 +12,7 @@ public class LabelsModel extends RootObjectAwareModel {
     private String text = "labels";
     private String description = "list";
 
-    public LabelsModel(DataSourceApi dataSourceApi, Object rootObject) {
+    public LabelsModel(DataSource dataSourceApi, Object rootObject) {
         super(dataSourceApi, rootObject);
     }
 

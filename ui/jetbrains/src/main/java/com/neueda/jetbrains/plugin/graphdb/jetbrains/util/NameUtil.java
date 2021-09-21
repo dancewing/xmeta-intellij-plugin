@@ -1,11 +1,11 @@
 package com.neueda.jetbrains.plugin.graphdb.jetbrains.util;
 
+import com.neueda.jetbrains.plugin.graphdb.jetbrains.component.datasource.state.DataSource;
 import com.neueda.jetbrains.plugin.graphdb.platform.GraphConstants;
-import com.neueda.jetbrains.plugin.graphdb.jetbrains.component.datasource.state.DataSourceApi;
 
 public final class NameUtil {
 
-    public static String createDataSourceFileName(DataSourceApi dataSource) {
+    public static String createDataSourceFileName(DataSource dataSource) {
         return GraphConstants.BOUND_DATA_SOURCE_PREFIX + dataSource.getUUID() + "." + dataSource.getDescription().getDefaultFileExtension();
     }
 

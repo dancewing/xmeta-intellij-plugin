@@ -1,7 +1,7 @@
 package com.neueda.jetbrains.plugin.graphdb.jetbrains.ui.datasource.tree;
 
 import com.neueda.jetbrains.plugin.graphdb.database.api.data.IDNameData;
-import com.neueda.jetbrains.plugin.graphdb.jetbrains.component.datasource.state.DataSourceApi;
+import com.neueda.jetbrains.plugin.graphdb.jetbrains.component.datasource.state.DataSource;
 import com.neueda.jetbrains.plugin.graphdb.jetbrains.ui.datasource.metadata.dto.ContextMenu;
 import com.neueda.jetbrains.plugin.graphdb.jetbrains.ui.datasource.metadata.dto.MetadataContextMenu;
 
@@ -14,13 +14,13 @@ public abstract class MetadataTreeNodeModel<T extends IDNameData> implements Tre
     private NodeType type;
     private Icon icon;
     private T value;
-    private DataSourceApi dataSourceApi;
+    private DataSource dataSourceApi;
 
-    public MetadataTreeNodeModel(Neo4jTreeNodeType type, DataSourceApi dataSourceApi, T value) {
+    public MetadataTreeNodeModel(Neo4jTreeNodeType type, DataSource dataSourceApi, T value) {
         this(type, dataSourceApi, value, null);
     }
 
-    public MetadataTreeNodeModel(Neo4jTreeNodeType type, DataSourceApi dataSourceApi, T value, Icon icon) {
+    public MetadataTreeNodeModel(Neo4jTreeNodeType type, DataSource dataSourceApi, T value, Icon icon) {
         this.type = type;
         this.value = value;
         this.dataSourceApi = dataSourceApi;
@@ -30,8 +30,8 @@ public abstract class MetadataTreeNodeModel<T extends IDNameData> implements Tre
 
     private void prepareContextMenu() {
         if (type == Neo4jTreeNodeType.APP
-            || type == Neo4jTreeNodeType.ENTITY) {
-                metadataContextMenu = new MetadataContextMenu(type, getDataSourceApi(), value);
+                || type == Neo4jTreeNodeType.ENTITY) {
+            metadataContextMenu = new MetadataContextMenu(type, getDataSourceApi(), value);
         }
     }
 
@@ -72,7 +72,7 @@ public abstract class MetadataTreeNodeModel<T extends IDNameData> implements Tre
     }
 
     @Override
-    public DataSourceApi getDataSourceApi() {
+    public DataSource getDataSourceApi() {
         return dataSourceApi;
     }
 }

@@ -1,7 +1,7 @@
 package com.neueda.jetbrains.plugin.graphdb.jetbrains.ui.datasource.tree;
 
 import com.neueda.jetbrains.plugin.graphdb.database.api.data.IDNameData;
-import com.neueda.jetbrains.plugin.graphdb.jetbrains.component.datasource.state.DataSourceApi;
+import com.neueda.jetbrains.plugin.graphdb.jetbrains.component.datasource.state.DataSource;
 import com.neueda.jetbrains.plugin.graphdb.jetbrains.ui.datasource.metadata.dto.ContextMenu;
 import org.jetbrains.annotations.Nullable;
 
@@ -37,5 +37,5 @@ public interface TreeNodeModelApi<T extends IDNameData> {
     }
 
     @Nullable
-    DataSourceApi getDataSourceApi();
+    DataSource getDataSourceApi();
 }

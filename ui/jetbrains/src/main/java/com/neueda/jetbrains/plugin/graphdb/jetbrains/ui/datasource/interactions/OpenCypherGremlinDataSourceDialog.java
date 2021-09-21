@@ -7,8 +7,8 @@ import com.intellij.ui.components.JBTextField;
 import com.intellij.util.ui.AsyncProcessIcon;
 import com.neueda.jetbrains.plugin.graphdb.database.opencypher.gremlin.OpenCypherGremlinConfiguration;
 import com.neueda.jetbrains.plugin.graphdb.jetbrains.component.datasource.DataSourceType;
-import com.neueda.jetbrains.plugin.graphdb.jetbrains.component.datasource.DataSourcesComponent;
-import com.neueda.jetbrains.plugin.graphdb.jetbrains.component.datasource.state.DataSourceApi;
+import com.neueda.jetbrains.plugin.graphdb.jetbrains.component.datasource.state.DataSource;
+import com.neueda.jetbrains.plugin.graphdb.jetbrains.configuration.DataSourcesSettings;
 import com.neueda.jetbrains.plugin.graphdb.jetbrains.ui.datasource.DataSourcesView;
 import org.apache.commons.lang.StringUtils;
 import org.jetbrains.annotations.NotNull;
@@ -25,8 +25,8 @@ public class OpenCypherGremlinDataSourceDialog extends DataSourceDialog {
     private static final String COSMOS_DB_USER_REGEX = "^\\/dbs\\/[^\\/\\\\#?]+\\/colls\\/[^\\/\\\\#?]+$";
     private static final String COSMOS_DB_USER_ERROR = "User should be of form '/dbs/__DATABASE_NAME__/colls/__COLLECTION_NAME__' for Cosmos DB";
 
-    private final DataSourcesComponent dataSourcesComponent;
-    private DataSourceApi dataSourceToEdit;
+    private final DataSourcesSettings dataSourcesSettings;
+    private DataSource dataSourceToEdit;
 
     private String dataSourceName;
     private OpenCypherGremlinConfiguration configuration = new OpenCypherGremlinConfiguration();
@@ -42,7 +42,7 @@ public class OpenCypherGremlinDataSourceDialog extends DataSourceDialog {
     private JPanel loadingPanel;
     private AsyncProcessIcon loadingIcon;
 
-    public OpenCypherGremlinDataSourceDialog(Project project, DataSourcesView dataSourcesView, DataSourceApi dataSourceToEdit) {
+    public OpenCypherGremlinDataSourceDialog(Project project, DataSourcesView dataSourcesView, DataSource dataSourceToEdit) {
         this(project, dataSourcesView);
         this.dataSourceToEdit = dataSourceToEdit;
     }
@@ -50,7 +50,7 @@ public class OpenCypherGremlinDataSourceDialog extends DataSourceDialog {
     public OpenCypherGremlinDataSourceDialog(Project project, DataSourcesView dataSourcesView) {
         super(project, dataSourcesView);
         loadingPanel.setVisible(false);
-        dataSourcesComponent = dataSourcesView.getComponent();
+        dataSourcesSettings = DataSourcesSettings.getInstance(project);
         testConnectionButton.addActionListener(e -> this.validationPopup());
         initValidation();
     }
@@ -75,7 +75,7 @@ public class OpenCypherGremlinDataSourceDialog extends DataSourceDialog {
 
         extractData();
 
-        if (dataSourcesComponent.getDataSourceContainer().isDataSourceExists(dataSourceName)) {
+        if (dataSourcesSettings.isDataSourceExists(dataSourceName)) {
             if (!(dataSourceToEdit != null && dataSourceToEdit.getName().equals(dataSourceName))) {
                 validations.add(validation(String.format("Data source [%s] already exists", dataSourceName), dataSourceNameField));
             }
@@ -101,10 +101,10 @@ public class OpenCypherGremlinDataSourceDialog extends DataSourceDialog {
     }
 
     @Override
-    public DataSourceApi constructDataSource() {
+    public DataSource constructDataSource() {
         extractData();
 
-        return dataSourcesComponent.getDataSourceContainer().createDataSource(
+        return dataSourcesSettings.createDataSource(
                 dataSourceToEdit,
                 DataSourceType.OPENCYPHER_GREMLIN,
                 dataSourceName,

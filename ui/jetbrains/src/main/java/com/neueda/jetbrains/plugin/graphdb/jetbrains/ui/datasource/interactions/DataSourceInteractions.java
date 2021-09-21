@@ -4,7 +4,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.ui.ToolbarDecorator;
 import com.intellij.ui.treeStructure.PatchedDefaultMutableTreeNode;
 import com.intellij.ui.treeStructure.Tree;
-import com.neueda.jetbrains.plugin.graphdb.jetbrains.component.datasource.state.DataSourceApi;
+import com.neueda.jetbrains.plugin.graphdb.jetbrains.component.datasource.state.DataSource;
 import com.neueda.jetbrains.plugin.graphdb.jetbrains.ui.datasource.DataSourcesView;
 import com.neueda.jetbrains.plugin.graphdb.jetbrains.ui.datasource.tree.Neo4jTreeNodeType;
 import com.neueda.jetbrains.plugin.graphdb.jetbrains.ui.datasource.tree.TreeNodeModelApi;
@@ -41,7 +41,7 @@ public class DataSourceInteractions {
     private void initAddAction() {
         decorator.setAddAction(anActionButton -> {
             OpenCypherGremlinDataSourceDialog dialog = new OpenCypherGremlinDataSourceDialog(project, dataSourcesView);
-            if (dialog.go()){
+            if (dialog.go()) {
                 dataSourcesView.createDataSource(dialog.constructDataSource());
             }
         });
@@ -52,7 +52,7 @@ public class DataSourceInteractions {
             DefaultMutableTreeNode[] selectedNodes = dataSourceTree.getSelectedNodes(DefaultMutableTreeNode.class,
                     this::isDataSource);
 
-            List<DataSourceApi> dataSourcesForRemoval = Arrays.stream(selectedNodes)
+            List<DataSource> dataSourcesForRemoval = Arrays.stream(selectedNodes)
                     .map(this::getDataSourceApi)
                     .collect(Collectors.toList());
 
@@ -82,9 +82,10 @@ public class DataSourceInteractions {
             if (selectedNodes.length == 1) {
                 PatchedDefaultMutableTreeNode treeNode = selectedNodes[0];
 
-                DataSourceApi dataSourceToEdit = getDataSourceApi(treeNode);
+                DataSource dataSourceToEdit = getDataSourceApi(treeNode);
 
-                DataSourceDialog dialog = new OpenCypherGremlinDataSourceDialog(project, dataSourcesView, dataSourceToEdit);;
+                DataSourceDialog dialog = new OpenCypherGremlinDataSourceDialog(project, dataSourcesView, dataSourceToEdit);
+                ;
                 if (dialog.go()) {
                     dataSourcesView.updateDataSource(treeNode, dataSourceToEdit, dialog.constructDataSource());
                 }
@@ -105,7 +106,7 @@ public class DataSourceInteractions {
                         return;
                     }
 
-                    DataSourceApi dataSource = getDataSourceApi(selectedNodes[0]);
+                    DataSource dataSource = getDataSourceApi(selectedNodes[0]);
 
                     try {
                         FileUtil.openFile(project, FileUtil.getDataSourceFile(project, dataSource));
@@ -123,7 +124,7 @@ public class DataSourceInteractions {
                 && ((TreeNodeModelApi) node.getUserObject()).getType() == Neo4jTreeNodeType.DATASOURCE;
     }
 
-    private DataSourceApi getDataSourceApi(DefaultMutableTreeNode node) {
+    private DataSource getDataSourceApi(DefaultMutableTreeNode node) {
         return ((TreeNodeModelApi) node.getUserObject()).getDataSourceApi();
     }
 }

@@ -4,20 +4,20 @@ import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.ui.popup.ListPopup;
 import com.neueda.jetbrains.plugin.graphdb.database.api.data.IDNameData;
-import com.neueda.jetbrains.plugin.graphdb.jetbrains.component.datasource.state.DataSourceApi;
+import com.neueda.jetbrains.plugin.graphdb.jetbrains.component.datasource.state.DataSource;
 import com.neueda.jetbrains.plugin.graphdb.jetbrains.ui.datasource.metadata.actions.MetadataActionGroup;
 import com.neueda.jetbrains.plugin.graphdb.jetbrains.ui.datasource.tree.NodeType;
 import com.neueda.jetbrains.plugin.graphdb.jetbrains.ui.datasource.tree.TreeNodeModelApi;
 
 import java.util.List;
 
-public class MetadataContextMenu implements ContextMenu     {
+public class MetadataContextMenu implements ContextMenu {
 
     private NodeType metadataType;
-    private DataSourceApi dataSourceApi;
+    private DataSource dataSourceApi;
     private IDNameData data;
 
-    public MetadataContextMenu(NodeType metadataType, DataSourceApi dataSourceApi, IDNameData data) {
+    public MetadataContextMenu(NodeType metadataType, DataSource dataSourceApi, IDNameData data) {
         this.metadataType = metadataType;
         this.dataSourceApi = dataSourceApi;
         this.data = data;
@@ -40,7 +40,7 @@ public class MetadataContextMenu implements ContextMenu     {
         return metadataType;
     }
 
-    public DataSourceApi getDataSourceApi() {
+    public DataSource getDataSourceApi() {
         return dataSourceApi;
     }
 

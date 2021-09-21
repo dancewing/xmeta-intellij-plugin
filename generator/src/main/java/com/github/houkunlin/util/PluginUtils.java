@@ -10,6 +10,7 @@ import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import lombok.Getter;
+import org.apache.commons.lang.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
@@ -112,7 +113,8 @@ public class PluginUtils {
      * @return 配置文件对象
      */
     public static <T> T getConfig(Class<T> clazz) {
-        String filename = clazz.getSimpleName().toLowerCase();
+        String name = clazz.getSimpleName();
+        String filename = StringUtils.lowerCase(name.substring(0,1)) + StringUtils.substring(name, 1);
         try {
             return getConfig(clazz, filename);
         } catch (Exception e) {

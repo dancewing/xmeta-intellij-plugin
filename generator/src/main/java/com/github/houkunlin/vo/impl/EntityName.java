@@ -1,6 +1,6 @@
 package com.github.houkunlin.vo.impl;
 
-import com.github.houkunlin.config.Settings;
+import com.github.houkunlin.config.OutputSettings;
 import com.github.houkunlin.vo.IName;
 import com.google.common.base.CaseFormat;
 import com.neueda.jetbrains.plugin.graphdb.database.api.data.GraphEntity;
@@ -55,12 +55,12 @@ public class EntityName implements IName {
         return value;
     }
 
-    public void initMore(Settings settings) {
-        this.entity = build(settings.getEntitySuffix());
-        this.service = build(settings.getServiceSuffix());
-        this.serviceImpl = build(settings.getServiceSuffix() + "Impl");
-        this.dao = build(settings.getDaoSuffix());
-        this.controller = build(settings.getControllerSuffix());
+    public void initMore(OutputSettings outputSettings) {
+        this.entity = build(outputSettings.getEntitySuffix());
+        this.service = build(outputSettings.getServiceSuffix());
+        this.serviceImpl = build(outputSettings.getServiceSuffix() + "Impl");
+        this.dao = build(outputSettings.getDaoSuffix());
+        this.controller = build(outputSettings.getControllerSuffix());
     }
 
     private IName build(String suffix) {

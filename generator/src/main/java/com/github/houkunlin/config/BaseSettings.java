@@ -3,13 +3,27 @@ package com.github.houkunlin.config;
 import lombok.Data;
 
 /**
- * 构建参数
+ * 开发者信息
  *
  * @author HouKunLin
- * @date 2020/4/3 0003 21:57
+ * @date 2020/4/6 0006 21:00
  */
 @Data
-public class Options {
+public class BaseSettings {
+    /**
+     * 开发者姓名
+     */
+    private String author;
+    /**
+     * 开发者电子邮件
+     */
+    private String email;
+
+    /**
+     * 默认编码
+     */
+    private String encode;
+
     /**
      * 覆盖Java文件
      */
@@ -22,5 +36,4 @@ public class Options {
      * 覆盖其他文件
      */
     private boolean overrideOther = true;
-
 }

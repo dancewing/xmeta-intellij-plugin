@@ -1,7 +1,7 @@
 package com.neueda.jetbrains.plugin.graphdb.jetbrains.ui.datasource.tree.model;
 
 import com.neueda.jetbrains.plugin.graphdb.database.api.data.GraphRelationship;
-import com.neueda.jetbrains.plugin.graphdb.jetbrains.component.datasource.state.DataSourceApi;
+import com.neueda.jetbrains.plugin.graphdb.jetbrains.component.datasource.state.DataSource;
 import com.neueda.jetbrains.plugin.graphdb.jetbrains.ui.datasource.metadata.dto.ContextMenu;
 import com.neueda.jetbrains.plugin.graphdb.jetbrains.ui.datasource.tree.Neo4jEntityViewNodeType;
 import com.neueda.jetbrains.plugin.graphdb.jetbrains.ui.datasource.tree.NodeType;
@@ -17,9 +17,9 @@ public class RelationshipModel implements TreeNodeModelApi {
     private GraphRelationship relationship;
     private String text;
     private String description = "relationship";
-    private DataSourceApi dataSourceApi;
+    private DataSource dataSourceApi;
 
-    public RelationshipModel(GraphRelationship relationship, String text, DataSourceApi dataSourceApi) {
+    public RelationshipModel(GraphRelationship relationship, String text, DataSource dataSourceApi) {
         this.relationship = relationship;
         this.text = text;
         this.dataSourceApi = dataSourceApi;
@@ -27,7 +27,7 @@ public class RelationshipModel implements TreeNodeModelApi {
 
     @Override
     public Optional<ContextMenu> getContextMenu() {
-       // return Optional.of(new EntityContextMenu(dataSourceApi, relationship));
+        // return Optional.of(new EntityContextMenu(dataSourceApi, relationship));
         return Optional.empty();
     }
 
@@ -58,7 +58,7 @@ public class RelationshipModel implements TreeNodeModelApi {
 
     @Nullable
     @Override
-    public DataSourceApi getDataSourceApi() {
+    public DataSource getDataSourceApi() {
         return dataSourceApi;
     }
 

@@ -10,7 +10,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.newvfs.FileAttribute;
 import com.intellij.openapi.vfs.newvfs.NewVirtualFile;
 import com.intellij.util.io.IOUtil;
-import com.neueda.jetbrains.plugin.graphdb.jetbrains.component.datasource.state.DataSourceApi;
+import com.neueda.jetbrains.plugin.graphdb.jetbrains.component.datasource.state.DataSource;
 import com.neueda.jetbrains.plugin.graphdb.jetbrains.ui.datasource.interactions.GraphDbEditorsConsoleRootType;
 
 import java.io.DataInputStream;
@@ -22,7 +22,7 @@ public class FileUtil {
     private static final Key<String> MY_KEY = Key.create("file specific params");
     private static final FileAttribute QUERY_PARAMS_FILE_ATTRIBUTE = new FileAttribute("queryParamsFileAttribute");
 
-    public static VirtualFile getDataSourceFile(Project project, DataSourceApi dataSource) throws IOException {
+    public static VirtualFile getDataSourceFile(Project project, DataSource dataSource) throws IOException {
         return ScratchFileService.getInstance().findFile(
                 GraphDbEditorsConsoleRootType.getInstance(),
                 NameUtil.createDataSourceFileName(dataSource),

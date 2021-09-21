@@ -1,8 +1,7 @@
 package com.github.houkunlin.util;
 
-import com.github.houkunlin.config.Developer;
-import com.github.houkunlin.config.Options;
-import com.github.houkunlin.config.Settings;
+import com.github.houkunlin.config.BaseSettings;
+import com.github.houkunlin.config.OutputSettings;
 import com.github.houkunlin.model.SaveFilePath;
 import com.github.houkunlin.template.TemplateUtils;
 import com.github.houkunlin.vo.Variable;
@@ -30,21 +29,21 @@ import java.util.function.BiConsumer;
  */
 @Data
 public class Generator {
-    private final Settings settings;
-    private final Options options;
+    private final OutputSettings outputSettings;
+    private final BaseSettings baseSettings;
     private final Map<String, Object> map;
     private final List<PsiFile> saveFiles;
     private final Project project;
     private final Map<File, TemplateUtils> templates = new HashMap<>();
 
-    public Generator(Settings settings, Options options, Developer developer) {
+    public Generator(OutputSettings outputSettings, BaseSettings baseSettings) {
         this.project = PluginUtils.getProject();
-        this.settings = settings;
-        this.options = options;
+        this.outputSettings = outputSettings;
+        this.baseSettings = baseSettings;
         this.saveFiles = new ArrayList<>();
         this.map = new HashMap<>(8);
-        map.put("settings", settings);
-        map.put("developer", developer);
+        map.put("outputSettings", outputSettings);
+        map.put("baseSettings", baseSettings);
         map.put("gen", Variable.getInstance());
         map.put("date", DateTime.now());
     }
@@ -89,7 +88,7 @@ public class Generator {
         }
         map.put("table", rootModel.getTable());
         map.put("columns", rootModel.getColumns());
-        map.put("entity", rootModel.getEntity(settings));
+        map.put("entity", rootModel.getEntity(outputSettings));
         map.put("fields", rootModel.getFields());
         map.put("primary", rootModel.getPrimary());
         for (int i = 0; i < templateFiles.size(); i++) {
@@ -115,12 +114,13 @@ public class Generator {
             }
             SaveFilePath saveFilePath;
             if (Variable.type == null) {
-                saveFilePath = new SaveFilePath(templateFile.getName(), settings.getSourcesPathAt("temp"));
+                saveFilePath = new SaveFilePath(templateFile.getName(), outputSettings.getSourcesPathAt("temp"));
             } else {
-                saveFilePath = SaveFilePath.create(rootModel, settings);
+                saveFilePath = SaveFilePath.create(rootModel, outputSettings);
             }
-            File saveFile = new File(settings.getProjectPath(), String.valueOf(saveFilePath));
-            PsiFile psiFile = FileUtils.getInstance().saveFileContent(project, saveFile, result, saveFilePath.isOverride(options));
+            File saveFile = new File(outputSettings.getProjectPath(), String.valueOf(saveFilePath));
+            PsiFile psiFile = FileUtils.getInstance().saveFileContent(project, saveFile, result,
+                    saveFilePath.isOverride(baseSettings));
             if (psiFile != null && !saveFiles.contains(psiFile)) {
                 saveFiles.add(psiFile);
             }

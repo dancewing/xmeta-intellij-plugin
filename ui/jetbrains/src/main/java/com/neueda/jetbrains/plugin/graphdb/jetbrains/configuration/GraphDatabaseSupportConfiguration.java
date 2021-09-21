@@ -4,7 +4,6 @@ import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.ui.components.JBCheckBox;
 import com.neueda.jetbrains.plugin.graphdb.jetbrains.component.settings.SettingsComponent;
-import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
@@ -15,7 +14,6 @@ public class GraphDatabaseSupportConfiguration implements Configurable {
     private JBCheckBox analyticsCheckBox, globalParametersCheckbox;
     private JBCheckBox invertZoomCheckBox;
 
-    @Nls
     @Override
     public String getDisplayName() {
         return "XMeta";

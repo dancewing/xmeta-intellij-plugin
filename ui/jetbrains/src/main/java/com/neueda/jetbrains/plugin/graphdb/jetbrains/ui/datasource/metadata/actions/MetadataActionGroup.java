@@ -53,7 +53,7 @@ public class MetadataActionGroup extends ActionGroup {
 
     private List<GraphEntity> getEntities() {
         List<GraphEntity> graphEntities = new ArrayList<>();
-        for (TreeNodeModelApi treeNodeModel: selectedData) {
+        for (TreeNodeModelApi treeNodeModel : selectedData) {
             if (treeNodeModel instanceof EntityTypeTreeNodeModel) {
                 EntityTypeTreeNodeModel entityTypeTreeNodeModel = (EntityTypeTreeNodeModel) treeNodeModel;
                 entityTypeTreeNodeModel.getValue().ifPresent(graphEntities::add);

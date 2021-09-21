@@ -1,6 +1,6 @@
 package com.neueda.jetbrains.plugin.graphdb.jetbrains.ui.datasource.tree.model;
 
-import com.neueda.jetbrains.plugin.graphdb.jetbrains.component.datasource.state.DataSourceApi;
+import com.neueda.jetbrains.plugin.graphdb.jetbrains.component.datasource.state.DataSource;
 import com.neueda.jetbrains.plugin.graphdb.jetbrains.ui.datasource.metadata.dto.ContextMenu;
 import com.neueda.jetbrains.plugin.graphdb.jetbrains.ui.datasource.tree.TreeNodeModelApi;
 import org.jetbrains.annotations.Nullable;
@@ -9,10 +9,10 @@ import java.util.Optional;
 
 public abstract class RootObjectAwareModel implements TreeNodeModelApi {
 
-    private DataSourceApi dataSourceApi;
+    private DataSource dataSourceApi;
     private Object rootObject;
 
-    public RootObjectAwareModel(DataSourceApi dataSourceApi, Object rootObject) {
+    public RootObjectAwareModel(DataSource dataSourceApi, Object rootObject) {
         this.dataSourceApi = dataSourceApi;
         this.rootObject = rootObject;
     }
@@ -34,7 +34,7 @@ public abstract class RootObjectAwareModel implements TreeNodeModelApi {
 
     @Nullable
     @Override
-    public DataSourceApi getDataSourceApi() {
+    public DataSource getDataSourceApi() {
         return dataSourceApi;
     }
 }

@@ -36,7 +36,7 @@
     <depends optional="true">com.intellij.modules.java</depends>
 
     <application-components>
-        <!-- Settings -->
+        <!-- OutputSettings -->
         <component>
             <interface-class>com.neueda.jetbrains.plugin.graphdb.jetbrains.component.settings.SettingsComponent</interface-class>
             <implementation-class>com.neueda.jetbrains.plugin.graphdb.jetbrains.component.settings.SettingsComponentImpl</implementation-class>
@@ -45,11 +45,11 @@
 
     <project-components>
         <!-- Graph Database support - data sources -->
-        <component>
-            <interface-class>com.neueda.jetbrains.plugin.graphdb.jetbrains.component.datasource.DataSourcesComponent</interface-class>
-            <implementation-class>com.neueda.jetbrains.plugin.graphdb.jetbrains.component.datasource.DataSourcesComponent</implementation-class>
-            <loadForDefaultProject/>
-        </component>
+<!--        <component>-->
+<!--            <interface-class>com.neueda.jetbrains.plugin.graphdb.jetbrains.configuration.DataSourcesSettings</interface-class>-->
+<!--            <implementation-class>com.neueda.jetbrains.plugin.graphdb.jetbrains.configuration.DataSourcesSettings</implementation-class>-->
+<!--            <loadForDefaultProject/>-->
+<!--        </component>-->
         <!-- Graph Database support - data sources metadata -->
         <component>
             <interface-class>com.neueda.jetbrains.plugin.graphdb.jetbrains.component.datasource.metadata.DataSourcesComponentMetadata</interface-class>
@@ -67,6 +67,7 @@
                     icon="GraphIcons.Window.GRAPH"/>
 
         <projectService serviceImplementation="com.github.houkunlin.config.ConfigService"/>
+        <projectService serviceImplementation="com.neueda.jetbrains.plugin.graphdb.jetbrains.configuration.DataSourcesSettings"/>
 
         <applicationService serviceInterface="com.neueda.jetbrains.plugin.graphdb.visualization.services.LookAndFeelService"
                             serviceImplementation="com.neueda.jetbrains.plugin.graphdb.jetbrains.services.IdeaLookAndFeelService"/>
@@ -81,8 +82,11 @@
 
         <scratch.rootType implementation="com.neueda.jetbrains.plugin.graphdb.jetbrains.ui.datasource.interactions.GraphDbEditorsConsoleRootType"/>
 
-        <applicationConfigurable groupId="tools"
-                                 instance="com.neueda.jetbrains.plugin.graphdb.jetbrains.configuration.GraphDatabaseSupportConfiguration"/>
+<!--        <applicationConfigurable instance="com.neueda.jetbrains.plugin.graphdb.jetbrains.configuration.GraphDatabaseSupportConfiguration"/>-->
+
+        <applicationConfigurable dynamic="true"
+                                 instance="com.neueda.jetbrains.plugin.graphdb.jetbrains.configuration.MainSetting"/>
+
         <!-- Update notification -->
         <postStartupActivity implementation="com.neueda.jetbrains.plugin.graphdb.jetbrains.component.updater.PluginUpdateActivity" />
 

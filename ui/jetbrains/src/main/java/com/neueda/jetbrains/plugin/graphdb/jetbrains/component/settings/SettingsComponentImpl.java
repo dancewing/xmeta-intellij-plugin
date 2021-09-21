@@ -16,7 +16,7 @@ public class SettingsComponentImpl implements SettingsComponent {
     @NotNull
     @Override
     public String getComponentName() {
-        return "GraphDatabaseSupport.Settings";
+        return "GraphDatabaseSupport.OutputSettings";
     }
 
     @Override

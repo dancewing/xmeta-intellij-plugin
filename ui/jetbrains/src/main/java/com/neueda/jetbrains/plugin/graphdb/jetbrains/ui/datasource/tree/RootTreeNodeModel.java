@@ -1,6 +1,6 @@
 package com.neueda.jetbrains.plugin.graphdb.jetbrains.ui.datasource.tree;
 
-import com.neueda.jetbrains.plugin.graphdb.jetbrains.component.datasource.state.DataSourceApi;
+import com.neueda.jetbrains.plugin.graphdb.jetbrains.component.datasource.state.DataSource;
 import com.neueda.jetbrains.plugin.graphdb.jetbrains.ui.datasource.metadata.dto.ContextMenu;
 
 import javax.swing.*;
@@ -36,7 +36,7 @@ public class RootTreeNodeModel implements TreeNodeModelApi {
     }
 
     @Override
-    public DataSourceApi getDataSourceApi() {
+    public DataSource getDataSourceApi() {
         return null;
     }
 }

@@ -1,6 +1,6 @@
 package com.github.houkunlin.vo.impl;
 
-import com.github.houkunlin.config.Settings;
+import com.github.houkunlin.config.OutputSettings;
 import lombok.Getter;
 import org.apache.commons.lang.StringUtils;
 
@@ -61,11 +61,11 @@ public class EntityPackage {
         return toString;
     }
 
-    public void initMore(Settings settings, EntityName entityName) {
-        this.entity = new EntityPackageInfo(settings.getEntityPackage(), entityName.getEntity());
-        this.service = new EntityPackageInfo(settings.getServicePackage(), entityName.getService());
-        this.serviceImpl = new EntityPackageInfo(settings.getServicePackage() + ".impl", entityName.getServiceImpl());
-        this.dao = new EntityPackageInfo(settings.getDaoPackage(), entityName.getDao());
-        this.controller = new EntityPackageInfo(settings.getControllerPackage(), entityName.getController());
+    public void initMore(OutputSettings outputSettings, EntityName entityName) {
+        this.entity = new EntityPackageInfo(outputSettings.getEntityPackage(), entityName.getEntity());
+        this.service = new EntityPackageInfo(outputSettings.getServicePackage(), entityName.getService());
+        this.serviceImpl = new EntityPackageInfo(outputSettings.getServicePackage() + ".impl", entityName.getServiceImpl());
+        this.dao = new EntityPackageInfo(outputSettings.getDaoPackage(), entityName.getDao());
+        this.controller = new EntityPackageInfo(outputSettings.getControllerPackage(), entityName.getController());
     }
 }

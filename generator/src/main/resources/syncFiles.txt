@@ -1,5 +1,5 @@
-config/developer.json
-config/settings.json
+config/baseSettings.json
+config/outputSettings.json
 config/options.json
 config/types.json
 templates/all-variable.ftl

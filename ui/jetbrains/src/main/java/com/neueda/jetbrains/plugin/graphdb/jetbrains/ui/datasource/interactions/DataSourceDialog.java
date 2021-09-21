@@ -12,7 +12,7 @@ import com.intellij.openapi.util.Disposer;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.util.ui.JBUI;
 import com.neueda.jetbrains.plugin.graphdb.database.api.GraphDatabaseApi;
-import com.neueda.jetbrains.plugin.graphdb.jetbrains.component.datasource.state.DataSourceApi;
+import com.neueda.jetbrains.plugin.graphdb.jetbrains.component.datasource.state.DataSource;
 import com.neueda.jetbrains.plugin.graphdb.jetbrains.database.DatabaseManagerService;
 import com.neueda.jetbrains.plugin.graphdb.jetbrains.services.ExecutorService;
 import com.neueda.jetbrains.plugin.graphdb.jetbrains.ui.datasource.DataSourcesView;
@@ -34,7 +34,7 @@ public abstract class DataSourceDialog extends DialogWrapper {
         init();
     }
 
-    public abstract DataSourceApi constructDataSource();
+    public abstract DataSource constructDataSource();
 
     protected abstract void showLoading();
 
@@ -89,12 +89,12 @@ public abstract class DataSourceDialog extends DialogWrapper {
     }
 
     private String executeOkQuery() {
-        DataSourceApi dataSource = constructDataSource();
+        DataSource dataSource = constructDataSource();
         DatabaseManagerService databaseManager = ServiceManager.getService(DatabaseManagerService.class);
         GraphDatabaseApi db = databaseManager.getDatabaseFor(dataSource);
 
         try {
-            String value =  db.getToken();
+            String value = db.getToken();
             if (StringUtils.isNotEmpty(value)) {
                 return "ok";
             } else {

@@ -1,6 +1,6 @@
 package com.neueda.jetbrains.plugin.graphdb.jetbrains.ui.datasource.tree;
 
-import com.neueda.jetbrains.plugin.graphdb.jetbrains.component.datasource.state.DataSourceApi;
+import com.neueda.jetbrains.plugin.graphdb.jetbrains.component.datasource.state.DataSource;
 import com.neueda.jetbrains.plugin.graphdb.jetbrains.ui.datasource.metadata.dto.ContextMenu;
 import com.neueda.jetbrains.plugin.graphdb.jetbrains.ui.datasource.metadata.dto.DataSourceContextMenu;
 
@@ -9,10 +9,10 @@ import java.util.Optional;
 
 public class DataSourceTreeNodeModel implements TreeNodeModelApi {
 
-    private DataSourceApi dataSourceApi;
+    private DataSource dataSourceApi;
     private DataSourceContextMenu dataSourceContextMenu;
 
-    public DataSourceTreeNodeModel(DataSourceApi dataSourceApi) {
+    public DataSourceTreeNodeModel(DataSource dataSourceApi) {
         this.dataSourceApi = dataSourceApi;
         this.dataSourceContextMenu = new DataSourceContextMenu(dataSourceApi);
     }
@@ -42,7 +42,7 @@ public class DataSourceTreeNodeModel implements TreeNodeModelApi {
     }
 
     @Override
-    public DataSourceApi getDataSourceApi() {
+    public DataSource getDataSourceApi() {
         return dataSourceApi;
     }
 }

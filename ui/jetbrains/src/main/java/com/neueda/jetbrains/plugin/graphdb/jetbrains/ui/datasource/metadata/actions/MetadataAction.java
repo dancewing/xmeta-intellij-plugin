@@ -33,7 +33,7 @@ public abstract class MetadataAction extends AnAction {
 //
 //        ExecuteQueryPayload payload = new ExecuteQueryPayload(getQuery(data));
 //
-//        DataSourcesComponent dataSourcesComponent = project.getComponent(DataSourcesComponent.class);
+//        DataSourcesSettings dataSourcesComponent = project.getComponent(DataSourcesSettings.class);
 //        Optional<DataSourceApi> dataSource = dataSourcesComponent.getDataSourceContainer().findDataSource(dataSourceUuid);
 //
 //        dataSource.ifPresent(dataSourceApi -> executeQueryEvent.executeQuery(dataSourceApi, payload));

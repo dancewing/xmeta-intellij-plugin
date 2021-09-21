@@ -2,7 +2,7 @@ package com.neueda.jetbrains.plugin.graphdb.jetbrains.component.datasource;
 
 import icons.GraphIcons;
 
-import javax.swing.Icon;
+import javax.swing.*;
 
 public interface DataSourceDescription {
 

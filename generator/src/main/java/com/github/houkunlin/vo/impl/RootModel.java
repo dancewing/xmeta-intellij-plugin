@@ -1,6 +1,6 @@
 package com.github.houkunlin.vo.impl;
 
-import com.github.houkunlin.config.Settings;
+import com.github.houkunlin.config.OutputSettings;
 import com.github.houkunlin.vo.IEntityField;
 import com.github.houkunlin.vo.ITable;
 import com.github.houkunlin.vo.ITableColumn;
@@ -46,9 +46,9 @@ public class RootModel {
         this.primary = new PrimaryInfo(fields);
     }
 
-    public EntityImpl getEntity(Settings settings) {
+    public EntityImpl getEntity(OutputSettings outputSettings) {
         Set<String> fullTypeNames = fields.stream().map(IEntityField::getFullTypeName).collect(Collectors.toSet());
-        entity.initMore(fullTypeNames, settings);
+        entity.initMore(fullTypeNames, outputSettings);
         return entity;
     }
 }

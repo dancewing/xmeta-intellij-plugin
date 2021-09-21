@@ -1,6 +1,6 @@
 package com.neueda.jetbrains.plugin.graphdb.jetbrains.ui.datasource.tree.model;
 
-import com.neueda.jetbrains.plugin.graphdb.jetbrains.component.datasource.state.DataSourceApi;
+import com.neueda.jetbrains.plugin.graphdb.jetbrains.component.datasource.state.DataSource;
 import com.neueda.jetbrains.plugin.graphdb.jetbrains.ui.datasource.tree.Neo4jEntityViewNodeType;
 import com.neueda.jetbrains.plugin.graphdb.jetbrains.ui.datasource.tree.NodeType;
 
@@ -12,7 +12,7 @@ public class PropertiesModel extends RootObjectAwareModel {
     private String text = "properties";
     private String description = "map";
 
-    public PropertiesModel(DataSourceApi dataSourceApi, Object rootObject) {
+    public PropertiesModel(DataSource dataSourceApi, Object rootObject) {
         super(dataSourceApi, rootObject);
     }
 

@@ -5,7 +5,7 @@ import com.neueda.jetbrains.plugin.graphdb.database.api.data.GraphEntity;
 import com.neueda.jetbrains.plugin.graphdb.database.api.data.GraphNode;
 import com.neueda.jetbrains.plugin.graphdb.database.api.data.GraphPath;
 import com.neueda.jetbrains.plugin.graphdb.database.api.data.GraphRelationship;
-import com.neueda.jetbrains.plugin.graphdb.jetbrains.component.datasource.state.DataSourceApi;
+import com.neueda.jetbrains.plugin.graphdb.jetbrains.component.datasource.state.DataSource;
 import com.neueda.jetbrains.plugin.graphdb.jetbrains.ui.datasource.tree.TreeNodeModelApi;
 import com.neueda.jetbrains.plugin.graphdb.jetbrains.ui.datasource.tree.model.*;
 
@@ -40,7 +40,7 @@ public final class UiHelper {
                 || object instanceof GraphPath;
     }
 
-    public static PatchedDefaultMutableTreeNode keyValueToTreeNode(String key, Object value, DataSourceApi dataSourceApi, Object rootObject) {
+    public static PatchedDefaultMutableTreeNode keyValueToTreeNode(String key, Object value, DataSource dataSourceApi, Object rootObject) {
         if (value instanceof List) {
             return listToTreeNode(key, (List) value, dataSourceApi, rootObject);
         }
@@ -59,13 +59,13 @@ public final class UiHelper {
         return objectToTreeNode(key, value, dataSourceApi, rootObject);
     }
 
-    public static PatchedDefaultMutableTreeNode nodeToTreeNode(String key, GraphNode node, DataSourceApi dataSourceApi) {
+    public static PatchedDefaultMutableTreeNode nodeToTreeNode(String key, GraphNode node, DataSource dataSourceApi) {
         PatchedDefaultMutableTreeNode treeRoot = new PatchedDefaultMutableTreeNode(modelOf(node, key, NODE, dataSourceApi, node));
         addGraphEntityData(treeRoot, node, dataSourceApi);
         return treeRoot;
     }
 
-    public static PatchedDefaultMutableTreeNode relationshipToTreeNode(String key, GraphRelationship relationship, DataSourceApi dataSourceApi) {
+    public static PatchedDefaultMutableTreeNode relationshipToTreeNode(String key, GraphRelationship relationship, DataSource dataSourceApi) {
         PatchedDefaultMutableTreeNode treeRoot = new PatchedDefaultMutableTreeNode(modelOf(relationship, key, RELATIONSHIP, dataSourceApi, relationship));
 
         addGraphEntityData(treeRoot, relationship, dataSourceApi);
@@ -81,7 +81,7 @@ public final class UiHelper {
         return treeRoot;
     }
 
-    private static void addGraphEntityData(PatchedDefaultMutableTreeNode treeRoot, GraphEntity graphEntity, DataSourceApi dataSourceApi) {
+    private static void addGraphEntityData(PatchedDefaultMutableTreeNode treeRoot, GraphEntity graphEntity, DataSource dataSourceApi) {
         treeRoot.add(objectToTreeNode(ID, graphEntity.getId(), dataSourceApi, graphEntity));
         if (graphEntity.isTypesSingle()) {
             treeRoot.add(objectToTreeNode(graphEntity.getTypesName(), graphEntity.getTypes().get(0), dataSourceApi, graphEntity));
@@ -91,7 +91,7 @@ public final class UiHelper {
         treeRoot.add(mapToTreeNode(PROPERTIES, graphEntity.getProperties(), dataSourceApi, graphEntity));
     }
 
-    private static PatchedDefaultMutableTreeNode pathToTreeNode(String key, GraphPath path, DataSourceApi dataSourceApi, Object rootObject) {
+    private static PatchedDefaultMutableTreeNode pathToTreeNode(String key, GraphPath path, DataSource dataSourceApi, Object rootObject) {
         PatchedDefaultMutableTreeNode root = new PatchedDefaultMutableTreeNode(modelOf(null, key, PATH, dataSourceApi, rootObject));
         List<Object> components = path.getComponents();
         for (int i = 0; i < components.size(); i++) {
@@ -100,7 +100,7 @@ public final class UiHelper {
         return root;
     }
 
-    private static PatchedDefaultMutableTreeNode objectToTreeNode(String key, Object value, DataSourceApi dataSourceApi, Object rootObject) {
+    private static PatchedDefaultMutableTreeNode objectToTreeNode(String key, Object value, DataSource dataSourceApi, Object rootObject) {
         if (value instanceof String) {
             String string = (String) value;
             if (string.length() <= INLINE_TEXT_LENGTH) {
@@ -114,7 +114,7 @@ public final class UiHelper {
         return new PatchedDefaultMutableTreeNode(modelOf(Objects.toString(value), key, null, dataSourceApi, rootObject));
     }
 
-    private static PatchedDefaultMutableTreeNode listToTreeNode(String key, List list, DataSourceApi dataSourceApi, Object rootObject) {
+    private static PatchedDefaultMutableTreeNode listToTreeNode(String key, List list, DataSource dataSourceApi, Object rootObject) {
         PatchedDefaultMutableTreeNode node;
         if (LABELS.equals(key)) {
             node = new PatchedDefaultMutableTreeNode(new LabelsModel(dataSourceApi, rootObject));
@@ -128,7 +128,7 @@ public final class UiHelper {
         return node;
     }
 
-    private static PatchedDefaultMutableTreeNode mapToTreeNode(String key, Map map, DataSourceApi dataSourceApi, Object rootObject) {
+    private static PatchedDefaultMutableTreeNode mapToTreeNode(String key, Map map, DataSource dataSourceApi, Object rootObject) {
         PatchedDefaultMutableTreeNode node;
         if (PROPERTIES.equals(key)) {
             node = new PatchedDefaultMutableTreeNode(new PropertiesModel(dataSourceApi, rootObject));
@@ -140,7 +140,7 @@ public final class UiHelper {
         return node;
     }
 
-    private static TreeNodeModelApi modelOf(Object value, String key, String description, DataSourceApi dataSourceApi, Object rootObject) {
+    private static TreeNodeModelApi modelOf(Object value, String key, String description, DataSource dataSourceApi, Object rootObject) {
         if (value instanceof GraphNode) {
             return new NodeModel((GraphNode) value, key, dataSourceApi);
         } else if (value instanceof GraphRelationship) {
@@ -155,11 +155,11 @@ public final class UiHelper {
     }
 
     public static String representUiString(String value) {
-            return format("\"%s\"", Objects.toString(value));
+        return format("\"%s\"", Objects.toString(value));
     }
 
     @SuppressWarnings("unchecked")
-    public static  <T> Optional<T> cast(Object o, Class<T> clazz) {
+    public static <T> Optional<T> cast(Object o, Class<T> clazz) {
         if (clazz.isInstance(o)) {
             return Optional.of((T) o);
         } else {

@@ -5,9 +5,10 @@
   "daoSuffix": "Repository",
   "serviceSuffix": "Service",
   "controllerSuffix": "Controller",
-  "entityPackage": "com.example.entity",
-  "daoPackage": "com.example.repository",
-  "servicePackage": "com.example.service",
-  "controllerPackage": "com.example.controller",
+  "rootPackage": "com.example",
+  "entitySubPackage": "entity",
+  "daoSubPackage": "repository",
+  "serviceSubPackage": "service",
+  "controllerSubPackage": "controller",
   "xmlPackage": "mapper"
 }

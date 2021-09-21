@@ -2,7 +2,7 @@ package com.neueda.jetbrains.plugin.graphdb.jetbrains.ui.datasource.actions;
 
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.neueda.jetbrains.plugin.graphdb.jetbrains.component.datasource.state.DataSourceApi;
+import com.neueda.jetbrains.plugin.graphdb.jetbrains.component.datasource.state.DataSource;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,9 +12,9 @@ import java.net.URISyntaxException;
 
 public class DataSourceOpenBrowserAction extends AnAction {
 
-    private DataSourceApi dataSource;
+    private DataSource dataSource;
 
-    DataSourceOpenBrowserAction(String title, String description, Icon icon, DataSourceApi dataSource) {
+    DataSourceOpenBrowserAction(String title, String description, Icon icon, DataSource dataSource) {
         super(title, description, icon);
         this.dataSource = dataSource;
     }

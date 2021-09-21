@@ -2,7 +2,7 @@ package com.neueda.jetbrains.plugin.graphdb.jetbrains.util;
 
 import com.intellij.openapi.ui.ValidationInfo;
 
-import javax.swing.JComponent;
+import javax.swing.*;
 
 public class Validation {
 

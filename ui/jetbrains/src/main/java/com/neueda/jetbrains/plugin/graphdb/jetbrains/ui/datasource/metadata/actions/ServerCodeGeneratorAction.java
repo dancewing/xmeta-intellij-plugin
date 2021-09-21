@@ -28,7 +28,7 @@ public class ServerCodeGeneratorAction extends AnAction {
     private final List<GraphEntity> entities;
 
     public ServerCodeGeneratorAction(@Nullable List<GraphEntity> entities, @Nullable @NlsActions.ActionText String text,
-                                       @Nullable @NlsActions.ActionDescription String description, @Nullable Icon icon) {
+                                     @Nullable @NlsActions.ActionDescription String description, @Nullable Icon icon) {
         super(text, description, icon);
         this.entities = entities;
     }

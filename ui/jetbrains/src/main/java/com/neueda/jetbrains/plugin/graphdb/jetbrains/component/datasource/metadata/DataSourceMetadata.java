@@ -1,7 +1,6 @@
 package com.neueda.jetbrains.plugin.graphdb.jetbrains.component.datasource.metadata;
 
 import com.neueda.jetbrains.plugin.graphdb.database.api.data.Workspace;
-import com.neueda.jetbrains.plugin.graphdb.database.opencypher.gremlin.WorkspaceDomain;
 
 import java.util.List;
 import java.util.Map;

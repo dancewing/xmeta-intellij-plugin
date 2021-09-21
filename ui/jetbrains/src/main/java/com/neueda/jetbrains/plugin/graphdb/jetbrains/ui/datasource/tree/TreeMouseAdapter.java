@@ -41,11 +41,11 @@ public class TreeMouseAdapter extends MouseAdapter {
         TreePath[] selectionPaths = tree.getSelectionPaths();
         List<TreeNodeModelApi> selectedData = new ArrayList<>();
         for (TreePath path : selectionPaths) {
-            if (path.getLastPathComponent() instanceof  PatchedDefaultMutableTreeNode) {
-                PatchedDefaultMutableTreeNode lastPathComponent = (PatchedDefaultMutableTreeNode)path.getLastPathComponent();
-               if ( lastPathComponent.getUserObject() instanceof TreeNodeModelApi) {
-                       selectedData.add((TreeNodeModelApi) lastPathComponent.getUserObject());
-               }
+            if (path.getLastPathComponent() instanceof PatchedDefaultMutableTreeNode) {
+                PatchedDefaultMutableTreeNode lastPathComponent = (PatchedDefaultMutableTreeNode) path.getLastPathComponent();
+                if (lastPathComponent.getUserObject() instanceof TreeNodeModelApi) {
+                    selectedData.add((TreeNodeModelApi) lastPathComponent.getUserObject());
+                }
             }
         }
         return selectedData;

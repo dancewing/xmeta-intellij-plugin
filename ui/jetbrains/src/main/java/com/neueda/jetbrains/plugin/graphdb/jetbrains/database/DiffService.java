@@ -1,9 +1,8 @@
 package com.neueda.jetbrains.plugin.graphdb.jetbrains.database;
 
-import com.google.common.collect.ImmutableMap;
 import com.intellij.openapi.project.Project;
 import com.neueda.jetbrains.plugin.graphdb.database.api.data.GraphEntity;
-import com.neueda.jetbrains.plugin.graphdb.jetbrains.component.datasource.state.DataSourceApi;
+import com.neueda.jetbrains.plugin.graphdb.jetbrains.component.datasource.state.DataSource;
 
 import java.util.Collection;
 import java.util.List;
@@ -18,7 +17,7 @@ public class DiffService {
         // this.service = new QueryExecutionService(project.getMessageBus());
     }
 
-    public void updateNode(DataSourceApi api, GraphEntity oldNode, GraphEntity newNode) {
+    public void updateNode(DataSource api, GraphEntity oldNode, GraphEntity newNode) {
 
         String query = "MATCH (n) WHERE ID(n) = $id " +
                 diffLabels(oldNode.getTypes(), newNode.getTypes()) +
@@ -32,7 +31,7 @@ public class DiffService {
     }
 
 
-    public void updateRelationShip(DataSourceApi api, GraphEntity relationship,
+    public void updateRelationShip(DataSource api, GraphEntity relationship,
                                    GraphEntity updatedRel) {
 
         String query = "MATCH ()-[n]->() WHERE ID(n) = $id " +
@@ -45,7 +44,7 @@ public class DiffService {
 //                null));
     }
 
-    public void saveNewNode(DataSourceApi api, GraphEntity newNode) {
+    public void saveNewNode(DataSource api, GraphEntity newNode) {
         StringBuilder sb = new StringBuilder("CREATE (n ");
         newNode.getTypes().forEach(newLabel -> sb.append(":").append(newLabel));
         sb.append(" $props) RETURN n");

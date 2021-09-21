@@ -3,15 +3,15 @@ package com.neueda.jetbrains.plugin.graphdb.jetbrains.ui.datasource.actions;
 import com.intellij.openapi.actionSystem.ActionGroup;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.neueda.jetbrains.plugin.graphdb.jetbrains.component.datasource.state.DataSourceApi;
+import com.neueda.jetbrains.plugin.graphdb.jetbrains.component.datasource.state.DataSource;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class DataSourceActionGroup extends ActionGroup {
 
-    private final DataSourceApi dataSourceApi;
+    private final DataSource dataSourceApi;
 
-    public DataSourceActionGroup(DataSourceApi dataSourceApi) {
+    public DataSourceActionGroup(DataSource dataSourceApi) {
         this.dataSourceApi = dataSourceApi;
     }
 
@@ -33,7 +33,6 @@ public class DataSourceActionGroup extends ActionGroup {
             default:
                 throw new IllegalStateException("Unknown data source type encountered: " + dataSourceApi.getDataSourceType());
         }
-
 
 
     }

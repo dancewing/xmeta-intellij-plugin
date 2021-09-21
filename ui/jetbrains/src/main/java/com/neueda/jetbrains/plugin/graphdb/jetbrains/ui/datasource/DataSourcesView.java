@@ -10,9 +10,9 @@ import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentFactory;
 import com.intellij.ui.treeStructure.PatchedDefaultMutableTreeNode;
 import com.intellij.ui.treeStructure.Tree;
-import com.neueda.jetbrains.plugin.graphdb.jetbrains.component.datasource.DataSourcesComponent;
 import com.neueda.jetbrains.plugin.graphdb.jetbrains.component.datasource.metadata.DataSourcesComponentMetadata;
-import com.neueda.jetbrains.plugin.graphdb.jetbrains.component.datasource.state.DataSourceApi;
+import com.neueda.jetbrains.plugin.graphdb.jetbrains.component.datasource.state.DataSource;
+import com.neueda.jetbrains.plugin.graphdb.jetbrains.configuration.DataSourcesSettings;
 import com.neueda.jetbrains.plugin.graphdb.jetbrains.ui.datasource.actions.RefreshDataSourcesAction;
 import com.neueda.jetbrains.plugin.graphdb.jetbrains.ui.datasource.interactions.DataSourceInteractions;
 import com.neueda.jetbrains.plugin.graphdb.jetbrains.ui.datasource.metadata.DataSourceMetadataUi;
@@ -33,7 +33,7 @@ public class DataSourcesView implements Disposable {
 
     private boolean initialized;
 
-    private DataSourcesComponent component;
+    private DataSourcesSettings component;
     private DataSourcesComponentMetadata componentMetadata;
     private DataSourceInteractions interactions;
     private PatchedDefaultMutableTreeNode treeRoot;
@@ -55,7 +55,7 @@ public class DataSourcesView implements Disposable {
             Content content = contentFactory.createContent(toolWindowContent, "", false);
             toolWindow.getContentManager().addContent(content);
 
-            component = project.getComponent(DataSourcesComponent.class);
+            component = DataSourcesSettings.getInstance(project);
             componentMetadata = project.getComponent(DataSourcesComponentMetadata.class);
             dataSourceMetadataUi = new DataSourceMetadataUi(componentMetadata);
             treeRoot = new PatchedDefaultMutableTreeNode(new RootTreeNodeModel());
@@ -76,7 +76,7 @@ public class DataSourcesView implements Disposable {
         }
     }
 
-    public DataSourcesComponent getComponent() {
+    public DataSourcesSettings getComponent() {
         return component;
     }
 
@@ -102,7 +102,7 @@ public class DataSourcesView implements Disposable {
 
     private void configureDataSourceTree() {
         dataSourceTree.getEmptyText().setText("Create a data source");
-        dataSourceTree.setCellRenderer(new GraphColoredTreeCellRenderer(component));
+        dataSourceTree.setCellRenderer(new GraphColoredTreeCellRenderer());
         dataSourceTree.setModel(treeModel);
         dataSourceTree.setRootVisible(false);
         dataSourceTree.setToggleClickCount(0);
@@ -120,7 +120,7 @@ public class DataSourcesView implements Disposable {
     }
 
     private void showDataSources() {
-        component.getDataSourceContainer().getDataSources()
+        component.getDataSources()
                 .forEach((dataSource) -> treeRoot.add(new PatchedDefaultMutableTreeNode(new DataSourceTreeNodeModel(dataSource))));
         treeModel.reload();
     }
@@ -139,12 +139,12 @@ public class DataSourcesView implements Disposable {
 
     public CompletableFuture<Boolean> refreshDataSourceMetadata(PatchedDefaultMutableTreeNode treeNode) {
         TreeNodeModelApi userObject = (TreeNodeModelApi) treeNode.getUserObject();
-        DataSourceApi nodeDataSource = userObject.getDataSourceApi();
+        DataSource nodeDataSource = userObject.getDataSourceApi();
         return dataSourceMetadataUi.updateDataSourceMetadataUi(treeNode, nodeDataSource);
     }
 
-    public void createDataSource(DataSourceApi dataSource) {
-        component.getDataSourceContainer().addDataSource(dataSource);
+    public void createDataSource(DataSource dataSource) {
+        component.addDataSource(dataSource);
         TreeNodeModelApi model = new DataSourceTreeNodeModel(dataSource);
         PatchedDefaultMutableTreeNode treeNode = new PatchedDefaultMutableTreeNode(model);
         treeRoot.add(treeNode);
@@ -152,15 +152,15 @@ public class DataSourcesView implements Disposable {
         treeModel.reload();
     }
 
-    public void updateDataSource(PatchedDefaultMutableTreeNode treeNode, DataSourceApi oldDataSource, DataSourceApi newDataSource) {
-        component.getDataSourceContainer().updateDataSource(oldDataSource, newDataSource);
+    public void updateDataSource(PatchedDefaultMutableTreeNode treeNode, DataSource oldDataSource, DataSource newDataSource) {
+        component.updateDataSource(oldDataSource, newDataSource);
         treeNode.setUserObject(new DataSourceTreeNodeModel(newDataSource));
         refreshDataSourceMetadata(treeNode);
         treeModel.reload();
     }
 
-    public void removeDataSources(Project project, List<DataSourceApi> dataSourcesForRemoval) {
-        component.getDataSourceContainer().removeDataSources(dataSourcesForRemoval);
+    public void removeDataSources(Project project, List<DataSource> dataSourcesForRemoval) {
+        component.removeDataSources(dataSourcesForRemoval);
 
         dataSourcesForRemoval.stream()
                 .peek((dataSourceApi -> {
@@ -172,13 +172,13 @@ public class DataSourcesView implements Disposable {
                         }
                     });
                 }))
-                .map(DataSourceApi::getName)
+                .map(DataSource::getName)
                 .map(name -> {
                     Enumeration enumeration = treeRoot.children();
                     while (enumeration.hasMoreElements()) {
                         DefaultMutableTreeNode element = (DefaultMutableTreeNode) enumeration.nextElement();
                         TreeNodeModelApi userObject = (TreeNodeModelApi) element.getUserObject();
-                        DataSourceApi dataSource = userObject.getDataSourceApi();
+                        DataSource dataSource = userObject.getDataSourceApi();
                         if (dataSource.getName().equals(name)) {
                             return element;
                         }

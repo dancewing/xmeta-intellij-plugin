@@ -1,7 +1,7 @@
 package com.github.houkunlin.model;
 
-import com.github.houkunlin.config.Options;
-import com.github.houkunlin.config.Settings;
+import com.github.houkunlin.config.BaseSettings;
+import com.github.houkunlin.config.OutputSettings;
 import com.github.houkunlin.vo.Variable;
 import com.github.houkunlin.vo.impl.RootModel;
 
@@ -53,41 +53,41 @@ public class SaveFilePath {
         Variable.type = null;
     }
 
-    public static SaveFilePath create(RootModel rootModel, Settings settings) {
+    public static SaveFilePath create(RootModel rootModel, OutputSettings outputSettings) {
         SaveFilePath saveFilePath;
         String entityName = String.valueOf(rootModel.getEntity().getName());
         if (Variable.type == null) {
             return new SaveFilePath(entityName + ".java",
-                    settings.getSourcesPathAt("temp"));
+                    outputSettings.getSourcesPathAt("temp"));
         }
         switch (Variable.type) {
             case "entity":
-                saveFilePath = new SaveFilePath(entityName + settings.getEntitySuffix() + ".java",
-                        settings.getJavaPathAt(settings.getEntityPackage()));
+                saveFilePath = new SaveFilePath(entityName + outputSettings.getEntitySuffix() + ".java",
+                        outputSettings.getJavaPathAt(outputSettings.getEntityPackage()));
                 break;
             case "dao":
-                saveFilePath = new SaveFilePath(entityName + settings.getDaoSuffix() + ".java",
-                        settings.getJavaPathAt(settings.getDaoPackage()));
+                saveFilePath = new SaveFilePath(entityName + outputSettings.getDaoSuffix() + ".java",
+                        outputSettings.getJavaPathAt(outputSettings.getDaoPackage()));
                 break;
             case "service":
-                saveFilePath = new SaveFilePath(entityName + settings.getServiceSuffix() + ".java",
-                        settings.getJavaPathAt(settings.getServicePackage()));
+                saveFilePath = new SaveFilePath(entityName + outputSettings.getServiceSuffix() + ".java",
+                        outputSettings.getJavaPathAt(outputSettings.getServicePackage()));
                 break;
             case "serviceImpl":
-                saveFilePath = new SaveFilePath(entityName + settings.getServiceSuffix() + "Impl.java",
-                        settings.getJavaPathAt(settings.getServicePackage() + ".impl"));
+                saveFilePath = new SaveFilePath(entityName + outputSettings.getServiceSuffix() + "Impl.java",
+                        outputSettings.getJavaPathAt(outputSettings.getServicePackage() + ".impl"));
                 break;
             case "controller":
-                saveFilePath = new SaveFilePath(entityName + settings.getControllerSuffix() + ".java",
-                        settings.getJavaPathAt(settings.getControllerPackage()));
+                saveFilePath = new SaveFilePath(entityName + outputSettings.getControllerSuffix() + ".java",
+                        outputSettings.getJavaPathAt(outputSettings.getControllerPackage()));
                 break;
             case "xml":
-                saveFilePath = new SaveFilePath(entityName + settings.getDaoSuffix() + ".xml",
-                        settings.getSourcesPathAt(settings.getXmlPackage()));
+                saveFilePath = new SaveFilePath(entityName + outputSettings.getDaoSuffix() + ".xml",
+                        outputSettings.getSourcesPathAt(outputSettings.getXmlPackage()));
                 break;
             default:
                 saveFilePath = new SaveFilePath(entityName + ".java",
-                        settings.getSourcesPathAt("temp"));
+                        outputSettings.getSourcesPathAt("temp"));
         }
         return saveFilePath;
     }
@@ -145,7 +145,7 @@ public class SaveFilePath {
         return !types.contains(type);
     }
 
-    public boolean isOverride(Options options) {
+    public boolean isOverride(BaseSettings options) {
         boolean isOverride = false;
         if (options.isOverrideJava() && isJava()) {
             isOverride = true;

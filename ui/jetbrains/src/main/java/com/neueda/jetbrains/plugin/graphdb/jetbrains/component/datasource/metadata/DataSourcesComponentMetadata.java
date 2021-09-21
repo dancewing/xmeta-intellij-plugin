@@ -3,11 +3,10 @@ package com.neueda.jetbrains.plugin.graphdb.jetbrains.component.datasource.metad
 import com.intellij.openapi.components.ProjectComponent;
 import com.intellij.util.messages.MessageBus;
 import com.neueda.jetbrains.plugin.graphdb.database.api.GraphDatabaseApi;
-import com.neueda.jetbrains.plugin.graphdb.database.api.data.GraphMetadata;
 import com.neueda.jetbrains.plugin.graphdb.database.api.query.GraphQueryResult;
 import com.neueda.jetbrains.plugin.graphdb.database.api.query.GraphQueryResultColumn;
 import com.neueda.jetbrains.plugin.graphdb.jetbrains.component.datasource.DataSourceType;
-import com.neueda.jetbrains.plugin.graphdb.jetbrains.component.datasource.state.DataSourceApi;
+import com.neueda.jetbrains.plugin.graphdb.jetbrains.component.datasource.state.DataSource;
 import com.neueda.jetbrains.plugin.graphdb.jetbrains.database.DatabaseManagerService;
 import com.neueda.jetbrains.plugin.graphdb.jetbrains.services.ExecutorService;
 import com.neueda.jetbrains.plugin.graphdb.jetbrains.ui.datasource.metadata.MetadataRetrieveEvent;
@@ -27,7 +26,7 @@ import static java.util.stream.Collectors.toList;
 
 public class DataSourcesComponentMetadata implements ProjectComponent {
 
-    private final Map<DataSourceType, Function<DataSourceApi, DataSourceMetadata>> handlers = new HashMap<>();
+    private final Map<DataSourceType, Function<DataSource, DataSourceMetadata>> handlers = new HashMap<>();
     private ExecutorService executorService;
     private DatabaseManagerService databaseManager;
     private MessageBus messageBus;
@@ -44,7 +43,7 @@ public class DataSourcesComponentMetadata implements ProjectComponent {
         handlers.put(OPENCYPHER_GREMLIN, this::getOpenCypherGremlinMetadata);
     }
 
-    public CompletableFuture<Optional<DataSourceMetadata>> getMetadata(DataSourceApi dataSource) {
+    public CompletableFuture<Optional<DataSourceMetadata>> getMetadata(DataSource dataSource) {
         MetadataRetrieveEvent metadataRetrieveEvent = messageBus.syncPublisher(MetadataRetrieveEvent.METADATA_RETRIEVE_EVENT);
 
         metadataRetrieveEvent.startMetadataRefresh(dataSource);
@@ -71,7 +70,7 @@ public class DataSourcesComponentMetadata implements ProjectComponent {
         return future;
     }
 
-    private DataSourceMetadata getNeo4jBoltMetadata(DataSourceApi dataSource) {
+    private DataSourceMetadata getNeo4jBoltMetadata(DataSource dataSource) {
         GraphDatabaseApi db = databaseManager.getDatabaseFor(dataSource);
         Neo4jBoltCypherDataSourceMetadata metadata = new Neo4jBoltCypherDataSourceMetadata();
 
@@ -112,7 +111,7 @@ public class DataSourcesComponentMetadata implements ProjectComponent {
         return metadata;
     }
 
-    private DataSourceMetadata getOpenCypherGremlinMetadata(DataSourceApi dataSource) {
+    private DataSourceMetadata getOpenCypherGremlinMetadata(DataSource dataSource) {
         GraphDatabaseApi db = databaseManager.getDatabaseFor(dataSource);
         Neo4jBoltCypherDataSourceMetadata result = new Neo4jBoltCypherDataSourceMetadata();
 
@@ -150,7 +149,7 @@ public class DataSourcesComponentMetadata implements ProjectComponent {
                 .collect(Collectors.joining(" UNION ALL "));
     }
 
-    private void updateNeo4jBoltMetadata(DataSourceApi dataSource, Neo4jBoltCypherDataSourceMetadata metadata) {
+    private void updateNeo4jBoltMetadata(DataSource dataSource, Neo4jBoltCypherDataSourceMetadata metadata) {
         // Refresh cypher metadata provider
 //        cypherMetadataProviderService.wipeContainer(dataSource.getName());
 //        CypherMetadataContainer container = cypherMetadataProviderService.getContainer(dataSource.getName());

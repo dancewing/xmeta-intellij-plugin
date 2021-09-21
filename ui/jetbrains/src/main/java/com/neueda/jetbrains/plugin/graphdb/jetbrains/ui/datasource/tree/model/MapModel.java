@@ -1,6 +1,6 @@
 package com.neueda.jetbrains.plugin.graphdb.jetbrains.ui.datasource.tree.model;
 
-import com.neueda.jetbrains.plugin.graphdb.jetbrains.component.datasource.state.DataSourceApi;
+import com.neueda.jetbrains.plugin.graphdb.jetbrains.component.datasource.state.DataSource;
 import com.neueda.jetbrains.plugin.graphdb.jetbrains.ui.datasource.tree.Neo4jEntityViewNodeType;
 import com.neueda.jetbrains.plugin.graphdb.jetbrains.ui.datasource.tree.NodeType;
 import com.neueda.jetbrains.plugin.graphdb.jetbrains.ui.datasource.tree.TreeNodeModelApi;
@@ -13,9 +13,9 @@ public class MapModel implements TreeNodeModelApi {
     private NodeType type = Neo4jEntityViewNodeType.NODE_MAP;
     private String text;
     private String description = "map";
-    private DataSourceApi dataSourceApi;
+    private DataSource dataSourceApi;
 
-    public MapModel(String text, DataSourceApi dataSourceApi) {
+    public MapModel(String text, DataSource dataSourceApi) {
         this.text = text;
         this.dataSourceApi = dataSourceApi;
     }
@@ -37,7 +37,7 @@ public class MapModel implements TreeNodeModelApi {
 
     @Nullable
     @Override
-    public DataSourceApi getDataSourceApi() {
+    public DataSource getDataSourceApi() {
         return dataSourceApi;
     }
 
