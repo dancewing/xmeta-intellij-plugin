@@ -64,7 +64,7 @@
                     anchor="right"
                     secondary="false"
                     factoryClass="io.xmeta.jetbrains.ui.datasource.DataSourcesToolWindow"
-                    icon="GraphIcons.Window.GRAPH"/>
+                    icon="MetaIcons.Window.GRAPH"/>
 
         <projectService serviceImplementation="io.xmeta.generator.config.ConfigService"/>
         <projectService serviceImplementation="io.xmeta.jetbrains.configuration.DataSourcesSettings"/>

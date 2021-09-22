@@ -29,6 +29,7 @@ public class PluginUtils {
     public static final String CONFIG_DIR = "config";
     public static final String GLOBAL_CONFIG_DIR = "globalConfig";
     public static final String TEMPLATE_DIR = "templates";
+    public static final String MAPPING_DIR = "mappings";
     public static final String PROJECT_WORK_DIR = "generator";
     /**
      * 当前项目对象

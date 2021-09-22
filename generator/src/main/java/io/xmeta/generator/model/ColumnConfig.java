@@ -3,6 +3,8 @@ package io.xmeta.generator.model;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 /**
  * 列配置信息
  *
@@ -14,26 +16,24 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ColumnConfig {
     /**
-     * 标题
-     */
-    private String title;
-    /**
      * 类型
      */
     private ColumnConfigType type;
+
+    private String shortName;
+
+    private String longName;
+
+    private UIConfigType uiType;
+
     /**
      * 可选值，逗号分割
      */
-    private String selectValue;
+    private List<UIConfigType> supportTypes;
 
-    public ColumnConfig(String title, ColumnConfigType type) {
-        this.title = title;
+    public ColumnConfig(ColumnConfigType type, Class javaType) {
         this.type = type;
-    }
-
-    public ColumnConfig(String title, ColumnConfigType type, String selectValue) {
-        this.title = title;
-        this.type = type;
-        this.selectValue = selectValue;
+        this.longName = javaType.getName();
+        this.shortName = javaType.getSimpleName();
     }
 }

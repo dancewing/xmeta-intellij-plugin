@@ -12,3 +12,4 @@ templates/Default/Server/Domain.java.vm
 templates/Default/Server/Mapper.java.vm
 templates/Default/Client/Domain.ts.vm
 templates/README.md
+mappings/Default.json

@@ -1,18 +1,19 @@
 package io.xmeta.jetbrains.configuration;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.intellij.openapi.options.Configurable;
 import io.xmeta.generator.config.ConfigService;
 import io.xmeta.generator.model.ColumnConfig;
 import io.xmeta.generator.model.ColumnConfigGroup;
 import io.xmeta.generator.model.ColumnConfigType;
-import com.intellij.openapi.options.Configurable;
-import com.intellij.openapi.project.Project;
 import io.xmeta.jetbrains.util.CloneUtils;
 import io.xmeta.jetbrains.util.ProjectUtils;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * 表设置面板
@@ -21,54 +22,46 @@ import java.util.Map;
  * @version 1.0.0
  * @since 2018/07/17 13:10
  */
-public class TableSettingPanel extends AbstractTableGroupPanel<ColumnConfigGroup, ColumnConfig> implements Configurable {
+public class MappingSettingPanel extends AbstractTableGroupPanel<ColumnConfigGroup, ColumnConfig> implements Configurable {
 
-    private ConfigService settings;
-    /**
-     * 项目对象
-     */
-    private Project project;
-
-    public TableSettingPanel() {
+    public MappingSettingPanel() {
 
         super(CloneUtils.cloneByJson(ConfigService.getInstance(ProjectUtils.getCurrProject()).getColumnConfigGroupMap(),
                 new TypeReference<Map<String, ColumnConfigGroup>>() {}), ConfigService.getInstance(ProjectUtils.getCurrProject()).getCurrColumnConfigGroupName());
-        this.project = ProjectUtils.getCurrProject();
-        this.settings = ConfigService.getInstance(this.project);
     }
 
     @Override
     protected Object[] toRow(ColumnConfig item) {
-        return new Object[]{item.getTitle(), item.getType().name(), item.getSelectValue()};
+         return new Object[]{item.getType().name(), item.getLongName(), item.getUiType().name(),
+                 item.getSupportTypes()==null? new String[]{}: item.getSupportTypes().stream().map(Enum::name).collect(Collectors.toList()) };
     }
 
     @Override
     protected ColumnConfig toItem(Object[] rowData) {
-        return new ColumnConfig((String) rowData[0], ColumnConfigType.valueOf((String) rowData[1]), (String) rowData[2]);
+        // return new ColumnConfig((String) rowData[0], ColumnConfigType.valueOf((String) rowData[1]),
+      //          (String) rowData[2]);
+        return null;
     }
 
     @Override
     protected String getItemName(ColumnConfig item) {
-        return item.getTitle();
+        return item.getType().name();
     }
 
     @Override
     protected ColumnConfig createItem(String value) {
-        return new ColumnConfig(value, ColumnConfigType.TEXT);
+       // return new ColumnConfig(value, ColumnConfigType.SingleLineText);
+        return null;
     }
 
     @Override
-    protected ColumnConfig[] initColumn() {
-        ColumnConfig[] columnConfigs = new ColumnConfig[3];
-        columnConfigs[0] = new ColumnConfig("title", ColumnConfigType.TEXT);
-        columnConfigs[1] = new ColumnConfig("type", ColumnConfigType.SELECT, "TEXT,SELECT,BOOLEAN");
-        columnConfigs[2] = new ColumnConfig("selectValue", ColumnConfigType.TEXT);
-        return columnConfigs;
+    protected String[] initColumn() {
+        return new String[]{"Field Type", "JavaType", "UIType", "Support UI Types"};
     }
 
     @Override
     public String getDisplayName() {
-        return "Table Editor Config";
+        return "Mapping Setting";
     }
 
     @Nullable
@@ -85,7 +78,7 @@ public class TableSettingPanel extends AbstractTableGroupPanel<ColumnConfigGroup
 
     @Override
     public void apply() {
-        settings.setColumnConfigGroupMap(group);
+       // settings.setColumnConfigGroupMap(group);
         settings.setCurrColumnConfigGroupName(currGroupName);
     }
 

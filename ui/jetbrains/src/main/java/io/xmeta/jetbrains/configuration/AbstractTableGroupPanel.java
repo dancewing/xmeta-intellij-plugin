@@ -1,5 +1,6 @@
 package io.xmeta.jetbrains.configuration;
 
+import com.intellij.openapi.project.Project;
 import io.xmeta.generator.config.ConfigService;
 import io.xmeta.generator.model.AbstractGroup;
 import io.xmeta.generator.model.ColumnConfig;
@@ -8,14 +9,18 @@ import com.intellij.openapi.ui.MessageDialogBuilder;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.ui.BooleanTableCellEditor;
 import com.intellij.util.ui.ComboBoxCellEditor;
+import io.xmeta.generator.model.ColumnConfigType;
+import io.xmeta.generator.model.UIConfigType;
 import io.xmeta.jetbrains.util.CloneUtils;
 import io.xmeta.jetbrains.util.MsgValue;
+import io.xmeta.jetbrains.util.ProjectUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 抽象的表分组面板
@@ -57,7 +62,7 @@ public abstract class AbstractTableGroupPanel<T extends AbstractGroup<E>, E> {
     /**
      * 列配置信息
      */
-    private ColumnConfig[] columnConfigInfo;
+    private String[] columnConfigInfo;
 
     /**
      * 表模型
@@ -78,6 +83,12 @@ public abstract class AbstractTableGroupPanel<T extends AbstractGroup<E>, E> {
      */
     private boolean initFlag;
 
+    protected ConfigService settings;
+    /**
+     * 项目对象
+     */
+    protected Project project;
+
 
 
     /**
@@ -89,6 +100,8 @@ public abstract class AbstractTableGroupPanel<T extends AbstractGroup<E>, E> {
     public AbstractTableGroupPanel(Map<String, T> group, String currGroupName) {
         this.group = group;
         this.currGroupName = currGroupName;
+        this.project = ProjectUtils.getCurrProject();
+        this.settings = ConfigService.getInstance(this.project);
         init();
         initEvent();
     }
@@ -106,21 +119,47 @@ public abstract class AbstractTableGroupPanel<T extends AbstractGroup<E>, E> {
      * 刷新类类型配置
      */
     private void refreshEditorType() {
-        for (ColumnConfig column : columnConfigInfo) {
-            TableColumn tableColumn = table.getColumn(column.getTitle());
-            switch (column.getType()) {
-                case TEXT:
-                    break;
-                case SELECT:
+        for (String column : columnConfigInfo) {
+            TableColumn tableColumn = table.getColumn(column);
+            switch (column) {
+                case "Field Type":
                     tableColumn.setCellEditor(new ComboBoxCellEditor() {
+
                         @Override
                         protected List<String> getComboBoxItems() {
-                            return Arrays.asList(column.getSelectValue().split(","));
+                            ColumnConfigType[] configTypes = ColumnConfigType.values();
+                            return Arrays.stream(configTypes).map(Enum::name).collect(Collectors.toList());
                         }
                     });
                     break;
-                case BOOLEAN:
-                    tableColumn.setCellEditor(new BooleanTableCellEditor());
+                case "JavaType":
+                    JTextField textField = new JTextField();
+                    textField.addActionListener(e -> {
+                        textField.getText();
+                    });
+                    DefaultCellEditor javaTypeEditor = new DefaultCellEditor(textField);
+                    tableColumn.setCellEditor(javaTypeEditor);
+                    break;
+                case "UIType":
+                    tableColumn.setCellEditor(new ComboBoxCellEditor() {
+                        @Override
+                        protected List<String> getComboBoxItems() {
+                            UIConfigType[] configTypes = UIConfigType.values();
+                            return Arrays.stream(configTypes).map(Enum::name).collect(Collectors.toList());
+                        }
+                    });
+                    break;
+                case "Support UI Types":
+                    ComboBoxCellEditor uiTypesEditor = new ComboBoxCellEditor() {
+                        @Override
+                        protected List<String> getComboBoxItems() {
+                            UIConfigType[] configTypes = UIConfigType.values();
+                            return Arrays.stream(configTypes).map(Enum::name).collect(Collectors.toList());
+                        }
+
+                    };
+                    uiTypesEditor.setClickCountToStart(1);
+                    tableColumn.setCellEditor(uiTypesEditor);
                     break;
                 default:
                     break;
@@ -138,9 +177,8 @@ public abstract class AbstractTableGroupPanel<T extends AbstractGroup<E>, E> {
         //初始化列
         columnConfigInfo = initColumn();
         tableModel = new DefaultTableModel();
-        for (ColumnConfig column : columnConfigInfo) {
-            tableModel.addColumn(column.getTitle());
-        }
+        tableModel.setColumnIdentifiers(columnConfigInfo);
+
         //初始化数据
         getCurrGroup().getElementList().forEach(e -> {
             tableModel.addRow(toRow(e));
@@ -348,7 +386,7 @@ public abstract class AbstractTableGroupPanel<T extends AbstractGroup<E>, E> {
      *
      * @return 列配置数组
      */
-    protected abstract ColumnConfig[] initColumn();
+    protected abstract String[] initColumn();
 
     /**
      * 获取主面板对象

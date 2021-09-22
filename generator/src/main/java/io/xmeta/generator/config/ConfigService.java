@@ -1,6 +1,7 @@
 package io.xmeta.generator.config;
 
 import io.xmeta.generator.model.*;
+import io.xmeta.generator.util.JsonUtils;
 import io.xmeta.generator.util.PluginUtils;
 import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.ServiceManager;
@@ -12,11 +13,14 @@ import com.intellij.util.xmlb.annotations.Transient;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
@@ -42,14 +46,6 @@ public class ConfigService implements PersistentStateComponent<ConfigService> {
     private OutputSettings outputSettings;
 
     /**
-     * 当前类型映射组名
-     */
-    private String currTypeMapperGroupName;
-    /**
-     * 类型映射组
-     */
-    private Map<String, TypeMapperGroup> typeMapperGroupMap;
-    /**
      * 当前模板组名
      */
     private String currTemplateGroupName;
@@ -64,10 +60,6 @@ public class ConfigService implements PersistentStateComponent<ConfigService> {
      */
     private String currColumnConfigGroupName;
 
-    /**
-     * 配置表组
-     */
-    private Map<String, ColumnConfigGroup> columnConfigGroupMap;
 
     public ConfigService() {
         baseSettings = PluginUtils.getConfig(BaseSettings.class);
@@ -77,44 +69,8 @@ public class ConfigService implements PersistentStateComponent<ConfigService> {
 
         // 当前各项分组名称
         this.currTemplateGroupName = DEFAULT_NAME;
-        this.currTypeMapperGroupName = DEFAULT_NAME;
         this.currColumnConfigGroupName = DEFAULT_NAME;
         this.currGlobalConfigGroupName = DEFAULT_NAME;
-
-        //配置默认类型映射
-        if (this.typeMapperGroupMap == null) {
-            this.typeMapperGroupMap = new LinkedHashMap<>();
-        }
-        TypeMapperGroup typeMapperGroup = new TypeMapperGroup();
-        List<TypeMapper> typeMapperList = new ArrayList<>();
-        typeMapperList.add(new TypeMapper("varchar(\\(\\d+\\))?", "java.lang.String"));
-        typeMapperList.add(new TypeMapper("char(\\(\\d+\\))?", "java.lang.String"));
-        typeMapperList.add(new TypeMapper("text", "java.lang.String"));
-        typeMapperList.add(new TypeMapper("decimal(\\(\\d+\\))?", "java.lang.Double"));
-        typeMapperList.add(new TypeMapper("decimal(\\(\\d+,\\d+\\))?", "java.lang.Double"));
-        typeMapperList.add(new TypeMapper("integer", "java.lang.Integer"));
-        typeMapperList.add(new TypeMapper("int(\\(\\d+\\))?", "java.lang.Integer"));
-        typeMapperList.add(new TypeMapper("int4", "java.lang.Integer"));
-        typeMapperList.add(new TypeMapper("int8", "java.lang.Long"));
-        typeMapperList.add(new TypeMapper("bigint(\\(\\d+\\))?", "java.lang.Long"));
-        typeMapperList.add(new TypeMapper("datetime", "java.util.Date"));
-        typeMapperList.add(new TypeMapper("timestamp", "java.util.Date"));
-        typeMapperList.add(new TypeMapper("boolean", "java.lang.Boolean"));
-        typeMapperGroup.setName(DEFAULT_NAME);
-        typeMapperGroup.setElementList(typeMapperList);
-        typeMapperGroupMap.put(DEFAULT_NAME, typeMapperGroup);
-
-        //初始化表配置
-        if (this.columnConfigGroupMap == null) {
-            this.columnConfigGroupMap = new LinkedHashMap<>();
-        }
-        ColumnConfigGroup columnConfigGroup = new ColumnConfigGroup();
-        List<ColumnConfig> columnConfigList = new ArrayList<>();
-        columnConfigList.add(new ColumnConfig("disable", ColumnConfigType.BOOLEAN));
-        columnConfigGroup.setName(DEFAULT_NAME);
-        columnConfigGroup.setElementList(columnConfigList);
-        columnConfigGroupMap.put(DEFAULT_NAME, columnConfigGroup);
-
     }
 
     @Nullable
@@ -229,6 +185,36 @@ public class ConfigService implements PersistentStateComponent<ConfigService> {
                     String groupName = file.getName();
                     GlobalConfigGroup templateGroup = loadGlobalConfigGroup(templateDir, groupName);
                     configGroupMap.put(groupName, templateGroup);
+                }
+            });
+        }
+        return configGroupMap;
+    }
+
+
+    /**
+     * 配置表组
+     */
+    public Map<String, ColumnConfigGroup> getColumnConfigGroupMap() {
+        Map<String, ColumnConfigGroup> configGroupMap = new HashMap<>();
+        File templateDir = new File(getConfigRootPath(), PluginUtils.MAPPING_DIR);
+        File[] listFiles = templateDir.listFiles();
+        if (listFiles!=null) {
+            Collection<File> files = Arrays.asList(listFiles);
+            files.stream().forEach(file -> {
+                if (file.isFile() && !file.isHidden()) {
+                    String groupName = FilenameUtils.getBaseName(file.getName());
+                    if (StringUtils.endsWith(file.getName(), ".json")) {
+                        try {
+                            ColumnConfig[] columnConfigs = JsonUtils.parse(ColumnConfig[].class, new FileInputStream(file));
+                            ColumnConfigGroup templateGroup = new ColumnConfigGroup();
+                            templateGroup.setName(groupName);
+                            templateGroup.setElementList(Arrays.asList(columnConfigs));
+                            configGroupMap.put(groupName, templateGroup);
+                        } catch (FileNotFoundException e) {
+                            e.printStackTrace();
+                        }
+                    }
                 }
             });
         }

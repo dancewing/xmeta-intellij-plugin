@@ -7,7 +7,7 @@ package io.xmeta.generator.model;
  * @version 1.0.0
  * @since 2018/07/17 13:10
  */
-public enum ColumnConfigType {
+public enum UIConfigType {
     SingleLineText("SingleLineText"),
     MultiLineText("MultiLineText"),
     Email("Email"),
@@ -24,12 +24,11 @@ public enum ColumnConfigType {
     UpdatedAt("UpdatedAt"),
     Roles("Roles"),
     Username("Username"),
-    Password("Password"),
-    Json("Json");
+    Password("Password");
 
     private final String graphqlName;
 
-    private ColumnConfigType(String graphqlName) {
+    private UIConfigType(String graphqlName) {
         this.graphqlName = graphqlName;
     }
 

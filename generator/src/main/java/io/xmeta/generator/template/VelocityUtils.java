@@ -1,4 +1,4 @@
-package io.xmeta.generator.template.velocity;
+package io.xmeta.generator.template;
 
 import io.xmeta.generator.util.IO;
 import org.apache.velocity.Template;

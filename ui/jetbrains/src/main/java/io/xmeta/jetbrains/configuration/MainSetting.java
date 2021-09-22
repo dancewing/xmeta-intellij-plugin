@@ -306,22 +306,20 @@ public class MainSetting implements Configurable, Configurable.Composite {
     @NotNull
     @Override
     public Configurable[] getConfigurables() {
-        Configurable[] result = new Configurable[4];
-        result[0] = new TypeMapperSetting();
-        result[1] = new TemplateSettingPanel();
-        result[2] = new TableSettingPanel();
-        result[3] = new GlobalConfigSettingPanel();
+        Configurable[] result = new Configurable[3];
+        result[0] = new TemplateSettingPanel();
+        result[1] = new MappingSettingPanel();
+        result[2] = new GlobalConfigSettingPanel();
         // 所有列表
         allList = new ArrayList<>();
         allList.add(result[0]);
         allList.add(result[1]);
         allList.add(result[2]);
-        allList.add(result[3]);
         // 需要重置的列表
         resetList = new ArrayList<>();
         resetList.add(result[0]);
         resetList.add(result[1]);
-        resetList.add(result[3]);
+        resetList.add(result[2]);
         // 不需要重置的列表
         saveList = new ArrayList<>();
         saveList.add(this);
@@ -379,7 +377,6 @@ public class MainSetting implements Configurable, Configurable.Composite {
     public void refreshConfigRootPathChanged() {
         settings.setCurrTemplateGroupName(ConfigService.DEFAULT_NAME);
         settings.setCurrColumnConfigGroupName(ConfigService.DEFAULT_NAME);
-        settings.setCurrTypeMapperGroupName(ConfigService.DEFAULT_NAME);
         settings.setCurrGlobalConfigGroupName(ConfigService.DEFAULT_NAME);
         allList.stream().forEach(UnnamedConfigurable::reset);
     }

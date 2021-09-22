@@ -1,0 +1,11 @@
+[
+  {
+    "type": "Id",
+    "shortName": "String",
+    "longName": "java.lang.Object",
+    "uiType": "SingleLineText",
+    "supportTypes": [
+      "SingleLineText", "MultiLineText"
+    ]
+  }
+]
